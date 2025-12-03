@@ -1,7 +1,16 @@
 # Product Requirements Document (PRD) : OmniShop 360
 
 ## 1. Structure de Rôles (RBAC)
-(Voir tableau des rôles dans le Brief. L'accès aux fonctionnalités est régi par ces rôles.)
+
+| Rôle | Description | Permissions Clés |
+| :--- | :--- | :--- |
+| **Superadmin** | Administrateur global de la plateforme. | - Créer des `tenants`.<br>- Créer des `Tenant Admins`.<br>- Configurer les paramètres globaux de l'application. |
+| **Tenant Admin** | Administrateur d'un tenant (une entreprise). | - Gérer les `boutiques` (créer, activer, désactiver).<br>- Gérer les `Shop Admins`.<br>- Gérer le `Catalogue Maître` et les politiques de prix.<br>- Accéder aux rapports de BI consolidés. |
+| **Shop Admin** | Administrateur d'une boutique spécifique. | - Gérer le personnel de sa boutique (`Caissiers`, `Gestionnaires de Stock`).<br>- Gérer les paramètres de sa boutique. |
+| **Gestionnaire de Stock** | Employé responsable de la gestion des stocks. | - Gérer les réceptions de marchandises.<br>- Gérer les inventaires. |
+| **Caissier** | Employé responsable des ventes. | - Utiliser le Point de Vente (POS) pour enregistrer les ventes et les retours. |
+| **Comptable Tenant** | Employé responsable de la comptabilité du tenant. | - Exporter les données de vente consolidées.<br>- Accéder aux rapports de marge. |
+
 
 ## 2. User Stories du MVP
 

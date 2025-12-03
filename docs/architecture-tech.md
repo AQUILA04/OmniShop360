@@ -10,6 +10,11 @@
 * **Token :** Le token JWT (JSON Web Token) émis par Keycloak doit inclure les `roles` de l'utilisateur et son `tenant_id` (via un Custom Mapper).
 * **Contexte de la Requête :** Chaque requête API émise par Angular doit inclure le JWT (Bearer Token).
 * **Sécurité des Données :** Le `Tenant ID` et le `Shop ID` seront extraits du token sur le backend Spring Boot pour appliquer la **Row-Level Security (RLS)**.
+* **Rôle Superadmin :**
+    * Un rôle `superadmin` est défini pour l'administration globale de l'application.
+    * Ce rôle a les permissions de créer des `tenants` et des `Tenant Admins`.
+    * Un utilisateur `superadmin` est créé automatiquement au déploiement de l'application via un script de démarrage (par exemple, dans le backend Spring Boot).
+    * Lors de la création, un email est envoyé au `superadmin` (configuré via les variables d'environnement) avec un lien pour initialiser son mot de passe dans Keycloak.
 
 ## 3. Contrats API Backend (Spring Boot)
 * **Sécurité RLS :** Le backend Spring Boot (via Spring Security et JPA/ORM) doit systématiquement filtrer toutes les requêtes en base de données par l'ID du Tenant et l'ID de la Boutique de l'utilisateur connecté.

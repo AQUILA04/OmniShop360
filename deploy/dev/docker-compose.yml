@@ -1,0 +1,166 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: omnishop-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: omnishop360
+      POSTGRES_USER: omnishop
+      POSTGRES_PASSWORD: omnishop_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - omnishop-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U omnishop -d omnishop360"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: omnishop-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - omnishop-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Keycloak IAM
+  keycloak:
+    build:
+      context: ../../keycloak
+      dockerfile: Dockerfile
+    container_name: omnishop-keycloak
+    restart: unless-stopped
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: omnishop
+      KC_DB_PASSWORD: omnishop_password
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - omnishop-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  # Backend API
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    container_name: omnishop-backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: omnishop360
+      DB_USERNAME: omnishop
+      DB_PASSWORD: omnishop_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/omnishop360
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/omnishop360/protocol/openid-connect/certs
+      CORS_ALLOWED_ORIGINS: http://localhost:4200,http://localhost:4201
+      SUPERADMIN_EMAIL: admin@omnishop360.com
+      SUPERADMIN_USERNAME: superadmin
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    networks:
+      - omnishop-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8081/api/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile
+    container_name: omnishop-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:8080"
+    depends_on:
+      - backend
+      - keycloak
+    networks:
+      - omnishop-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # POS Application
+  pos:
+    build:
+      context: ../../pos
+      dockerfile: Dockerfile
+    container_name: omnishop-pos
+    restart: unless-stopped
+    ports:
+      - "4201:8080"
+    depends_on:
+      - backend
+      - keycloak
+    networks:
+      - omnishop-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  omnishop-network:
+    driver: bridge
+    name: omnishop-network
+
+volumes:
+  postgres_data:
+    name: omnishop-postgres-data
+  redis_data:
+    name: omnishop-redis-data

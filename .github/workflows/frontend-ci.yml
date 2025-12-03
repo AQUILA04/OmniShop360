@@ -1,5 +1,10 @@
 name: Frontend CI
 
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+
 on:
   push:
     branches:

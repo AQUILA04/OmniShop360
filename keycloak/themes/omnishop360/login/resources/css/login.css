@@ -1,0 +1,95 @@
+:root {
+    --omnishop-primary: #2563eb;
+    --omnishop-primary-dark: #1d4ed8;
+    --omnishop-secondary: #10b981;
+    --omnishop-text: #1f2937;
+    --omnishop-bg: #f9fafb;
+}
+
+body {
+    background: linear-gradient(135deg, var(--omnishop-primary) 0%, var(--omnishop-primary-dark) 100%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.login-pf body {
+    background: linear-gradient(135deg, var(--omnishop-primary) 0%, var(--omnishop-primary-dark) 100%);
+}
+
+#kc-header {
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#kc-header-wrapper {
+    font-size: 2rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-pf {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: none;
+    padding: 2.5rem;
+}
+
+#kc-form-login .btn-primary {
+    background-color: var(--omnishop-primary);
+    border-color: var(--omnishop-primary);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+}
+
+#kc-form-login .btn-primary:hover {
+    background-color: var(--omnishop-primary-dark);
+    border-color: var(--omnishop-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--omnishop-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+#kc-logo-wrapper {
+    margin-bottom: 2rem;
+}
+
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.alert-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.alert-info {
+    background-color: #dbeafe;
+    color: #1e40af;
+}

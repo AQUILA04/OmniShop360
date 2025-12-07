@@ -5,6 +5,20 @@ spring:
       hibernate:
         format_sql: true
 
+  # Mail Configuration (MailDev)
+  mail:
+    host: localhost
+    port: 1025
+    username: ""
+    password: ""
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+    test-connection: false
+
 logging:
   level:
     root: INFO

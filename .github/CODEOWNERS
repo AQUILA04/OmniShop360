@@ -1,0 +1,34 @@
+# OmniShop360 Code Owners
+# These owners will be automatically requested for review when someone opens a pull request
+
+# Global owners (fallback for everything)
+* @AQUILA04
+
+# Backend
+/backend/ @AQUILA04
+/backend/src/main/java/com/omnishop360/backend/domain/ @AQUILA04
+/backend/src/main/resources/db/migration/ @AQUILA04
+
+# Frontend
+/frontend/ @AQUILA04
+/frontend/src/app/core/ @AQUILA04
+
+# POS
+/pos/ @AQUILA04
+
+# Infrastructure
+/deploy/ @AQUILA04
+/keycloak/ @AQUILA04
+/keycloak-config/ @AQUILA04
+/.github/ @AQUILA04
+
+# Documentation
+/docs/ @AQUILA04
+*.md @AQUILA04
+
+# Configuration files
+*.yml @AQUILA04
+*.yaml @AQUILA04
+*.json @AQUILA04
+Dockerfile @AQUILA04
+docker-compose.yml @AQUILA04

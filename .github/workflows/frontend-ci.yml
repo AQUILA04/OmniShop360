@@ -1,0 +1,157 @@
+name: Frontend CI
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - develop
+      - 'release/**'
+      - 'feature/**'
+      - 'hotfix/**'
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'release/**'
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+
+jobs:
+  build-and-test:
+    name: Build and Test Frontend
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint code
+        working-directory: ./frontend
+        run: pnpm run lint
+        continue-on-error: true
+
+      - name: Run unit tests
+        working-directory: ./frontend
+        run: pnpm run test:ci
+
+      - name: Generate test coverage
+        working-directory: ./frontend
+        run: pnpm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./frontend/coverage/lcov.info
+          flags: frontend
+          name: frontend-coverage
+
+      - name: Build application
+        working-directory: ./frontend
+        run: pnpm run build --configuration=production
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          retention-days: 7
+
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: frontend
+          args: >
+            -Dsonar.projectKey=omnishop360-frontend
+            -Dsonar.organization=omnishop360
+            -Dsonar.sources=src
+            -Dsonar.tests=src
+            -Dsonar.test.inclusions=**/*.spec.ts
+            -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
+        continue-on-error: true
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Run npm audit
+        working-directory: ./frontend
+        run: pnpm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: './frontend'
+          format: 'sarif'
+          output: 'trivy-results-frontend.sarif'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results-frontend.sarif'

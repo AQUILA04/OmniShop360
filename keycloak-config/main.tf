@@ -24,9 +24,12 @@ resource "keycloak_realm" "omnishop360" {
   display_name      = "OmniShop 360"
   display_name_html = "<b>OmniShop</b> 360"
 
+  # Only use login_theme since that's the only sub-theme we have
+  # Account and email themes will use Keycloak defaults
   login_theme   = "omnishop360"
-  account_theme = "omnishop360"
-  email_theme   = "omnishop360"
+  #account_theme = "omnishop360"
+  #email_theme   = "omnishop360"
+  # account_theme and email_theme omitted - will use default "keycloak" theme
 
   # Security settings
   ssl_required                   = "external"
@@ -53,14 +56,18 @@ resource "keycloak_realm" "omnishop360" {
 
   # SMTP settings (optional, configure via variables)
   smtp_server {
-    host = var.smtp_host
-    port = var.smtp_port
-    from = var.smtp_from
+    host              = var.smtp_host
+    port              = var.smtp_port
+    from              = var.smtp_from
     from_display_name = "OmniShop 360"
     
-    auth {
-      username = var.smtp_username
-      password = var.smtp_password
+    # Correction: Utilisation de 'dynamic' pour éviter le plantage lorsque les identifiants SMTP sont vides
+    dynamic "auth" {
+      for_each = var.smtp_username != "" ? [1] : []
+      content {
+        username = var.smtp_username
+        password = var.smtp_password
+      }
     }
     
     ssl       = var.smtp_ssl
@@ -121,7 +128,7 @@ resource "keycloak_openid_client" "frontend" {
   name      = "OmniShop Frontend"
   enabled   = true
 
-  access_type           = "public"
+  access_type           = "PUBLIC" # Corrigé: était "public"
   standard_flow_enabled = true
   implicit_flow_enabled = false
   direct_access_grants_enabled = false
@@ -148,7 +155,7 @@ resource "keycloak_openid_client" "pos" {
   name      = "OmniShop POS"
   enabled   = true
 
-  access_type           = "public"
+  access_type           = "PUBLIC" # Corrigé: était "public"
   standard_flow_enabled = true
   implicit_flow_enabled = false
   direct_access_grants_enabled = false
@@ -175,15 +182,35 @@ resource "keycloak_openid_client" "backend" {
   name      = "OmniShop Backend"
   enabled   = true
 
-  access_type                  = "confidential"
+  access_type                  = "CONFIDENTIAL"
   service_accounts_enabled     = true
   standard_flow_enabled        = false
   direct_access_grants_enabled = true
 
-  valid_redirect_uris = [
-    "http://localhost:8081/*",
-    var.backend_url != "" ? "${var.backend_url}/*" : ""
-  ]
+  # valid_redirect_uris cannot be set when standard_flow_enabled is false
+  # Only needed for standard/implicit flows
+}
+
+# Get the realm-management client (system client for admin operations)
+data "keycloak_openid_client" "realm_management" {
+  realm_id  = keycloak_realm.omnishop360.id
+  client_id = "realm-management"
+}
+
+# Assign manage-users client role to backend service account
+resource "keycloak_openid_client_service_account_role" "backend_manage_users" {
+  realm_id                = keycloak_realm.omnishop360.id
+  service_account_user_id = keycloak_openid_client.backend.service_account_user_id
+  client_id               = data.keycloak_openid_client.realm_management.id
+  role                    = "manage-users"
+}
+
+# Assign view-users client role to backend service account
+resource "keycloak_openid_client_service_account_role" "backend_view_users" {
+  realm_id                = keycloak_realm.omnishop360.id
+  service_account_user_id = keycloak_openid_client.backend.service_account_user_id
+  client_id               = data.keycloak_openid_client.realm_management.id
+  role                    = "view-users"
 }
 
 # Add tenant_id mapper to tokens
@@ -228,7 +255,7 @@ resource "keycloak_user" "superadmin" {
   last_name      = "Admin"
 
   initial_password {
-    value     = var.superadmin_initial_password
+    value    = var.superadmin_initial_password
     temporary = true
   }
 }

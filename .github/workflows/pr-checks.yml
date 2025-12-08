@@ -1,0 +1,183 @@
+name: Pull Request Checks
+
+permissions:
+  contents: read
+  pull-requests: write
+  statuses: read
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'release/**'
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  pr-validation:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate PR title
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+          requireScope: false
+
+      - name: Check for merge conflicts
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          if git merge-tree $(git merge-base HEAD origin/${{ github.base_ref }}) HEAD origin/${{ github.base_ref }} | grep -q "<<<<<"; then
+            echo "❌ Merge conflicts detected"
+            exit 1
+          else
+            echo "✅ No merge conflicts"
+          fi
+
+      - name: Validate branch naming
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          if [[ ! "$BRANCH_NAME" =~ ^(feature|bugfix|hotfix|release)/.+ ]]; then
+            echo "❌ Branch name must follow pattern: feature/*, bugfix/*, hotfix/*, or release/*"
+            exit 1
+          fi
+          echo "✅ Branch name is valid: $BRANCH_NAME"
+
+  changed-files:
+    name: Detect Changed Files
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.changes.outputs.backend }}
+      frontend: ${{ steps.changes.outputs.frontend }}
+      pos: ${{ steps.changes.outputs.pos }}
+      keycloak: ${{ steps.changes.outputs.keycloak }}
+      terraform: ${{ steps.changes.outputs.terraform }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+            pos:
+              - 'pos/**'
+            keycloak:
+              - 'keycloak/**'
+            terraform:
+              - 'keycloak-config/**'
+
+  backend-checks:
+    name: Backend Checks
+    needs: changed-files
+    if: needs.changed-files.outputs.backend == 'true'
+    uses: ./.github/workflows/backend-ci.yml
+
+  frontend-checks:
+    name: Frontend Checks
+    needs: changed-files
+    if: needs.changed-files.outputs.frontend == 'true'
+    uses: ./.github/workflows/frontend-ci.yml
+
+  pos-checks:
+    name: POS Checks
+    needs: changed-files
+    if: needs.changed-files.outputs.pos == 'true'
+    uses: ./.github/workflows/pos-ci.yml
+
+  terraform-validate:
+    name: Validate Terraform
+    needs: changed-files
+    if: needs.changed-files.outputs.terraform == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Terraform Format Check
+        working-directory: ./keycloak-config
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        working-directory: ./keycloak-config
+        run: terraform init -backend=false
+
+      - name: Terraform Validate
+        working-directory: ./keycloak-config
+        run: terraform validate
+
+  pr-summary:
+    name: PR Summary
+    runs-on: ubuntu-latest
+    needs: [pr-validation, changed-files]
+    if: always()
+    
+    steps:
+      - name: Generate PR summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const summary = `
+            ## Pull Request Summary
+            
+            **Title:** ${pr.title}
+            **Author:** @${pr.user.login}
+            **Base:** \`${pr.base.ref}\` ← **Head:** \`${pr.head.ref}\`
+            
+            ### Changed Components
+            - Backend: ${{ needs.changed-files.outputs.backend == 'true' && '✅' || '⬜' }}
+            - Frontend: ${{ needs.changed-files.outputs.frontend == 'true' && '✅' || '⬜' }}
+            - POS: ${{ needs.changed-files.outputs.pos == 'true' && '✅' || '⬜' }}
+            - Keycloak: ${{ needs.changed-files.outputs.keycloak == 'true' && '✅' || '⬜' }}
+            - Terraform: ${{ needs.changed-files.outputs.terraform == 'true' && '✅' || '⬜' }}
+            
+            ### Validation Status
+            - PR Title: ${{ needs.pr-validation.result == 'success' && '✅' || '❌' }}
+            - Branch Name: ${{ needs.pr-validation.result == 'success' && '✅' || '❌' }}
+            - Merge Conflicts: ${{ needs.pr-validation.result == 'success' && '✅ None' || '❌ Detected' }}
+            `;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: summary
+            });

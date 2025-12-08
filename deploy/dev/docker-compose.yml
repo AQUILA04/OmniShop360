@@ -23,6 +23,20 @@ services:
       timeout: 5s
       retries: 5
 
+  # MailDev - Email Testing
+  maildev:
+    image: maildev/maildev:latest
+    container_name: omnishop-maildev
+    restart: unless-stopped
+    ports:
+      - "1080:1080"  # Web UI
+      - "1025:1025"  # SMTP Server
+    networks:
+      - omnishop-network
+    environment:
+      MAILDEV_INCOMING_USER: ""
+      MAILDEV_INCOMING_PASS: ""
+
   # Redis Cache
   redis:
     image: redis:7-alpine

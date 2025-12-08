@@ -1,0 +1,109 @@
+name: POS CI
+
+on:
+  push:
+    branches:
+      - develop
+      - 'release/**'
+      - 'feature/**'
+      - 'hotfix/**'
+    paths:
+      - 'pos/**'
+      - '.github/workflows/pos-ci.yml'
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'release/**'
+    paths:
+      - 'pos/**'
+      - '.github/workflows/pos-ci.yml'
+
+jobs:
+  build-and-test:
+    name: Build and Test POS
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: pos/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: ./pos
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint code
+        working-directory: ./pos
+        run: pnpm run lint
+        continue-on-error: true
+
+      - name: Run unit tests
+        working-directory: ./pos
+        run: pnpm run test:ci
+
+      - name: Generate test coverage
+        working-directory: ./pos
+        run: pnpm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./pos/coverage/lcov.info
+          flags: pos
+          name: pos-coverage
+
+      - name: Build application
+        working-directory: ./pos
+        run: pnpm run build --configuration=production
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pos-dist
+          path: pos/dist/
+          retention-days: 7
+
+  performance-test:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pos-dist
+          path: pos/dist/
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          configPath: './pos/lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        continue-on-error: true

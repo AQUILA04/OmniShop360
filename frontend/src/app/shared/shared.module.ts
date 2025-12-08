@@ -11,7 +11,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snackBar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -42,7 +42,8 @@ const MATERIAL_MODULES = [
   MatMenuModule
 ];
 
-const COMPONENTS = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const COMPONENTS: any[] = [
   // DataTableComponent,
   // LoadingSpinnerComponent,
   // ConfirmationDialogComponent

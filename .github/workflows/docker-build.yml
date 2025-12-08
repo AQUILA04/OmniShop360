@@ -238,8 +238,18 @@ jobs:
           output: 'trivy-results-${{ matrix.image }}.sarif'
         continue-on-error: true
 
+      - name: Check if SARIF file exists
+        id: check_sarif
+        run: |
+          if [ -f "trivy-results-${{ matrix.image }}.sarif" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "SARIF file not found, skipping upload"
+          fi
+
       - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: steps.check_sarif.outputs.exists == 'true'
         with:
           sarif_file: 'trivy-results-${{ matrix.image }}.sarif'

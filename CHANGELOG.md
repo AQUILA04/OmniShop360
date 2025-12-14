@@ -10,22 +10,43 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
-- ...
+- **Tenant Management API** - Backend implementation for tenant creation and management
+  - `POST /api/v1/tenants` - Create new tenant with admin user
+  - `GET /api/v1/tenants` - List all tenants with pagination and search
+  - `GET /api/v1/tenants/{id}` - Get tenant by ID
+- **Keycloak Integration** - `KeycloakAdapter` for user management in Keycloak
+  - Create users in Keycloak
+  - Assign roles to users
+  - Send password reset emails via Keycloak
+- **Global Exception Handler** - Centralized error handling for REST API
+  - Handles validation errors (`MethodArgumentNotValidException`)
+  - Handles entity not found (`EntityNotFoundException`)
+  - Handles access denied (`AccessDeniedException`)
+  - Handles constraint violations (`ConstraintViolationException`)
+  - Handles generic exceptions
+- **Database Migrations** - Flyway migration for users table (`V2__create_users_table.sql`)
+- **Swagger/OpenAPI Documentation** - API documentation with Swagger UI
+- **Unit and Integration Tests** - 100% test coverage for new code
+  - Tests for `TenantService`
+  - Tests for `TenantController`
+  - Tests for `KeycloakAdapter`
+  - Tests for `GlobalExceptionHandler`
+  - Tests for DTOs (`TenantResponse`, `PageResponse`, `AdminUserResponse`)
 
 ### Changed
-- ...
-
-### Deprecated
-- ...
-
-### Removed
-- ...
+- **Architecture** - Reorganized backend structure following hexagonal architecture
+  - Moved configuration classes to `infrastructure.config` package
+  - Separated DTOs into `web.dto` package
+- **BaseEntity** - Removed `tenantId` field (handled via `@ManyToOne` relationship)
 
 ### Fixed
-- ...
+- Fixed `@OneToMany` relationship mapping in `Tenant` entity
+- Fixed resource leaks in `KeycloakAdapter` (proper `Response` closure with try-with-resources)
+- Fixed `NullPointerException` in `KeycloakAdapter.getCreatedUserId()` with null checks
+- Fixed `StringIndexOutOfBoundsException` in `TenantService.generateTenantCode()` for empty filtered names
 
 ### Security
-- ...
+- Implemented role-based access control with `@PreAuthorize("hasRole('superadmin')")` on tenant endpoints
 
 ---
 

@@ -1,4 +1,4 @@
-package com.omnishop360.backend.config;
+package com.omnishop360.backend.infrastructure.config;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -33,3 +33,4 @@ public class CacheConfig {
             .build();
     }
 }
+

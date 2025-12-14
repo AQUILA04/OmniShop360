@@ -19,8 +19,6 @@ public abstract class BaseEntity {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "tenant_id", nullable = false, updatable = false)
-    private UUID tenantId;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

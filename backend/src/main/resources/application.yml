@@ -5,6 +5,14 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: static/**,public/**,templates/**,META-INF/maven/**
+    livereload:
+      enabled: true
+  
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:omnishop360}
     username: ${DB_USERNAME:omnishop}
@@ -34,6 +42,15 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+    baseline-description: "init"
+    baseline-version: 0
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    validate-on-migrate: true
+    clean-disabled: true
+    out-of-order: true
+    ignore-migration-patterns: [ "*:ignored" ]
+    repeatable-sql-migration-prefix: RRR
     locations: classpath:db/migration
     schemas: public
   
@@ -100,6 +117,25 @@ logging:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
+# SpringDoc OpenAPI configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
+    filter: true
+    display-request-duration: true
+    show-extensions: true
+    show-common-extensions: true
+  show-actuator: false
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
 # Application specific configurations
 omnishop:
   security:
@@ -119,3 +155,9 @@ omnishop:
     email: ${SUPERADMIN_EMAIL:admin@omnishop360.com}
     username: ${SUPERADMIN_USERNAME:superadmin}
     auto-create: true
+
+keycloak:
+  url: ${KEYCLOAK_URL:http://localhost:8080}
+  realm: ${KEYCLOAK_REALM:omnishop360}
+  client-id: ${KEYCLOAK_CLIENT_ID:omnishop-backend}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET:}

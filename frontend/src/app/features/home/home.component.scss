@@ -1,0 +1,363 @@
+// Variables
+$primary-dark: #0F172A;
+$primary-gold: #D4AF37;
+$text-light: #F8FAFC;
+$text-gray: #94A3B8;
+$card-bg: #FFFFFF;
+$font-family: 'Inter', sans-serif;
+
+.landing-page {
+    font-family: $font-family;
+    color: $text-light;
+    background-color: $primary-dark;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+// Navbar
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    background-color: rgba($primary-dark, 0.95);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: $text-light;
+
+        img {
+            height: 32px;
+            width: 32px;
+        }
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+
+        a {
+            color: $text-gray;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+
+            &:hover {
+                color: $text-light;
+            }
+        }
+    }
+
+    .auth-buttons {
+        display: flex;
+        gap: 1rem;
+
+        button {
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: $text-light;
+            border: 1px solid $text-light;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        .btn-register {
+            background: $primary-gold;
+            color: $primary-dark;
+            border: none;
+
+            &:hover {
+                background: lighten($primary-gold, 10%);
+            }
+        }
+    }
+}
+
+// Hero
+.hero {
+    display: flex;
+    padding: 4rem;
+    min-height: 80vh;
+    background: linear-gradient(135deg, $primary-dark 0%, darken($primary-dark, 5%) 100%);
+    position: relative;
+    overflow: hidden;
+
+    .hero-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 10;
+
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+
+            .highlight {
+                color: $primary-gold;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: $text-gray;
+            margin-bottom: 3rem;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .hero-question {
+            margin-top: 3rem;
+            font-weight: 600;
+            color: $text-light;
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 500px;
+            /* Align with buttons */
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+
+            button {
+                padding: 1rem 2rem;
+                border-radius: 4px;
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+
+            .btn-primary {
+                background: $text-light;
+                color: $primary-dark;
+                border: none;
+
+                &:hover {
+                    background: darken($text-light, 10%);
+                }
+            }
+
+            .btn-secondary {
+                background: $primary-gold;
+                color: $primary-dark;
+                border: none;
+
+                &:hover {
+                    background: lighten($primary-gold, 10%);
+                }
+            }
+        }
+    }
+
+    .hero-image {
+        flex: 1;
+        background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'); // Example mall image
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+        /* Should probably not have radius if it splits screen fully */
+        /* To match design, the image takes the right side fully */
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 50%;
+
+        /* Overlay gradient to fade into dark on the left if desired, but design shows clear split. 
+       Let's keep it clean. */
+    }
+}
+
+// Features
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 4rem;
+    background: linear-gradient(to bottom, $primary-dark, darken($primary-dark, 3%));
+    /* To overlap with hero slightly? Design shows Cards "floating" over bottom of hero area */
+    margin-top: -5rem;
+    z-index: 20;
+    position: relative;
+
+    .feature-card {
+        background: $card-bg;
+        color: $primary-dark;
+        padding: 2rem;
+        border-radius: 12px;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border-bottom: 4px solid $primary-gold;
+
+        .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: $primary-gold;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: lighten($primary-dark, 20%);
+            line-height: 1.5;
+        }
+    }
+}
+
+// How it works
+.how-it-works {
+    background: #FFFBF0; // Light cream from image
+    color: $primary-dark;
+    padding: 5rem 4rem;
+    text-align: center;
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 4rem;
+        font-weight: 700;
+    }
+
+    .steps {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 2rem;
+        max-width: 1000px;
+        margin: 0 auto;
+
+        .step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .step-icon {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+
+            p {
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+
+            small {
+                color: #666;
+                font-size: 0.9rem;
+            }
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: #ccc;
+            margin-top: 1.5rem;
+        }
+    }
+}
+
+// Footer
+.footer {
+    background: $primary-dark;
+    color: $text-gray;
+    padding: 3rem 4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+
+    .footer-logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        color: $text-light;
+        font-weight: 600;
+
+        img {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+
+        a {
+            color: $text-gray;
+            text-decoration: none;
+
+            &:hover {
+                color: $text-light;
+            }
+        }
+
+        .socials {
+            display: flex;
+            gap: 1rem;
+        }
+    }
+
+    .copyright {
+        font-size: 0.85rem;
+        opacity: 0.6;
+    }
+}
+
+// Responsive
+@media (max-width: 900px) {
+    .hero {
+        flex-direction: column;
+
+        .hero-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin-top: 2rem;
+        }
+    }
+
+    .features {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 0;
+        background: $primary-dark;
+    }
+
+    .steps {
+        flex-direction: column;
+
+        .step-line {
+            display: none;
+        }
+    }
+}

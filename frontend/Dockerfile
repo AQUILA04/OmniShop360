@@ -7,7 +7,9 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Install pnpm and dependencies
-RUN npm install -g pnpm@10.24.0 && \
+RUN npm config set strict-ssl false && \
+    npm install -g pnpm@10.24.0 && \
+    pnpm config set strict-ssl false && \
     pnpm install --frozen-lockfile
 
 # Copy source code

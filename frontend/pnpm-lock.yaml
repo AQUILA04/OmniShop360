@@ -39,8 +39,8 @@ importers:
         specifier: ^17.3.0
         version: 17.3.12(@angular/common@17.3.12(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))(rxjs@7.8.2))(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))(@angular/platform-browser@17.3.12(@angular/animations@17.3.12(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10)))(@angular/common@17.3.12(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))(rxjs@7.8.2))(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10)))(rxjs@7.8.2)
       angular-oauth2-oidc:
-        specifier: 20.0.2
-        version: 20.0.2(@angular/common@17.3.12(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))(rxjs@7.8.2))(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))
+        specifier: ^17.0.0
+        version: 17.0.2(@angular/common@17.3.12(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))(rxjs@7.8.2))(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))
       rxjs:
         specifier: ~7.8.0
         version: 7.8.2
@@ -1894,11 +1894,11 @@ packages:
       typescript: '*'
       typescript-eslint: ^8.0.0
 
-  angular-oauth2-oidc@20.0.2:
-    resolution: {integrity: sha512-bMSXEQIuvgq8yqnsIatZggAvCJvY+pm7G8MK0tWCHR93UpFuNN+L5B6pY9CzRg8Ys+VVhkLIBx4zEHbJnv9icg==}
+  angular-oauth2-oidc@17.0.2:
+    resolution: {integrity: sha512-zYgeLmAnu1g8XAYZK+csAsCQBDhgp9ffBv/eArEnujGxNPTeK00bREHWObtehflpQdSn+k9rY2D15ChCSydyVw==}
     peerDependencies:
-      '@angular/common': '>=20.0.0'
-      '@angular/core': '>=20.0.0'
+      '@angular/common': '>=14.0.0'
+      '@angular/core': '>=14.0.0'
 
   ansi-colors@4.1.3:
     resolution: {integrity: sha512-/6w/C21Pm1A7aZitlI5Ni/2J6FFQN8i1Cvz3kHABAAbw93v/NlvKdVOqz7CCWz/3iv/JplRSEEZ83XION15ovw==}
@@ -7321,7 +7321,7 @@ snapshots:
       - chokidar
       - supports-color
 
-  angular-oauth2-oidc@20.0.2(@angular/common@17.3.12(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))(rxjs@7.8.2))(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10)):
+  angular-oauth2-oidc@17.0.2(@angular/common@17.3.12(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))(rxjs@7.8.2))(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10)):
     dependencies:
       '@angular/common': 17.3.12(@angular/core@17.3.12(rxjs@7.8.2)(zone.js@0.14.10))(rxjs@7.8.2)
       '@angular/core': 17.3.12(rxjs@7.8.2)(zone.js@0.14.10)

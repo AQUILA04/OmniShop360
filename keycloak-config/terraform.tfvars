@@ -1,0 +1,23 @@
+# Keycloak Configuration
+keycloak_url            = "http://localhost:8080"
+keycloak_admin_username = "admin"
+keycloak_admin_password = "admin"
+
+# Superadmin Configuration
+superadmin_username         = "superadmin"
+superadmin_email            = "admin@omnishop360.com"
+superadmin_initial_password = "ChangeMe123!"
+
+# Application URLs
+frontend_url = "http://localhost:4200"
+pos_url      = "http://localhost:4201"
+backend_url  = "http://localhost:8081"
+
+# SMTP Configuration (Optional)
+smtp_host     = "maildev"
+smtp_port     = "1025"
+smtp_from     = "noreply@omnishop360.com"
+smtp_username = ""
+smtp_password = ""
+smtp_ssl      = false
+smtp_starttls = true

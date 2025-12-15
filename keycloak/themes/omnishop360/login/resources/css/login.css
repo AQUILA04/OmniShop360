@@ -1,95 +1,282 @@
+/* Main Variables */
 :root {
-    --omnishop-primary: #2563eb;
-    --omnishop-primary-dark: #1d4ed8;
-    --omnishop-secondary: #10b981;
-    --omnishop-text: #1f2937;
-    --omnishop-bg: #f9fafb;
+    --omni-dark-blue: #0B1E33;
+    --omni-gold: #C5A065;
+    --omni-bg-cream: #FCFAF7;
+    /* Slight cream tint from designs */
+    --omni-white: #FFFFFF;
+    --omni-text-color: #333333;
+    --omni-border-radius: 8px;
+    --omni-font-family: 'Inter', sans-serif;
+    /* Assuming Inter or similar */
 }
 
 body {
-    background: linear-gradient(135deg, var(--omnishop-primary) 0%, var(--omnishop-primary-dark) 100%);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: var(--omni-font-family);
+    background-color: var(--omni-white);
+    color: var(--omni-text-color);
+    height: 100vh;
+    overflow-x: hidden;
 }
 
-.login-pf body {
-    background: linear-gradient(135deg, var(--omnishop-primary) 0%, var(--omnishop-primary-dark) 100%);
+/* =========================================
+   Layout Containers
+   ========================================= */
+
+/* Default Wrapper (for non-login pages or shared structure) */
+.login-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100vh;
 }
 
-#kc-header {
-    color: #ffffff;
-    text-align: center;
-    margin-bottom: 2rem;
+/* =========================================
+   Login Page Specific (Split Screen)
+   ========================================= */
+body.login-page .login-wrapper {
+    flex-direction: row;
 }
 
-#kc-header-wrapper {
-    font-size: 2rem;
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Left Panel (Image) */
+.login-left-panel {
+    flex: 1;
+    background: url('../img/shopping-cart-bg.png') no-repeat center center;
+    background-size: cover;
+    display: block;
 }
 
-.card-pf {
-    background: #ffffff;
+/* Right Panel (Content) */
+.login-right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--omni-bg-cream);
+    padding: 2rem;
+    position: relative;
+    max-width: 100%;
+}
+
+.login-content-container {
+    width: 100%;
+    max-width: 400px;
+    /* Standard form width */
+}
+
+/* =========================================
+   Template Page Specific (Centered Card)
+   ========================================= */
+/* When body class is NOT login-page, we assume it's a template page */
+body:not(.login-page) .login-wrapper {
+    justify-content: center;
+    align-items: center;
+    background-color: var(--omni-bg-cream);
+}
+
+body:not(.login-page) .login-left-panel {
+    display: none !important;
+    /* Hide image panel on template pages */
+}
+
+body:not(.login-page) .login-right-panel {
+    flex: 0 1 auto;
+    /* Don't stretch */
+    background-color: var(--omni-white);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    /* Card shadow */
     border-radius: 12px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border: none;
-    padding: 2.5rem;
+    padding: 3rem;
+    width: 100%;
+    max-width: 500px;
 }
 
-#kc-form-login .btn-primary {
-    background-color: var(--omnishop-primary);
-    border-color: var(--omnishop-primary);
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: all 0.3s ease;
-}
 
-#kc-form-login .btn-primary:hover {
-    background-color: var(--omnishop-primary-dark);
-    border-color: var(--omnishop-primary-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
+/* =========================================
+   Branding & Components
+   ========================================= */
 
-.form-control {
-    border-radius: 8px;
-    border: 2px solid #e5e7eb;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
-}
-
-.form-control:focus {
-    border-color: var(--omnishop-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-#kc-logo-wrapper {
+/* Brand Logo */
+.brand-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Center logo by default in form */
     margin-bottom: 2rem;
 }
 
-.alert {
-    border-radius: 8px;
+.brand-logo img.logo-img {
+    height: 40px;
+    margin-right: 10px;
+    /* If logo image is missing/broken, hide it and rely on text */
+}
+
+.brand-logo .logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--omni-dark-blue);
+    letter-spacing: -0.5px;
+}
+
+/* Headings */
+h1 {
+    font-size: 24px;
+    color: var(--omni-dark-blue);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: var(--omni-border-radius);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    /* Fix width issues */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    border-color: var(--omni-gold);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.2);
+}
+
+/* Buttons */
+input[type="submit"],
+button.btn-primary {
+    background-color: var(--omni-dark-blue);
+    color: var(--omni-white);
     border: none;
+    border-radius: var(--omni-border-radius);
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+}
+
+input[type="submit"]:hover,
+button.btn-primary:hover {
+    background-color: #1a2f47;
+    /* Slightly lighter/darker */
+}
+
+/* Links */
+a {
+    color: var(--omni-text-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--omni-gold);
+}
+
+.forgot-password-link {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Password Toggle */
+.password-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 42px;
+    /* Adjust based on label height + padding */
+    color: #888;
+}
+
+.pf-c-form-control-group {
+    position: relative;
+}
+
+/* Adjust Keycloak standard classes overrides */
+.pf-c-alert {
+    margin-bottom: 1rem;
+    border-radius: var(--omni-border-radius);
+    padding: 1rem;
+    font-size: 0.9rem;
 }
 
 .alert-error {
-    background-color: #fee2e2;
-    color: #991b1b;
+    background-color: #ffe6e6;
+    border-left: 4px solid #cc0000;
+    color: #cc0000;
 }
 
 .alert-success {
-    background-color: #d1fae5;
-    color: #065f46;
+    background-color: #e6fffa;
+    border-left: 4px solid #00cc88;
+    color: #006644;
 }
 
-.alert-warning {
-    background-color: #fef3c7;
-    color: #92400e;
-}
+/* =========================================
+   Mobile Responsiveness
+   ========================================= */
+@media (max-width: 768px) {
 
-.alert-info {
-    background-color: #dbeafe;
-    color: #1e40af;
+    /* Login Page Mobile */
+    body.login-page .login-wrapper {
+        flex-direction: column;
+    }
+
+    body.login-page .login-left-panel {
+        flex: 0 0 250px;
+        /* Fixed height for header image */
+        background: url('../img/login-bg-mobile.png') no-repeat top center;
+        background-size: cover;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    body.login-page .login-right-panel {
+        flex: 1;
+        justify-content: flex-start;
+        /* Align to top after image */
+        padding-top: 2rem;
+        background: transparent;
+        /* Let body bg show or transparent */
+        margin-top: -40px;
+        /* Overlap effect? Optional. Let's keep it simple first. */
+        margin-top: 0;
+    }
+
+    .login-content-container {
+        background: var(--omni-white);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        /* Card effect on mobile to pop from bg */
+    }
+
+    /* Template Page Mobile */
+    body:not(.login-page) .login-right-panel {
+        padding: 1.5rem;
+        width: 90%;
+    }
 }

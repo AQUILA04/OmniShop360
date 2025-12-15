@@ -5,8 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/docs/architecture-tech.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/architecture-tech.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/prd.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/prd.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak/themes/omnishop360/login/resources/css/shopping-cart-bg.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pnpm-lock.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keycloak/themes/omnishop360/login/resources/css/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak/themes/omnishop360/login/resources/css/login.css" afterDir="false" />
+    </list>
+    <list id="9640c8ea-7951-43d0-9a27-f16fc788ba4a" name="config" comment="OmniShop360">
+      <change afterPath="$PROJECT_DIR$/backend/GlobalSelfSign.crt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/ZscalerRootCA.cer" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/apigateway.iqera.download.crt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/iQera-SI.crt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/dev/terraform.tfstate" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/keycloak/keycloak/5.5.0/windows_amd64/CHANGELOG.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/keycloak/keycloak/5.5.0/windows_amd64/LICENSE-APACHE-2.0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/keycloak/keycloak/5.5.0/windows_amd64/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/CHANGELOG.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate.backup" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/pos/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,21 +43,50 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "AQUILA04"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AQUILA04&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/AQUILA04/OmniShop360.git",
-    "accountId": "59a33b3f-1fae-416a-8425-1944993bf67e"
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/add-theme-and-keycloak-frontend" />
+                    <option name="lastUsedInstant" value="1765797880" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="develop" />
+                    <option name="lastUsedInstant" value="1765737459" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1765737458" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/AQUILA04/OmniShop360.git&quot;,
+    &quot;accountId&quot;: &quot;59a33b3f-1fae-416a-8425-1944993bf67e&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="36FZsOtq7U21YNwq4yPvMAbslU7" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -41,11 +97,13 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/add-theme-and-keycloak-frontend",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360",
+    "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360/keycloak/themes/omnishop360/login/resources/css",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -55,6 +113,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\keycloak\themes\omnishop360\login\resources\css" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -66,11 +129,15 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="" />
+      <changelist id="9640c8ea-7951-43d0-9a27-f16fc788ba4a" name="config" comment="OmniShop360" />
       <created>1764604486409</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1764604486409</updated>
       <workItem from="1764604487534" duration="3407000" />
+      <workItem from="1765639206897" duration="2398000" />
+      <workItem from="1765773942892" duration="783000" />
+      <workItem from="1765774747496" duration="11016000" />
     </task>
     <servers />
   </component>

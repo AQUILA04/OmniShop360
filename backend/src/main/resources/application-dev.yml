@@ -173,4 +173,4 @@ keycloak:
   url: ${KEYCLOAK_URL:http://localhost:8080}
   realm: ${KEYCLOAK_REALM:omnishop360}
   client-id: ${KEYCLOAK_CLIENT_ID:omnishop-backend}
-  client-secret: ${KEYCLOAK_CLIENT_SECRET:lKnCcfdttkf5A2AMAM8qQBHU93FnpqvE}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET:EQ6htUCANB9j72Hp730g1pmlcofc3gtR}

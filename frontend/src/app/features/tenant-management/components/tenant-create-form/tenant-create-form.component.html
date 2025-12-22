@@ -1,17 +1,21 @@
 <mat-card class="tenant-create-card">
   <mat-card-header>
-    <mat-card-title>Créer un nouveau Tenant</mat-card-title>
-    <mat-card-subtitle>Remplissez les informations de l'entreprise et de l'administrateur</mat-card-subtitle>
+    <mat-card-title>{{ isEditMode ? 'Edit Tenant' : 'Create New Tenant' }}</mat-card-title>
+    <mat-card-subtitle>{{ isEditMode ? 'Update the company information' : 'Fill in the company and administrator information' }}</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
+    <div *ngIf="isLoading && isEditMode" class="loading-overlay">
+      <mat-spinner></mat-spinner>
+    </div>
+
     <form [formGroup]="tenantForm" (ngSubmit)="onSubmit()" class="tenant-form">
 
       <!-- Company Information -->
-      <h3>Informations Entreprise</h3>
+      <h3>Company Information</h3>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nom de l'entreprise</mat-label>
+        <mat-label>Company Name</mat-label>
         <input matInput formControlName="companyName" placeholder="Ex: ACME Corp">
         @if (tenantForm.get('companyName')?.invalid) {
           <mat-error>{{ getErrorMessage('companyName') }}</mat-error>
@@ -19,54 +23,56 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email de contact (Entreprise)</mat-label>
+        <mat-label>Contact Email (Company)</mat-label>
         <input matInput formControlName="contactEmail" placeholder="contact@acme.com" type="email">
         @if (tenantForm.get('contactEmail')?.invalid) {
           <mat-error>{{ getErrorMessage('contactEmail') }}</mat-error>
         }
       </mat-form-field>
 
-      <!-- Admin Information -->
-      <h3>Administrateur Principal</h3>
+      <!-- Admin Information (only for create mode) -->
+      <ng-container *ngIf="!isEditMode">
+        <h3>Primary Administrator</h3>
 
-      <div class="row">
-        <mat-form-field appearance="outline" class="half-width">
-          <mat-label>Prénom</mat-label>
-          <input matInput formControlName="adminFirstName" placeholder="John">
-          @if (tenantForm.get('adminFirstName')?.invalid) {
-            <mat-error>{{ getErrorMessage('adminFirstName') }}</mat-error>
+        <div class="row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="adminFirstName" placeholder="John">
+            @if (tenantForm.get('adminFirstName')?.invalid) {
+              <mat-error>{{ getErrorMessage('adminFirstName') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="adminLastName" placeholder="Doe">
+            @if (tenantForm.get('adminLastName')?.invalid) {
+              <mat-error>{{ getErrorMessage('adminLastName') }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Administrator Email</mat-label>
+          <input matInput formControlName="adminEmail" placeholder="john.doe@acme.com" type="email">
+          @if (tenantForm.get('adminEmail')?.invalid) {
+            <mat-error>{{ getErrorMessage('adminEmail') }}</mat-error>
           }
+          <mat-hint>This email will be used for login</mat-hint>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" class="half-width">
-          <mat-label>Nom</mat-label>
-          <input matInput formControlName="adminLastName" placeholder="Doe">
-          @if (tenantForm.get('adminLastName')?.invalid) {
-            <mat-error>{{ getErrorMessage('adminLastName') }}</mat-error>
-          }
-        </mat-form-field>
-      </div>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email Administrateur</mat-label>
-        <input matInput formControlName="adminEmail" placeholder="john.doe@acme.com" type="email">
-        @if (tenantForm.get('adminEmail')?.invalid) {
-          <mat-error>{{ getErrorMessage('adminEmail') }}</mat-error>
-        }
-        <mat-hint>Cet email sera utilisé pour la connexion</mat-hint>
-      </mat-form-field>
+      </ng-container>
 
     </form>
   </mat-card-content>
 
   <mat-card-actions align="end">
-    <button mat-button type="button" [disabled]="isLoading" routerLink="/tenants">Annuler</button>
+    <button mat-button type="button" [disabled]="isLoading" (click)="cancel()">Cancel</button>
     <button mat-raised-button color="primary" type="submit" [disabled]="tenantForm.invalid || isLoading" (click)="onSubmit()">
       @if (isLoading) {
         <mat-spinner diameter="20"></mat-spinner>
       }
       @if (!isLoading) {
-        <span>Créer Tenant</span>
+        <span>{{ isEditMode ? 'Update Tenant' : 'Create Tenant' }}</span>
       }
     </button>
   </mat-card-actions>

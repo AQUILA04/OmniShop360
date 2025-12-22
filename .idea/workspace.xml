@@ -4,36 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak/themes/omnishop360/login/resources/css/shopping-cart-bg.png" afterDir="false" />
+    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="frontend setup update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/pnpm-lock.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keycloak/themes/omnishop360/login/resources/css/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak/themes/omnishop360/login/resources/css/login.css" afterDir="false" />
-    </list>
-    <list id="9640c8ea-7951-43d0-9a27-f16fc788ba4a" name="config" comment="OmniShop360">
-      <change afterPath="$PROJECT_DIR$/backend/GlobalSelfSign.crt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/ZscalerRootCA.cer" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/apigateway.iqera.download.crt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/iQera-SI.crt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deploy/dev/terraform.tfstate" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/keycloak/keycloak/5.5.0/windows_amd64/CHANGELOG.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/keycloak/keycloak/5.5.0/windows_amd64/LICENSE-APACHE-2.0" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/keycloak/keycloak/5.5.0/windows_amd64/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/CHANGELOG.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate.backup" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/pos/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/dev/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/deploy/dev/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,29 +69,32 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "feature/add-theme-and-keycloak-frontend",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360/keycloak/themes/omnishop360/login/resources/css",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/add-theme-and-keycloak-frontend&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kahonsu/Documents/GitHub/OmniShop360/keycloak/themes/omnishop360/login/resources/css&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\keycloak\themes\omnishop360\login\resources\css" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\keycloak\themes\omnishop360\login\resources\img" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -129,7 +108,6 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="" />
-      <changelist id="9640c8ea-7951-43d0-9a27-f16fc788ba4a" name="config" comment="OmniShop360" />
       <created>1764604486409</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -137,12 +115,36 @@
       <workItem from="1764604487534" duration="3407000" />
       <workItem from="1765639206897" duration="2398000" />
       <workItem from="1765773942892" duration="783000" />
-      <workItem from="1765774747496" duration="11016000" />
+      <workItem from="1765774747496" duration="11319000" />
+      <workItem from="1765823473320" duration="29000" />
+      <workItem from="1765823564220" duration="5661000" />
     </task>
+    <task id="LOCAL-00001">
+      <option name="closed" value="true" />
+      <created>1765798417093</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1765798417093</updated>
+    </task>
+    <task id="LOCAL-00002" summary="frontend setup update">
+      <option name="closed" value="true" />
+      <created>1765798479073</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1765798479073</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="OmniShop360: [SETUP] configurer un theme personnaliser pour le thème keycloak et intgrer le flow de connexion keycloak au frontend" />
+    <MESSAGE value="frontend setup update" />
+    <option name="LAST_COMMIT_MESSAGE" value="frontend setup update" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

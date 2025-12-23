@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:23.0.1 AS builder
+FROM quay.io/keycloak/keycloak:26.1 AS builder
 
 # Enable health and metrics support
 ENV KC_HEALTH_ENABLED=true
@@ -15,7 +15,7 @@ COPY themes/omnishop360 /opt/keycloak/themes/omnishop360
 # Build optimized Keycloak
 RUN /opt/keycloak/bin/kc.sh build
 
-FROM quay.io/keycloak/keycloak:23.0.1
+FROM quay.io/keycloak/keycloak:26.1
 
 # Switch to root temporarily
 USER root

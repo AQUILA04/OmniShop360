@@ -2,49 +2,38 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TenantListComponent } from './tenant-list.component';
 import { TenantService } from '../../services/tenant.service';
 import { of } from 'rxjs';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SharedModule } from '../../../../shared/shared.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 describe('TenantListComponent', () => {
   let component: TenantListComponent;
   let fixture: ComponentFixture<TenantListComponent>;
   let tenantServiceSpy: jasmine.SpyObj<TenantService>;
+  let toastServiceSpy: jasmine.SpyObj<ToastService>;
 
   beforeEach(async () => {
-    tenantServiceSpy = jasmine.createSpyObj('TenantService', ['getTenants', 'deleteTenant', 'updateTenantStatus']);
-    tenantServiceSpy.getTenants.and.returnValue(of({
+    tenantServiceSpy = jasmine.createSpyObj('TenantService', ['getAll', 'delete', 'updateTenantStatus']);
+    tenantServiceSpy.getAll.and.returnValue(of({
       content: [],
       page: { size: 10, number: 0, totalElements: 0, totalPages: 0 }
     }));
 
+    toastServiceSpy = jasmine.createSpyObj('ToastService', ['showSuccess', 'showError']);
+
     await TestBed.configureTestingModule({
       declarations: [TenantListComponent],
       imports: [
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatSnackBarModule,
-        MatDialogModule,
-        MatIconModule,
-        MatMenuModule,
-        MatFormFieldModule,
-        MatInputModule,
-        NoopAnimationsModule,
+        SharedModule,
         RouterTestingModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        NoopAnimationsModule
       ],
       providers: [
-        { provide: TenantService, useValue: tenantServiceSpy }
+        { provide: TenantService, useValue: tenantServiceSpy },
+        { provide: ToastService, useValue: toastServiceSpy }
       ]
     })
     .compileComponents();
@@ -59,6 +48,6 @@ describe('TenantListComponent', () => {
   });
 
   it('should load tenants on init', () => {
-    expect(tenantServiceSpy.getTenants).toHaveBeenCalled();
+    expect(tenantServiceSpy.getAll).toHaveBeenCalled();
   });
 });

@@ -1,0 +1,41 @@
+.form-card {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+
+  h3 {
+    margin-top: 20px;
+    margin-bottom: 16px;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .half-width {
+    width: calc(50% - 8px);
+  }
+
+  mat-card-actions {
+    padding: 16px 0 0 0;
+
+    button {
+      min-width: 100px;
+
+      mat-spinner {
+        display: inline-block;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+<mat-card class="form-card">
+  <mat-card-header>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-subtitle>{{ subtitle }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <ng-container *ngFor="let section of config">
+        <h3 *ngIf="section.title">{{ section.title }}</h3>
+        <div class="form-row">
+          <ng-container *ngFor="let field of section.fields">
+            <mat-form-field appearance="outline" [ngClass]="field.cssClass || 'full-width'" [ngSwitch]="field.type">
+              <mat-label>{{ field.label }}</mat-label>
+
+              <!-- Input Text, Email, Number, Password -->
+              <input *ngSwitchCase="'text'" matInput [formControlName]="field.key" [placeholder]="field.placeholder || ''">
+              <input *ngSwitchCase="'email'" matInput [formControlName]="field.key" [placeholder]="field.placeholder || ''" type="email">
+              <input *ngSwitchCase="'number'" matInput [formControlName]="field.key" [placeholder]="field.placeholder || ''" type="number">
+              <input *ngSwitchCase="'password'" matInput [formControlName]="field.key" [placeholder]="field.placeholder || ''" type="password">
+
+              <!-- Textarea -->
+              <textarea *ngSwitchCase="'textarea'" matInput [formControlName]="field.key" [placeholder]="field.placeholder || ''"></textarea>
+
+              <!-- Select -->
+              <mat-select *ngSwitchCase="'select'" [formControlName]="field.key">
+                <mat-option *ngFor="let opt of field.options" [value]="opt.value">
+                  {{ opt.label }}
+                </mat-option>
+              </mat-select>
+
+              <mat-hint *ngIf="field.hint">{{ field.hint }}</mat-hint>
+              <mat-error *ngIf="form.get(field.key)?.invalid">{{ getErrorMessage(field.key) }}</mat-error>
+            </mat-form-field>
+          </ng-container>
+        </div>
+      </ng-container>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button type="button" [disabled]="isLoading" (click)="onCancel()">{{ cancelLabel }}</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading" (click)="onSubmit()">
+      <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+      <span *ngIf="!isLoading">{{ submitLabel }}</span>
+    </button>
+  </mat-card-actions>
+</mat-card>

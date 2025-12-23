@@ -1,9 +1,10 @@
-import { ApplicationConfig, APP_INITIALIZER } from '@angular/core';
+import { ApplicationConfig, APP_INITIALIZER, importProvidersFrom } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideOAuthClient, OAuthService } from 'angular-oauth2-oidc';
 import { provideToastr } from 'ngx-toastr';
+import { NgxPermissionsModule, NgxPermissionsService } from 'ngx-permissions';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/auth/auth.interceptor';
@@ -23,10 +24,11 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
+    importProvidersFrom(NgxPermissionsModule.forRoot()),
     {
       provide: APP_INITIALIZER,
       useFactory: initializeOAuth,
-      deps: [OAuthService, Router], // Ajout de Router ici
+      deps: [OAuthService, Router, NgxPermissionsService], // Ajout de NgxPermissionsService ici
       multi: true
     }
   ]

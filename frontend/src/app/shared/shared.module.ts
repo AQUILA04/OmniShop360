@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 // Angular Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +19,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // Components
 import { GenericListComponent } from './components/generic-list/generic-list.component';
@@ -38,7 +42,11 @@ const MATERIAL_MODULES = [
   MatSidenavModule,
   MatListModule,
   MatMenuModule,
-  MatSelectModule
+  MatMenuModule,
+  MatSelectModule,
+  MatTabsModule,
+  MatRadioModule,
+  MatCheckboxModule
 ];
 
 const COMPONENTS = [
@@ -53,11 +61,16 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    NgxPermissionsModule.forChild({
+      permissionsIsolate: true,
+      rolesIsolate: true
+    }),
     ...MATERIAL_MODULES
   ],
   exports: [
     CommonModule,
     ReactiveFormsModule,
+    NgxPermissionsModule,
     ...MATERIAL_MODULES,
     ...COMPONENTS
   ]

@@ -1,0 +1,65 @@
+<div class="container mx-auto p-4">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">{{ pageTitle }}</h1>
+        <button mat-button (click)="cancel()">Retour</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Name -->
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Nom de la boutique</mat-label>
+                <input matInput formControlName="name" placeholder="Ex: Boutique Paris Centre">
+                <mat-error *ngIf="form.get('name')?.hasError('required')">Le nom est requis</mat-error>
+            </mat-form-field>
+
+            <!-- Status -->
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Statut</mat-label>
+                <mat-select formControlName="status">
+                    <mat-option value="ACTIVE">Actif</mat-option>
+                    <mat-option value="INACTIVE">Inactif</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Address -->
+            <mat-form-field appearance="outline" class="w-full md:col-span-2">
+                <mat-label>Adresse</mat-label>
+                <input matInput formControlName="address">
+            </mat-form-field>
+
+            <!-- City -->
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Ville</mat-label>
+                <input matInput formControlName="city">
+            </mat-form-field>
+
+            <!-- Postal Code -->
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Code Postal</mat-label>
+                <input matInput formControlName="postalCode">
+            </mat-form-field>
+
+            <!-- Phone -->
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Téléphone</mat-label>
+                <input matInput formControlName="phone">
+            </mat-form-field>
+
+            <!-- Email -->
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Email de contact</mat-label>
+                <input matInput formControlName="email">
+                <mat-error *ngIf="form.get('email')?.hasError('email')">Email invalide</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="flex items-center justify-end mt-6 gap-4">
+            <button mat-button type="button" (click)="cancel()">Annuler</button>
+            <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || isSubmitting">
+                <span *ngIf="!isSubmitting">Enregistrer</span>
+                <span *ngIf="isSubmitting">Enregistrement...</span>
+            </button>
+        </div>
+    </form>
+</div>

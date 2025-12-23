@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 @Component({
     selector: 'app-sidebar',
     standalone: true,
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, NgxPermissionsModule],
     template: `
     <aside class="sidebar">
       <div class="logo">
         <img src="assets/logo.png" alt="OmniShop360" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2Q0YWYzNyIvPjwvc3ZnPg=='"/>
         <span>OmniShop360</span>
       </div>
-      
+
       <nav class="menu">
         <a routerLink="/dashboard" routerLinkActive="active" class="menu-item">
           <i class="icon">🏠</i>
@@ -44,7 +45,7 @@ import { RouterModule } from '@angular/router';
           <i class="icon">🛒</i>
           <span>Orders</span>
         </a>
-        <a routerLink="/tenants" routerLinkActive="active" class="menu-item">
+        <a routerLink="/tenants" routerLinkActive="active" class="menu-item" *ngxPermissionsOnly="['ROLE_superadmin']">
           <i class="icon">👥</i>
           <span>Tenants</span>
         </a>
@@ -64,7 +65,7 @@ import { RouterModule } from '@angular/router';
       width: 250px;
       flex-shrink: 0;
     }
-    
+
     .sidebar {
       height: 100%;
       display: flex;
@@ -81,7 +82,7 @@ import { RouterModule } from '@angular/router';
       font-size: 1.25rem;
       gap: 0.5rem;
       border-bottom: 1px solid rgba(255,255,255,0.1);
-      
+
       img { width: 24px; height: 24px; }
     }
 
@@ -120,7 +121,7 @@ import { RouterModule } from '@angular/router';
       .group-header {
         justify-content: space-between;
       }
-      
+
       .chevron {
         font-size: 0.7rem;
         transition: transform 0.3s;
@@ -133,9 +134,9 @@ import { RouterModule } from '@angular/router';
       overflow: hidden;
       transition: max-height 0.3s ease-out;
       background-color: rgba(0,0,0,0.2);
-      
+
       &.expanded { max-height: 500px; }
-      
+
       .submenu-item {
         padding-left: 3.5rem;
         font-size: 0.9rem;

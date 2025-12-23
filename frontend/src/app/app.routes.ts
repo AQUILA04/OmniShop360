@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './core/layout/main-layout/main-layout.component';
+import { NgxPermissionsGuard } from 'ngx-permissions';
 
 export const routes: Routes = [
   {
@@ -20,7 +21,25 @@ export const routes: Routes = [
       },
       {
         path: 'tenants',
-        loadChildren: () => import('./features/tenant-management/tenant-management.module').then(m => m.TenantManagementModule)
+        loadChildren: () => import('./features/tenant-management/tenant-management.module').then(m => m.TenantManagementModule),
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: ['ROLE_superadmin'],
+            redirectTo: '/dashboard'
+          }
+        }
+      },
+      {
+        path: 'tenant',
+        loadChildren: () => import('./features/tenant-space/tenant-space.module').then(m => m.TenantSpaceModule),
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: ['ROLE_TENANT_ADMIN'],
+            redirectTo: '/dashboard'
+          }
+        }
       }
     ]
   }

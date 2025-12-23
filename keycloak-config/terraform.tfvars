@@ -14,7 +14,7 @@ pos_url      = "http://localhost:4201"
 backend_url  = "http://localhost:8081"
 
 # SMTP Configuration (Optional)
-smtp_host     = "maildev"
+smtp_host     = "host.docker.internal"
 smtp_port     = "1025"
 smtp_from     = "noreply@omnishop360.com"
 smtp_username = ""

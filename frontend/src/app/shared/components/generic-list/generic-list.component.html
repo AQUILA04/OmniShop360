@@ -1,0 +1,128 @@
+<div class="page-container">
+
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>{{ pageTitle }}</h1>
+      <p class="subtitle" *ngIf="resultsLength > 0">{{ resultsLength }} entries found</p>
+    </div>
+
+    <button mat-flat-button color="primary" class="create-btn" (click)="emitAction('create', $any({}))">
+      <mat-icon>add</mat-icon>
+      <span>Create New</span>
+    </button>
+  </div>
+
+  <!-- Controls Section (Search & Filters) -->
+  <div class="controls-bar">
+    <div class="search-container">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input type="text" (keyup)="applyFilter($event)" placeholder="Search..." #input>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-card mat-elevation-z0">
+
+    <!-- Loading State -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-responsive" [class.hidden]="isLoading || (dataSource.data.length === 0 && !input.value)">
+      <table mat-table [dataSource]="dataSource" matSort [matSortActive]="defaultSort.active" [matSortDirection]="defaultSort.direction" matSortDisableClear>
+
+        <ng-container *ngFor="let col of columnsConfig" [matColumnDef]="col.key">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!col.sortable">
+            {{ col.label }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div [ngSwitch]="col.type">
+              <!-- Status Badge -->
+              <span *ngSwitchCase="'status'" class="status-pill" [ngClass]="getFieldValue(col.key, row)?.toLowerCase()">
+                <span class="dot"></span>
+                {{ getFieldValue(col.key, row) }}
+              </span>
+
+              <!-- Date Formats -->
+              <span *ngSwitchCase="'date'" class="text-secondary">
+                {{ getFieldValue(col.key, row) | date: 'mediumDate' }}
+              </span>
+              <span *ngSwitchCase="'datetime'" class="text-secondary">
+                {{ getFieldValue(col.key, row) | date: 'medium' }}
+              </span>
+
+              <!-- Default Text -->
+              <span *ngSwitchDefault class="text-primary">
+                {{ getFieldValue(col.key, row) }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="actions-header"></th>
+          <td mat-cell *matCellDef="let row" class="actions-cell">
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="action-btn">
+              <mat-icon>more_horiz</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="before" class="custom-menu">
+              <button mat-menu-item (click)="emitAction('details', row)">
+                <mat-icon>visibility</mat-icon>
+                <span>View Details</span>
+              </button>
+              <button mat-menu-item (click)="emitAction('edit', row)">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+
+              <mat-divider></mat-divider>
+
+              <ng-container *ngIf="specificActionsTemplate" [ngTemplateOutlet]="specificActionsTemplate" [ngTemplateOutletContext]="{$implicit: row}"></ng-container>
+
+              <button mat-menu-item (click)="emitAction('delete', row)" class="delete-item">
+                <mat-icon color="warn">delete_outline</mat-icon>
+                <span class="text-warn">Delete</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+
+        <!-- No Match State -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length" *ngIf="input.value">
+            <div class="empty-search">
+              <mat-icon>search_off</mat-icon>
+              <p>No results found for "{{input.value}}"</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Empty State (No Data at all) -->
+    <div class="empty-state" *ngIf="!isLoading && dataSource.data.length === 0 && !input.value">
+      <div class="empty-content">
+        <div class="icon-circle">
+          <mat-icon>inbox</mat-icon>
+        </div>
+        <h3>No records found</h3>
+        <p>Get started by creating a new item.</p>
+        <button mat-stroked-button color="primary" (click)="emitAction('create', $any({}))">
+          Create Now
+        </button>
+      </div>
+    </div>
+
+    <mat-paginator [length]="resultsLength"
+                   [pageSize]="10"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   [class.hidden]="dataSource.data.length === 0">
+    </mat-paginator>
+  </div>
+</div>

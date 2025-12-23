@@ -128,22 +128,24 @@ resource "keycloak_openid_client" "frontend" {
   name      = "OmniShop Frontend"
   enabled   = true
 
-  access_type           = "PUBLIC" # Corrigé: était "public"
+  access_type           = "PUBLIC"
   standard_flow_enabled = true
   implicit_flow_enabled = false
-  direct_access_grants_enabled = false
+  direct_access_grants_enabled = true # Enabled for easier testing/dev
 
-  valid_redirect_uris = [
+  valid_redirect_uris = compact([
+    "http://localhost:4200/",
     "http://localhost:4200/*",
     "https://*.omnishop360.com/*",
     var.frontend_url != "" ? "${var.frontend_url}/*" : ""
-  ]
+  ])
 
-  web_origins = [
+  web_origins = compact([
+    "+", # Allow all redirect URIs
     "http://localhost:4200",
     "https://*.omnishop360.com",
     var.frontend_url != "" ? var.frontend_url : ""
-  ]
+  ])
 
   login_theme = "omnishop360"
 }
@@ -155,22 +157,24 @@ resource "keycloak_openid_client" "pos" {
   name      = "OmniShop POS"
   enabled   = true
 
-  access_type           = "PUBLIC" # Corrigé: était "public"
+  access_type           = "PUBLIC"
   standard_flow_enabled = true
   implicit_flow_enabled = false
-  direct_access_grants_enabled = false
+  direct_access_grants_enabled = true
 
-  valid_redirect_uris = [
+  valid_redirect_uris = compact([
+    "http://localhost:4201/",
     "http://localhost:4201/*",
     "https://*.omnishop360.com/*",
     var.pos_url != "" ? "${var.pos_url}/*" : ""
-  ]
+  ])
 
-  web_origins = [
+  web_origins = compact([
+    "+",
     "http://localhost:4201",
     "https://*.omnishop360.com",
     var.pos_url != "" ? var.pos_url : ""
-  ]
+  ])
 
   login_theme = "omnishop360"
 }

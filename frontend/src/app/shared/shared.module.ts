@@ -11,18 +11,17 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 
-// Components (to be created)
-// import { DataTableComponent } from './components/data-table/data-table.component';
-// import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
-// import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+// Components
+import { GenericListComponent } from './components/generic-list/generic-list.component';
+import { GenericFormComponent } from './components/generic-form/generic-form.component';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -33,20 +32,18 @@ const MATERIAL_MODULES = [
   MatPaginatorModule,
   MatSortModule,
   MatProgressSpinnerModule,
-  MatSnackBarModule,
   MatDialogModule,
   MatIconModule,
   MatToolbarModule,
   MatSidenavModule,
   MatListModule,
-  MatMenuModule
+  MatMenuModule,
+  MatSelectModule
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const COMPONENTS: any[] = [
-  // DataTableComponent,
-  // LoadingSpinnerComponent,
-  // ConfirmationDialogComponent
+const COMPONENTS = [
+  GenericListComponent,
+  GenericFormComponent
 ];
 
 @NgModule({

@@ -59,17 +59,17 @@
               <a tabindex="5" href="${url.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a>
           </div>
       </#if>
+
+      <script>
+        function togglePassword() {
+          var x = document.getElementById("password");
+          var icon = document.getElementById("eye-icon");
+          if (x.type === "password") {
+            x.type = "text";
+          } else {
+            x.type = "password";
+          }
+        }
+      </script>
     </#if>
 </@layout.registrationLayout>
-
-<script>
-function togglePassword() {
-  var x = document.getElementById("password");
-  var icon = document.getElementById("eye-icon");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
-  }
-}
-</script>

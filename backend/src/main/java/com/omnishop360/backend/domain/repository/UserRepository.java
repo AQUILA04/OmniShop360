@@ -23,5 +23,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.tenant.id = :tenantId AND u.deleted = false")
     long countByTenantId(@Param("tenantId") UUID tenantId);
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.shop.id = :shopId AND u.deleted = false")
+    long countByShopId(@Param("shopId") UUID shopId);
 }
 

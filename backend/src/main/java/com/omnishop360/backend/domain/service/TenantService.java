@@ -10,6 +10,7 @@ import com.omnishop360.backend.web.dto.AdminUserResponse;
 import com.omnishop360.backend.web.dto.CreateTenantRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.TenantResponse;
+import com.omnishop360.backend.web.dto.UpdateTenantPricingPolicyRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class TenantService {
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
     private final KeycloakAdapter keycloakAdapter;
+    private final UserContextService userContextService;
 
     @Transactional
     public TenantResponse createTenant(CreateTenantRequest request) {
@@ -53,6 +55,8 @@ public class TenantService {
                 request.getAdminLastName(),
                 "tenant_admin"
         );
+
+        keycloakAdapter.setUserAttribute(keycloakId, "tenant_id", tenant.getId().toString());
 
         User admin = new User();
         admin.setTenant(tenant);
@@ -134,6 +138,21 @@ public class TenantService {
             }
         }
         return code;
+    }
+
+    @Transactional
+    public TenantResponse updatePricingPolicy(UpdateTenantPricingPolicyRequest request) {
+        UUID tenantId = userContextService.getCurrentUserTenantId();
+        log.info("Updating pricing policy for tenant: {} to {}", tenantId, request.getPricingPolicy());
+
+        Tenant tenant = tenantRepository.findByIdAndDeletedFalse(tenantId)
+                .orElseThrow(() -> new EntityNotFoundException("Tenant not found with id: " + tenantId));
+
+        tenant.setPricingPolicy(request.getPricingPolicy());
+        tenant = tenantRepository.save(tenant);
+
+        log.info("Pricing policy updated successfully for tenant: {}", tenantId);
+        return TenantResponse.from(tenant);
     }
 
 }

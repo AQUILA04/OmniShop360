@@ -129,6 +129,11 @@ Avant de merger :
 | Fichier | Version | Description | Status |
 |:---|:---:|:---|:---:|
 | `tenant-controller.v1.md` | 1.0.0 | Gestion des Tenants | 🟢 Actif |
+| `tenant-controller.v1.1.md` | 1.1.0 | Gestion des Tenants (Update, Delete, Status) | 🟢 Actif |
+| `tenant-controller.v1.2.md` | 1.2.0 | Gestion des Tenants (Pricing Policy) | 🟢 Actif |
+| `shop-controller.v1.md` | 1.0.0 | Gestion des Boutiques | 🟢 Actif |
+| `product-controller.v1.md` | 1.0.0 | Gestion du Catalogue de Produits | 🟢 Actif |
+| `category-controller.v1.md` | 1.0.0 | Gestion des Catégories de Produits | 🟢 Actif |
 
 ---
 
@@ -141,4 +146,4 @@ Avant de merger :
 ---
 
 **Maintenu par :** Scrum Master  
-**Dernière mise à jour :** 2025-12-08
+**Dernière mise à jour :** 2025-12-09

@@ -149,5 +149,51 @@ public class KeycloakAdapter {
             throw new RuntimeException("Error sending password reset email: " + e.getMessage(), e);
         }
     }
+
+    public void setUserAttribute(String keycloakId, String attributeName, String attributeValue) {
+        try {
+            UsersResource usersResource = getRealmResource().users();
+            UserResource userResource = usersResource.get(keycloakId);
+            UserRepresentation user = userResource.toRepresentation();
+            
+            if (user.getAttributes() == null) {
+                user.setAttributes(new java.util.HashMap<>());
+            }
+            user.getAttributes().put(attributeName, Collections.singletonList(attributeValue));
+            userResource.update(user);
+            
+            log.info("Attribute {} set to {} for user: {}", attributeName, attributeValue, keycloakId);
+        } catch (Exception e) {
+            log.error("Error setting attribute {} for user: {}", attributeName, keycloakId, e);
+            throw new RuntimeException("Error setting user attribute: " + e.getMessage(), e);
+        }
+    }
+
+    public UserRepresentation getUserById(String keycloakId) {
+        try {
+            UsersResource usersResource = getRealmResource().users();
+            UserResource userResource = usersResource.get(keycloakId);
+            return userResource.toRepresentation();
+        } catch (Exception e) {
+            log.error("Error getting user from Keycloak: {}", keycloakId, e);
+            throw new RuntimeException("Error getting user from Keycloak: " + e.getMessage(), e);
+        }
+    }
+
+    public String getUserAttribute(String keycloakId, String attributeName) {
+        try {
+            UserRepresentation user = getUserById(keycloakId);
+            if (user.getAttributes() != null && user.getAttributes().containsKey(attributeName)) {
+                List<String> values = user.getAttributes().get(attributeName);
+                if (values != null && !values.isEmpty()) {
+                    return values.get(0);
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            log.error("Error getting attribute {} for user: {}", attributeName, keycloakId, e);
+            return null;
+        }
+    }
 }
 

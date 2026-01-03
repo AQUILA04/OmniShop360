@@ -28,5 +28,9 @@ public class User extends BaseEntity {
 
     @Column(name = "active", nullable = false)
     private Boolean active = true;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 }
 

@@ -4,71 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint1: update changelog">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/Category.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/Product.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/ProductVariant.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/Shop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/repository/CategoryRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/repository/ProductRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/repository/ShopRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/CategoryService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ProductService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ShopService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/UserContextService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/SecurityUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/CategoryController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ProductController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ShopController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/CategoryResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/CreateCategoryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/CreateProductRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/CreateShopAdminRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/CreateShopRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/ProductResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/ProductVariantRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/ProductVariantResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/ShopResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateTenantPricingPolicyRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/db/migration/V3__add_shop_id_to_users.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/db/migration/V4__add_missing_columns_to_product_variants.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/category-controller.v1.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/product-controller.v1.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/shop-controller.v1.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/tenant-controller.v1.2.md" afterDir="false" />
+    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint2: US-005 &amp; US-006 : Gestion des Boutiques">
       <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/keycloak/keycloak/5.5.0/windows_amd64/terraform-provider-keycloak_v5.5.0.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/application/dto/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/application/dto/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/application/usecase/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/application/usecase/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/repository/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/repository/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/TenantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/TenantService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/adapter/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/adapter/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/adapter/KeycloakAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/adapter/KeycloakAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/CacheConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/CacheConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/OpenApiConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/OpenApiConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/persistence/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/persistence/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/HealthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/HealthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/TenantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/TenantController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/TenantResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/TenantResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/exception/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/exception/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/exception/GlobalExceptionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-dev.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/TenantServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/TenantServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/deploy/dev/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/deploy/dev/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/CHANGELOG.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/mrparkers/keycloak/4.4.0/windows_amd64/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfstate" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfstate.backup" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate.backup" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keycloak/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,6 +106,7 @@
     "Docker.dev.keycloak: Compose Deployment.executor": "Run",
     "Docker.dev: Compose Deployment (1).executor": "Run",
     "Docker.dev: Compose Deployment.executor": "Run",
+    "Maven.omnishop-backend [verify].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -306,7 +253,7 @@
       <workItem from="1765823564220" duration="5661000" />
       <workItem from="1766400379287" duration="9660000" />
       <workItem from="1766432664871" duration="11166000" />
-      <workItem from="1767439304310" duration="7140000" />
+      <workItem from="1767439304310" duration="9377000" />
     </task>
     <task id="LOCAL-00001">
       <option name="closed" value="true" />
@@ -340,7 +287,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766472499384</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="sprint2: US-005 &amp; US-006 : Gestion des Boutiques">
+      <option name="closed" value="true" />
+      <created>1767449882811</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1767449882811</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -351,7 +306,8 @@
     <MESSAGE value="frontend setup update" />
     <MESSAGE value="sprint1: complete tenant management, test with backend, setup Generic service and base component for DRY architecture. fix keycloak integration." />
     <MESSAGE value="sprint1: update changelog" />
-    <option name="LAST_COMMIT_MESSAGE" value="sprint1: update changelog" />
+    <MESSAGE value="sprint2: US-005 &amp; US-006 : Gestion des Boutiques" />
+    <option name="LAST_COMMIT_MESSAGE" value="sprint2: US-005 &amp; US-006 : Gestion des Boutiques" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint1: update changelog">
-      <change afterPath="$PROJECT_DIR$/docs/sprint-2-stories/US07.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/sprints/sprint-2-backlog.md" afterDir="false" />
+    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint2: US-005 &amp; US-006 : Gestion des Boutiques">
+      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/keycloak/keycloak/5.5.0/windows_amd64/terraform-provider-keycloak_v5.5.0.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/TenantServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/TenantServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/dev/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/deploy/dev/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfstate" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfstate.backup" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate.backup" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +26,11 @@
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -94,6 +106,7 @@
     "Docker.dev.keycloak: Compose Deployment.executor": "Run",
     "Docker.dev: Compose Deployment (1).executor": "Run",
     "Docker.dev: Compose Deployment.executor": "Run",
+    "Maven.omnishop-backend [verify].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -106,7 +119,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "Spring Boot.OmniShop360BackendApplication.executor": "Debug",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "feature/add-theme-and-keycloak-frontend",
+    "git-widget-placeholder": "feature/contract-add-gestion-des-Boutiques-et-Catalogue-Maître",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360/keycloak/themes/omnishop360/login/resources/img",
@@ -116,10 +129,13 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\Users\\kahonsu\\Documents\\GitHub\\OmniShop360\\frontend\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "C:\\code\\OmniShop360\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1768762816556" />
     <option name="spentUsd" value="0.07415625" />
@@ -139,7 +155,7 @@
       <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\keycloak\themes\omnishop360\login\resources\img" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.dev.keycloak: Compose Deployment">
+  <component name="RunManager" selected="Spring Boot.OmniShop360BackendApplication">
     <configuration name="OmniShop360BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <option name="ACTIVE_PROFILES" value="dev" />
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
@@ -207,9 +223,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.OmniShop360BackendApplication" />
         <item itemvalue="Docker.dev.keycloak: Compose Deployment" />
         <item itemvalue="Docker.dev: Compose Deployment (1)" />
-        <item itemvalue="Spring Boot.OmniShop360BackendApplication" />
         <item itemvalue="Docker.dev: Compose Deployment" />
       </list>
     </recent_temporary>
@@ -217,8 +233,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.138" />
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
       </set>
     </attachedChunks>
   </component>
@@ -237,6 +253,7 @@
       <workItem from="1765823564220" duration="5661000" />
       <workItem from="1766400379287" duration="9660000" />
       <workItem from="1766432664871" duration="11166000" />
+      <workItem from="1767439304310" duration="9377000" />
     </task>
     <task id="LOCAL-00001">
       <option name="closed" value="true" />
@@ -270,7 +287,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766472499384</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="sprint2: US-005 &amp; US-006 : Gestion des Boutiques">
+      <option name="closed" value="true" />
+      <created>1767449882811</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1767449882811</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -281,7 +306,8 @@
     <MESSAGE value="frontend setup update" />
     <MESSAGE value="sprint1: complete tenant management, test with backend, setup Generic service and base component for DRY architecture. fix keycloak integration." />
     <MESSAGE value="sprint1: update changelog" />
-    <option name="LAST_COMMIT_MESSAGE" value="sprint1: update changelog" />
+    <MESSAGE value="sprint2: US-005 &amp; US-006 : Gestion des Boutiques" />
+    <option name="LAST_COMMIT_MESSAGE" value="sprint2: US-005 &amp; US-006 : Gestion des Boutiques" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

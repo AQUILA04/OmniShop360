@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -126,6 +127,33 @@ public class GlobalExceptionHandler {
                 .error("Bad Request")
                 .message("Validation failed")
                 .errors(fieldErrors)
+                .path(request.getDescription(false).replace("uri=", ""))
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException ex, WebRequest request) {
+        log.warn("Invalid JSON format: {}", ex.getMessage());
+
+        String message = "Invalid JSON format";
+        if (ex.getMessage() != null) {
+            if (ex.getMessage().contains("Unexpected character")) {
+                message = "Invalid JSON format. Please check your request body syntax.";
+            } else if (ex.getMessage().contains("Cannot deserialize")) {
+                message = "Invalid data format. Please check the field types in your request.";
+            } else {
+                message = "Invalid JSON format: " + ex.getMessage();
+            }
+        }
+
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Bad Request")
+                .message(message)
                 .path(request.getDescription(false).replace("uri=", ""))
                 .build();
 

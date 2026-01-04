@@ -22,6 +22,7 @@ public class TenantResponse {
     private UUID id;
     private String companyName;
     private String contactEmail;
+    private String pricingPolicy;
     private TenantStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -40,6 +41,7 @@ public class TenantResponse {
                 .id(tenant.getId())
                 .companyName(tenant.getCompanyName())
                 .contactEmail(tenant.getContactEmail())
+                .pricingPolicy(tenant.getPricingPolicy())
                 .status(tenant.getStatus())
                 .createdAt(tenant.getCreatedAt())
                 .updatedAt(tenant.getUpdatedAt());

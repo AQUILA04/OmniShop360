@@ -5,9 +5,11 @@ import com.omnishop360.backend.domain.entity.TenantStatus;
 import com.omnishop360.backend.domain.entity.User;
 import com.omnishop360.backend.domain.repository.TenantRepository;
 import com.omnishop360.backend.domain.repository.UserRepository;
+import com.omnishop360.backend.domain.service.UserContextService;
 import com.omnishop360.backend.infrastructure.adapter.KeycloakAdapter;
 import com.omnishop360.backend.web.dto.CreateTenantRequest;
 import com.omnishop360.backend.web.dto.TenantResponse;
+import com.omnishop360.backend.web.dto.UpdateTenantPricingPolicyRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,9 @@ class TenantServiceTest {
 
     @Mock
     private KeycloakAdapter keycloakAdapter;
+
+    @Mock
+    private UserContextService userContextService;
 
     @InjectMocks
     private TenantService tenantService;
@@ -271,6 +276,22 @@ class TenantServiceTest {
 
         assertNotNull(response);
         verify(tenantRepository, atLeastOnce()).existsByCode(anyString());
+    }
+
+    @Test
+    @DisplayName("Should update pricing policy successfully")
+    void shouldUpdatePricingPolicySuccessfully() {
+        UUID tenantId = savedTenant.getId();
+        UpdateTenantPricingPolicyRequest request = new UpdateTenantPricingPolicyRequest("LOCAL_ALLOWED");
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(savedTenant));
+        when(tenantRepository.save(any(Tenant.class))).thenReturn(savedTenant);
+
+        TenantResponse response = tenantService.updatePricingPolicy(request);
+
+        assertNotNull(response);
+        verify(tenantRepository).save(any(Tenant.class));
     }
 }
 

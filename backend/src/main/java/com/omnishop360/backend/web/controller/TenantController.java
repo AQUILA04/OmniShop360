@@ -4,6 +4,7 @@ import com.omnishop360.backend.domain.service.TenantService;
 import com.omnishop360.backend.web.dto.CreateTenantRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.TenantResponse;
+import com.omnishop360.backend.web.dto.UpdateTenantPricingPolicyRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -87,6 +88,21 @@ public class TenantController {
             @PathVariable UUID tenantId) {
         log.debug("Fetching tenant: {}", tenantId);
         TenantResponse response = tenantService.getTenantById(tenantId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/pricing-policy")
+    @PreAuthorize("hasRole('tenant_admin')")
+    @Operation(summary = "Mettre à jour la politique de prix", description = "Permet au Tenant Admin de mettre à jour la politique de prix (GLOBAL_ENFORCED ou LOCAL_ALLOWED)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Politique de prix mise à jour avec succès"),
+            @ApiResponse(responseCode = "400", description = "Données invalides"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes")
+    })
+    public ResponseEntity<TenantResponse> updatePricingPolicy(
+            @Valid @RequestBody UpdateTenantPricingPolicyRequest request) {
+        log.info("Updating pricing policy: {}", request.getPricingPolicy());
+        TenantResponse response = tenantService.updatePricingPolicy(request);
         return ResponseEntity.ok(response);
     }
 }

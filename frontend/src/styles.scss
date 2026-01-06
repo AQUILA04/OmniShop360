@@ -21,3 +21,15 @@ $my-theme: mat.define-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Global Responsive Adjustments */
+@media (max-width: 600px) {
+  .mat-mdc-dialog-container {
+    padding: 16px !important;
+  }
+
+  .mat-mdc-dialog-surface {
+    max-width: 95vw !important;
+    width: 95vw !important;
+  }
+}

@@ -25,6 +25,7 @@ replay_pid*
 
 # IDEs
 .idea/
+.idea
 .vscode/
 *.swp
 *.swo

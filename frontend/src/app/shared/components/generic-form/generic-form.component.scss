@@ -39,3 +39,26 @@
     }
   }
 }
+
+// Mobile Responsive Styles
+@media (max-width: 600px) {
+  .form-card {
+    margin: 10px;
+    padding: 16px;
+
+    .half-width {
+      width: 100%;
+    }
+
+    mat-card-actions {
+      flex-direction: column-reverse;
+      gap: 10px;
+      align-items: stretch;
+
+      button {
+        width: 100%;
+        margin-left: 0 !important;
+      }
+    }
+  }
+}

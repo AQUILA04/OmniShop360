@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { LayoutService } from '../layout.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -12,6 +13,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
       <div class="logo">
         <img src="assets/logo.png" alt="OmniShop360" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2Q0YWYzNyIvPjwvc3ZnPg=='"/>
         <span>OmniShop360</span>
+        <button class="close-btn" (click)="closeSidebar()">✕</button>
       </div>
 
       <nav class="menu">
@@ -82,8 +84,20 @@ import { NgxPermissionsModule } from 'ngx-permissions';
       font-size: 1.25rem;
       gap: 0.5rem;
       border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: relative;
 
       img { width: 24px; height: 24px; }
+    }
+
+    .close-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #94A3B8;
+      font-size: 1.2rem;
+      position: absolute;
+      right: 1rem;
+      cursor: pointer;
     }
 
     .menu {
@@ -142,8 +156,19 @@ import { NgxPermissionsModule } from 'ngx-permissions';
         font-size: 0.9rem;
       }
     }
+
+    @media (max-width: 768px) {
+      .close-btn {
+        display: block;
+      }
+    }
   `]
 })
 export class SidebarComponent {
     toggleSample = true; // Open by default for visibility
+    private layoutService = inject(LayoutService);
+
+    closeSidebar() {
+      this.layoutService.closeSidebar();
+    }
 }

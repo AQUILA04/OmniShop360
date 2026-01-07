@@ -5,10 +5,10 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 import { LayoutService } from '../layout.service';
 
 @Component({
-    selector: 'app-sidebar',
-    standalone: true,
-    imports: [CommonModule, RouterModule, NgxPermissionsModule],
-    template: `
+  selector: 'app-sidebar',
+  standalone: true,
+  imports: [CommonModule, RouterModule, NgxPermissionsModule],
+  template: `
     <aside class="sidebar">
       <div class="logo">
         <img src="assets/logo.png" alt="OmniShop360" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2Q0YWYzNyIvPjwvc3ZnPg=='"/>
@@ -39,6 +39,29 @@ import { LayoutService } from '../layout.service';
           </div>
         </div>
 
+        <!-- Tenant Admin Group -->
+        <div class="menu-group" *ngxPermissionsOnly="['ROLE_TENANT_ADMIN', 'ROLE_superadmin']">
+          <div class="menu-item group-header" (click)="toggleTenantAdmin = !toggleTenantAdmin" [class.active-group]="toggleTenantAdmin">
+            <i class="icon">🏢</i>
+            <span>Gestion Tenant</span>
+            <i class="chevron" [class.expanded]="toggleTenantAdmin">▼</i>
+          </div>
+          <div class="submenu" [class.expanded]="toggleTenantAdmin">
+            <a routerLink="/tenant/shops" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Boutiques</span>
+            </a>
+            <a routerLink="/tenant/categories" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Catégories</span>
+            </a>
+            <a routerLink="/tenant/catalog" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Catalogue Maître</span>
+            </a>
+            <a routerLink="/tenant/settings" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Paramètres</span>
+            </a>
+          </div>
+        </div>
+
         <a routerLink="/products" routerLinkActive="active" class="menu-item">
           <i class="icon">📦</i>
           <span>Products</span>
@@ -58,7 +81,7 @@ import { LayoutService } from '../layout.service';
       </nav>
     </aside>
   `,
-    styles: [`
+  styles: [`
     :host {
       display: block;
       height: 100vh;
@@ -165,10 +188,11 @@ import { LayoutService } from '../layout.service';
   `]
 })
 export class SidebarComponent {
-    toggleSample = true; // Open by default for visibility
-    private layoutService = inject(LayoutService);
+  toggleSample = true; // Open by default for visibility
+  toggleTenantAdmin = true; // Open by default for Tenant Admin
+  private layoutService = inject(LayoutService);
 
-    closeSidebar() {
-      this.layoutService.closeSidebar();
-    }
+  closeSidebar() {
+    this.layoutService.closeSidebar();
+  }
 }

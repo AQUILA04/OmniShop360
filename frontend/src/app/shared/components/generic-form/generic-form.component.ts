@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { FormSectionConfig } from '../../abstractions/form-config.model';
+import { FormSectionConfig, FormFieldConfig } from '../../abstractions/form-config.model';
+export { FormFieldConfig };
 
 @Component({
   selector: 'app-generic-form',
@@ -11,10 +12,16 @@ export class GenericFormComponent implements OnInit, OnChanges {
   @Input() config: FormSectionConfig[] = [];
   @Input() title: string = '';
   @Input() subtitle: string = '';
-  @Input() submitLabel: string = 'Save';
-  @Input() cancelLabel: string = 'Cancel';
+  @Input() submitLabel: string = 'Enregistrer';
+  @Input() cancelLabel: string = 'Annuler';
   @Input() isLoading: boolean = false;
   @Input() formGroup?: FormGroup;
+
+  // New Design Inputs
+  @Input() mode: 'card' | 'page' = 'card'; // 'page' centers content and moves title outside
+  @Input() showBackButton: boolean = false;
+  @Input() showFooter: boolean = true;
+  @Input() actionsAlignment: 'end' | 'space-between' = 'space-between';
 
   @Output() formSubmit = new EventEmitter<any>();
   @Output() formCancel = new EventEmitter<void>();

@@ -6,7 +6,7 @@ export interface Shop {
     postalCode: string;
     phone: string;
     email: string;
-    status: 'ACTIVE' | 'INACTIVE';
+    active: boolean;
     userCount?: number;
     tenantId: string;
     createdAt?: string;

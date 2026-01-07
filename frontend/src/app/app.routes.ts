@@ -36,7 +36,7 @@ export const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
-            only: ['ROLE_TENANT_ADMIN'],
+            only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
             redirectTo: '/dashboard'
           }
         }

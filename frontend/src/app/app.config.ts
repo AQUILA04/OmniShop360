@@ -24,7 +24,10 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
-    importProvidersFrom(NgxPermissionsModule.forRoot()),
+    importProvidersFrom(NgxPermissionsModule.forRoot({
+      permissionsIsolate: false,
+      rolesIsolate: false
+    })),
     {
       provide: APP_INITIALIZER,
       useFactory: initializeOAuth,

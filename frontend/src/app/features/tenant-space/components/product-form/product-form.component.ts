@@ -5,9 +5,14 @@ import { ProductService } from '../../services/product.service';
 import { FormArray, Validators, FormGroup, FormControl } from '@angular/forms';
 import { NgxPermissionsService } from 'ngx-permissions';
 
+import { CategoryService } from '../../services/category.service';
+import { CategoryResponse } from '../../models/category.model';
+import { Observable, map } from 'rxjs';
+
 @Component({
     selector: 'app-product-form',
     templateUrl: './product-form.component.html',
+    styleUrls: ['./product-form.component.scss'],
     standalone: false
 })
 export class ProductFormComponent extends BaseFormComponent<Product> {
@@ -16,22 +21,29 @@ export class ProductFormComponent extends BaseFormComponent<Product> {
     // Pricing Security (US-008)
     canSeePurchasePrice = false;
 
+    categories$: Observable<CategoryResponse[]>;
+
     constructor(
         protected productService: ProductService,
-        private permissionsService: NgxPermissionsService
+        private permissionsService: NgxPermissionsService,
+        private categoryService: CategoryService // Injected
     ) {
         super(productService);
         // Determine if user can see purchase price
         this.permissionsService.hasPermission('ROLE_TENANT_ADMIN').then((has: boolean) => {
             this.canSeePurchasePrice = has;
         });
+
+        this.categories$ = this.categoryService.getAll().pipe(
+            map(response => response.content)
+        ); // Load categories adapted from PagedResponse
     }
 
     initForm(): void {
         this.form = this.fb.group({
             name: ['', Validators.required],
             sku: ['', Validators.required],
-            category: ['', Validators.required],
+            categoryId: ['', Validators.required], // Changed from 'category' to 'categoryId'
             description: [''],
 
             // Pricing

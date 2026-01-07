@@ -41,7 +41,7 @@ export function initializeOAuth(oauthService: OAuthService, router: Router, perm
           loadPermissions(oauthService, permissionsService);
           // Redirection vers le dashboard si on est à la racine
           if (router.url === '/' || router.url === '/index.html') {
-             router.navigate(['/dashboard']);
+            router.navigate(['/dashboard']);
           }
         } else {
           console.log('OAuth: No valid token found. Starting login flow if needed...');
@@ -56,15 +56,31 @@ export function initializeOAuth(oauthService: OAuthService, router: Router, perm
 }
 
 function loadPermissions(oauthService: OAuthService, permissionsService: NgxPermissionsService) {
-  const claims: any = oauthService.getIdentityClaims();
-  if (claims) {
-    // Keycloak realm roles
-    const realmRoles = claims.realm_access?.roles || [];
-    // Keycloak resource roles (if needed)
-    // const resourceRoles = claims.resource_access?.['omnishop-frontend']?.roles || [];
+  try {
+    const accessToken = oauthService.getAccessToken();
+    if (!accessToken) {
+      console.warn('No access token available');
+      return;
+    }
 
-    const roles = [...realmRoles];
+    // Decode the JWT access token to get the payload
+    const base64Url = accessToken.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    const payload = JSON.parse(jsonPayload);
+    console.log('Access Token Payload:', payload);
+
+    // Extract Keycloak realm roles from access token
+    const realmRoles = payload.realm_access?.roles || [];
+
+    // Add ROLE_ prefix and normalize to uppercase for ngx-permissions
+    const roles = [...realmRoles].map(role => `ROLE_${role.toUpperCase()}`);
     console.log('Loading permissions:', roles);
     permissionsService.loadPermissions(roles);
+  } catch (error) {
+    console.error('Error loading permissions:', error);
   }
 }

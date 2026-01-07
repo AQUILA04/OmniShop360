@@ -14,8 +14,8 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
             permissions: {
-                only: ['ROLE_TENANT_ADMIN'],
-                redirectTo: '/login'
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
+                redirectTo: '/dashboard'
             }
         }
     },
@@ -25,7 +25,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
             permissions: {
-                only: ['ROLE_TENANT_ADMIN'],
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
                 redirectTo: '/login'
             }
         }
@@ -36,7 +36,19 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
             permissions: {
-                only: ['ROLE_TENANT_ADMIN'],
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
+                redirectTo: '/login'
+            }
+        }
+    },
+    {
+        path: 'shops/details/:id',
+        component: ShopFormComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+            readOnly: true,
+            permissions: {
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
                 redirectTo: '/login'
             }
         }
@@ -47,7 +59,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
             permissions: {
-                only: ['ROLE_TENANT_ADMIN'],
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
                 redirectTo: '/login'
             }
         }
@@ -58,7 +70,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
             permissions: {
-                only: ['ROLE_TENANT_ADMIN'],
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
                 redirectTo: '/login'
             }
         }
@@ -69,10 +81,25 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
             permissions: {
-                only: ['ROLE_TENANT_ADMIN'],
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
                 redirectTo: '/login'
             }
         }
+    },
+    {
+        path: 'categories',
+        loadComponent: () => import('./components/category-list/category-list.component').then(m => m.CategoryListComponent),
+        data: { title: 'Catégories' }
+    },
+    {
+        path: 'categories/create',
+        loadComponent: () => import('./components/category-form/category-form.component').then(m => m.CategoryFormComponent),
+        data: { title: 'Nouvelle catégorie' }
+    },
+    {
+        path: 'categories/:id',
+        loadComponent: () => import('./components/category-form/category-form.component').then(m => m.CategoryFormComponent),
+        data: { title: 'Modifier la catégorie' }
     },
     {
         path: 'settings',
@@ -80,7 +107,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
             permissions: {
-                only: ['ROLE_TENANT_ADMIN'],
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
                 redirectTo: '/login'
             }
         }

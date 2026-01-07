@@ -13,7 +13,7 @@ const routes: Routes = [
     data: {
       permissions: {
         only: ['ROLE_superadmin'],
-        redirectTo: '/login'
+        redirectTo: '/dashboard'
       }
     }
   },
@@ -24,7 +24,7 @@ const routes: Routes = [
     data: {
       permissions: {
         only: ['ROLE_superadmin'],
-        redirectTo: '/login'
+        redirectTo: '/dashboard'
       }
     }
   },
@@ -35,7 +35,7 @@ const routes: Routes = [
     data: {
       permissions: {
         only: ['ROLE_superadmin'],
-        redirectTo: '/login'
+        redirectTo: '/dashboard'
       }
     }
   },
@@ -46,7 +46,7 @@ const routes: Routes = [
     data: {
       permissions: {
         only: ['ROLE_superadmin'],
-        redirectTo: '/login'
+        redirectTo: '/dashboard'
       }
     }
   },

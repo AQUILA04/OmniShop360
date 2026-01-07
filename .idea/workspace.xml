@@ -4,17 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint1: update changelog">
-      <change afterPath="$PROJECT_DIR$/frontend/src/app/core/layout/layout.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint2: gestion des boutiques et produits (front)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/core/layout/header/header.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/core/layout/header/header.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/core/layout/main-layout/main-layout.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/core/layout/main-layout/main-layout.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/core/auth/auth.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/core/auth/auth.config.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/core/layout/sidebar/sidebar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/core/layout/sidebar/sidebar.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/dashboard/dashboard.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/dashboard/dashboard.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/home/home.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/home/home.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-management/tenant-management-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-management/tenant-management-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-list/shop-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-list/shop-list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/models/shop.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/models/shop.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/product.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/product.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/shop.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/shop.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/tenant-settings.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/tenant-settings.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/tenant-space-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/tenant-space-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/abstractions/form-config.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/abstractions/form-config.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/shared.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/shared.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -147,7 +161,7 @@
       <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\keycloak\themes\omnishop360\login\resources\img" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.dev.keycloak: Compose Deployment">
+  <component name="RunManager" selected="Spring Boot.OmniShop360BackendApplication">
     <configuration name="OmniShop360BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <option name="ACTIVE_PROFILES" value="dev" />
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
@@ -215,10 +229,10 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Docker.dev.keycloak: Compose Deployment" />
-        <item itemvalue="Docker.dev: Compose Deployment (1)" />
         <item itemvalue="Spring Boot.OmniShop360BackendApplication" />
         <item itemvalue="Docker.dev: Compose Deployment" />
+        <item itemvalue="Docker.dev.keycloak: Compose Deployment" />
+        <item itemvalue="Docker.dev: Compose Deployment (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -248,6 +262,8 @@
       <workItem from="1766490720579" duration="643000" />
       <workItem from="1766513512191" duration="3758000" />
       <workItem from="1767454547403" duration="4504000" />
+      <workItem from="1767682524633" duration="7667000" />
+      <workItem from="1767764823177" duration="2044000" />
     </task>
     <task id="LOCAL-00001">
       <option name="closed" value="true" />
@@ -281,7 +297,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766472499384</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="sprint2: gestion des boutiques et produits (front)">
+      <option name="closed" value="true" />
+      <created>1767682702904</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1767682702904</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,7 +316,8 @@
     <MESSAGE value="frontend setup update" />
     <MESSAGE value="sprint1: complete tenant management, test with backend, setup Generic service and base component for DRY architecture. fix keycloak integration." />
     <MESSAGE value="sprint1: update changelog" />
-    <option name="LAST_COMMIT_MESSAGE" value="sprint1: update changelog" />
+    <MESSAGE value="sprint2: gestion des boutiques et produits (front)" />
+    <option name="LAST_COMMIT_MESSAGE" value="sprint2: gestion des boutiques et produits (front)" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

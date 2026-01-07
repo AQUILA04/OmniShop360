@@ -5,8 +5,8 @@ import { ShopService } from '../../services/shop.service';
 import { ColumnConfig } from '../../../../shared/abstractions/column-config.model';
 
 @Component({
-    selector: 'app-shop-list',
-    template: `
+  selector: 'app-shop-list',
+  template: `
     <app-generic-list
       [pageTitle]="pageTitle"
       [isLoading]="isLoading"
@@ -19,19 +19,24 @@ import { ColumnConfig } from '../../../../shared/abstractions/column-config.mode
       (action)="onAction($event)">
     </app-generic-list>
   `,
-    standalone: false
+  standalone: false
 })
 export class ShopListComponent extends BaseListComponent<Shop> {
-    pageTitle = 'Gestion des Boutiques';
+  pageTitle = 'Gestion des Boutiques';
 
-    columnsConfig: ColumnConfig[] = [
-        { key: 'name', label: 'Nom', sortable: true },
-        { key: 'city', label: 'Ville', sortable: true },
-        { key: 'status', label: 'Statut', type: 'status' },
-        { key: 'userCount', label: 'Staff', type: 'text', sortable: false }
-    ];
+  columnsConfig: ColumnConfig[] = [
+    { key: 'name', label: 'Nom', sortable: true },
+    { key: 'city', label: 'Ville', sortable: true },
+    { key: 'active', label: 'Statut', type: 'status' },
+    { key: 'createdAt', label: 'Créé le', type: 'date', sortable: true },
+    { key: 'userCount', label: 'Staff', type: 'text', sortable: false }
+  ];
 
-    constructor(protected shopService: ShopService) {
-        super(shopService);
-    }
+  constructor(protected shopService: ShopService) {
+    super(shopService);
+  }
+
+  override viewDetails(item: Shop) {
+    this.router.navigate(['/tenant/shops/details', item.id]);
+  }
 }

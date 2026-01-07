@@ -1,0 +1,4 @@
+<app-generic-form [title]="isEditMode ? 'Modifier la catégorie' : 'Nouvelle catégorie'" [config]="formConfig"
+    [formGroup]="formGroup" [mode]="'page'" [showBackButton]="true" (formSubmit)="onSubmit($event)"
+    (formCancel)="onCancel()">
+</app-generic-form>

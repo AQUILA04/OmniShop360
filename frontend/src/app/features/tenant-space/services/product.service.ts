@@ -9,7 +9,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class ProductService extends BaseCrudService<Product, string> {
     protected override get baseUrl(): string {
-        return `${environment.apiUrl}/products`;
+        return `${environment.apiUrl}/v1/products`;
     }
 
     constructor(http: HttpClient) {

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class ShopService extends BaseCrudService<Shop, string> {
     protected override get baseUrl(): string {
-        return `${environment.apiUrl}/shops`;
+        return `${environment.apiUrl}/v1/shops`;
     }
 
     constructor(http: HttpClient) {

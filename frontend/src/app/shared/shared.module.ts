@@ -22,6 +22,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // Components
 import { GenericListComponent } from './components/generic-list/generic-list.component';
@@ -46,7 +49,10 @@ const MATERIAL_MODULES = [
   MatSelectModule,
   MatTabsModule,
   MatRadioModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatSlideToggleModule
 ];
 
 const COMPONENTS = [
@@ -61,10 +67,6 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgxPermissionsModule.forChild({
-      permissionsIsolate: true,
-      rolesIsolate: true
-    }),
     ...MATERIAL_MODULES
   ],
   exports: [

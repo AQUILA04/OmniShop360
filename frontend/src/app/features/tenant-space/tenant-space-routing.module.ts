@@ -113,6 +113,28 @@ const routes: Routes = [
         }
     },
     {
+        path: 'users',
+        loadComponent: () => import('./components/user-list/user-list.component').then(m => m.UserListComponent),
+        canActivate: [NgxPermissionsGuard],
+        data: {
+            permissions: {
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
+                redirectTo: '/login'
+            }
+        }
+    },
+    {
+        path: 'users/create',
+        loadComponent: () => import('./components/user-form/user-form.component').then(m => m.UserFormComponent),
+        canActivate: [NgxPermissionsGuard],
+        data: {
+            permissions: {
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
+                redirectTo: '/login'
+            }
+        }
+    },
+    {
         path: '',
         redirectTo: 'shops',
         pathMatch: 'full'

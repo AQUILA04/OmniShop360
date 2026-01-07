@@ -20,4 +20,8 @@ export class ShopService extends BaseCrudService<Shop, string> {
     assignAdmin(shopId: string, userId: string): Observable<void> {
         return this.http.post<void>(`${this.baseUrl}/${shopId}/admins/${userId}`, {});
     }
+
+    createShopAdmin(shopId: string, data: any): Observable<any> {
+        return this.http.post<any>(`${this.baseUrl}/${shopId}/admins`, data);
+    }
 }

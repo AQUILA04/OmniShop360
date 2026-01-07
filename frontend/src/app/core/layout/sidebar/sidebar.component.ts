@@ -23,21 +23,21 @@ import { LayoutService } from '../layout.service';
         </a>
 
         <!-- Sample Group -->
-        <div class="menu-group">
-          <div class="menu-item group-header" (click)="toggleSample = !toggleSample" [class.active-group]="toggleSample">
-            <i class="icon">📂</i>
-            <span>Sample</span>
-            <i class="chevron" [class.expanded]="toggleSample">▼</i>
-          </div>
-          <div class="submenu" [class.expanded]="toggleSample">
-            <a routerLink="/samples/dashboard" routerLinkActive="active" class="menu-item submenu-item">
-              <span>Dashboard Sample</span>
-            </a>
-            <a routerLink="/samples/list" routerLinkActive="active" class="menu-item submenu-item">
-              <span>Data List Sample</span>
-            </a>
-          </div>
-        </div>
+<!--        <div class="menu-group">-->
+<!--          <div class="menu-item group-header" (click)="toggleSample = !toggleSample" [class.active-group]="toggleSample">-->
+<!--            <i class="icon">📂</i>-->
+<!--            <span>Sample</span>-->
+<!--            <i class="chevron" [class.expanded]="toggleSample">▼</i>-->
+<!--          </div>-->
+<!--          <div class="submenu" [class.expanded]="toggleSample">-->
+<!--            <a routerLink="/samples/dashboard" routerLinkActive="active" class="menu-item submenu-item">-->
+<!--              <span>Dashboard Sample</span>-->
+<!--            </a>-->
+<!--            <a routerLink="/samples/list" routerLinkActive="active" class="menu-item submenu-item">-->
+<!--              <span>Data List Sample</span>-->
+<!--            </a>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <!-- Tenant Admin Group -->
         <div class="menu-group" *ngxPermissionsOnly="['ROLE_TENANT_ADMIN', 'ROLE_superadmin']">
@@ -59,25 +59,28 @@ import { LayoutService } from '../layout.service';
             <a routerLink="/tenant/settings" routerLinkActive="active" class="menu-item submenu-item">
               <span>Paramètres</span>
             </a>
+            <a routerLink="/tenant/users" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Utilisateurs</span>
+            </a>
           </div>
         </div>
 
-        <a routerLink="/products" routerLinkActive="active" class="menu-item">
-          <i class="icon">📦</i>
-          <span>Products</span>
-        </a>
-        <a routerLink="/orders" routerLinkActive="active" class="menu-item">
-          <i class="icon">🛒</i>
-          <span>Orders</span>
-        </a>
-        <a routerLink="/tenants" routerLinkActive="active" class="menu-item" *ngxPermissionsOnly="['ROLE_superadmin']">
-          <i class="icon">👥</i>
-          <span>Tenants</span>
-        </a>
-        <a routerLink="/settings" routerLinkActive="active" class="menu-item">
-          <i class="icon">⚙️</i>
-          <span>Settings</span>
-        </a>
+<!--        <a routerLink="/products" routerLinkActive="active" class="menu-item">-->
+<!--          <i class="icon">📦</i>-->
+<!--          <span>Products</span>-->
+<!--        </a>-->
+<!--        <a routerLink="/orders" routerLinkActive="active" class="menu-item">-->
+<!--          <i class="icon">🛒</i>-->
+<!--          <span>Orders</span>-->
+<!--        </a>-->
+<!--        <a routerLink="/tenants" routerLinkActive="active" class="menu-item" *ngxPermissionsOnly="['ROLE_superadmin']">-->
+<!--          <i class="icon">👥</i>-->
+<!--          <span>Tenants</span>-->
+<!--        </a>-->
+<!--        <a routerLink="/settings" routerLinkActive="active" class="menu-item">-->
+<!--          <i class="icon">⚙️</i>-->
+<!--          <span>Settings</span>-->
+<!--        </a>-->
       </nav>
     </aside>
   `,

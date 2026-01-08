@@ -1,10 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProductFormComponent } from './product-form.component';
 import { ProductService } from '../../services/product.service';
+import { CategoryService } from '../../services/category.service';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { SharedModule } from '../../../../shared/shared.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ProductFormComponent', () => {
     let component: ProductFormComponent;
@@ -15,17 +21,32 @@ describe('ProductFormComponent', () => {
     beforeEach(async () => {
         mockProductService = jasmine.createSpyObj('ProductService', ['create', 'update']);
         mockPermissionsService = jasmine.createSpyObj('NgxPermissionsService', ['hasPermission']);
+        const mockCategoryService = jasmine.createSpyObj('CategoryService', ['getAll']);
+        mockCategoryService.getAll.and.returnValue(of({ content: [] }));
 
         // Default permission check to false
         mockPermissionsService.hasPermission.and.returnValue(Promise.resolve(false));
 
         await TestBed.configureTestingModule({
             declarations: [ProductFormComponent],
-            imports: [ReactiveFormsModule],
+            imports: [ReactiveFormsModule, HttpClientTestingModule, SharedModule, NoopAnimationsModule],
             providers: [
                 FormBuilder,
                 { provide: ProductService, useValue: mockProductService },
-                { provide: NgxPermissionsService, useValue: mockPermissionsService }
+                { provide: CategoryService, useValue: mockCategoryService },
+                { provide: NgxPermissionsService, useValue: mockPermissionsService },
+                { provide: ToastrService, useValue: jasmine.createSpyObj('ToastrService', ['success', 'error']) },
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            params: {},
+                            data: {},
+                            paramMap: { get: () => null }
+                        },
+                        paramMap: of({ get: () => null })
+                    }
+                }
             ],
             schemas: [NO_ERRORS_SCHEMA]
         })

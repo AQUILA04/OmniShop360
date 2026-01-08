@@ -17,12 +17,14 @@ export class ShopFormComponent extends BaseFormComponent<Shop> {
     // Configuration for Generic Form
     formConfig: FormSectionConfig[] = [
         {
+            title: 'Informations Générales',
             fields: [
                 { key: 'name', label: 'Nom de la boutique', type: 'text', validators: [Validators.required], placeholder: 'Ex: Ma Super Boutique', icon: 'store' },
                 { key: 'active', label: 'Actif', type: 'slide-toggle', hint: 'Désactivez pour rendre la boutique inaccessible temporairement' }
             ]
         },
         {
+            title: 'Adresse',
             fields: [
                 { key: 'address', label: 'Adresse', type: 'text', validators: [Validators.required], placeholder: '123 rue du Commerce', icon: 'place' },
                 { key: 'city', label: 'Ville', type: 'text', validators: [Validators.required], placeholder: 'Paris', icon: 'apartment' },
@@ -30,6 +32,7 @@ export class ShopFormComponent extends BaseFormComponent<Shop> {
             ]
         },
         {
+            title: 'Contact',
             fields: [
                 { key: 'phone', label: 'Téléphone', type: 'text', placeholder: '+33 1 23 45 67 89', icon: 'phone' },
                 { key: 'email', label: 'Email de contact', type: 'email', validators: [Validators.required, Validators.email], placeholder: 'contact@boutique.com', icon: 'email' }

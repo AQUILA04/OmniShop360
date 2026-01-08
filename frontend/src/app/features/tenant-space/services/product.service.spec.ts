@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProductService } from './product.service';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 describe('ProductService', () => {
     let service: ProductService;
@@ -27,11 +27,11 @@ describe('ProductService', () => {
 
     it('should get all products', () => {
         const mockResponse = {
-            content: [{ id: '1', name: 'Product 1' }],
+            content: [{ id: '1', name: 'Product 1', tenantId: 't1', sku: 'SKU1', category: 'cat1', salePrice: 100, hasVariants: false }],
             page: { size: 10, number: 0, totalElements: 1, totalPages: 1 }
         };
 
-        service.getAll().subscribe(res => {
+        service.getAll({ page: 0, size: 10 }).subscribe(res => {
             expect(res.content.length).toBe(1);
         });
 
@@ -42,7 +42,7 @@ describe('ProductService', () => {
 
     it('should create a product', () => {
         const newProd = { name: 'New Product', price: 100 };
-        const mockResponse = { id: '2', ...newProd };
+        const mockResponse = { id: '2', ...newProd, tenantId: 't1', sku: 'SKU2', category: 'cat1', salePrice: 100, hasVariants: false };
 
         service.create(newProd as any).subscribe(res => {
             expect(res).toEqual(mockResponse);

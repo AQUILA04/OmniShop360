@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SharedModule } from '../../../../shared/shared.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 describe('UserListComponent', () => {
     let component: UserListComponent;
@@ -28,7 +29,8 @@ describe('UserListComponent', () => {
                 UserListComponent // Standalone
             ],
             providers: [
-                { provide: ShopAdminService, useValue: shopAdminServiceSpy }
+                { provide: ShopAdminService, useValue: shopAdminServiceSpy },
+                { provide: ToastrService, useValue: jasmine.createSpyObj('ToastrService', ['success', 'error']) }
             ]
         }).compileComponents();
 

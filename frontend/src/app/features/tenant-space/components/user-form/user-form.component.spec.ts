@@ -2,9 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserFormComponent } from './user-form.component';
 import { ShopAdminService } from '../../services/shop-admin.service';
 import { ShopService } from '../../services/shop.service';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from '../../../../shared/shared.module';
 import { PagedResponse } from '../../../../shared/models/paged-response.model';
@@ -17,7 +18,17 @@ describe('UserFormComponent', () => {
     let shopServiceSpy: jasmine.SpyObj<ShopService>;
 
     const mockShops: Shop[] = [
-        { id: '1', name: 'Shop 1', city: 'Paris', active: true, address: 'addr', postalCode: '75001' }
+        {
+            id: '1',
+            name: 'Shop 1',
+            city: 'Paris',
+            active: true,
+            address: 'addr',
+            postalCode: '75001',
+            phone: '0102030405',
+            email: 'shop@test.com',
+            tenantId: 't1'
+        }
     ];
 
     const mockPagedShops: PagedResponse<Shop> = {
@@ -35,14 +46,27 @@ describe('UserFormComponent', () => {
         await TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
-                RouterTestingModule,
+                HttpClientTestingModule,
                 NoopAnimationsModule,
                 SharedModule,
-                UserFormComponent // Standalone component imported here
+                UserFormComponent
             ],
             providers: [
                 { provide: ShopAdminService, useValue: shopAdminServiceSpy },
-                { provide: ShopService, useValue: shopServiceSpy }
+                { provide: ShopService, useValue: shopServiceSpy },
+                { provide: ToastrService, useValue: jasmine.createSpyObj('ToastrService', ['success', 'error']) },
+                { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) },
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            params: {},
+                            data: {},
+                            paramMap: { get: () => null }
+                        },
+                        paramMap: of({ get: () => null })
+                    }
+                }
             ]
         }).compileComponents();
 
@@ -57,7 +81,6 @@ describe('UserFormComponent', () => {
 
     it('should load shops on init', () => {
         expect(shopServiceSpy.getAll).toHaveBeenCalled();
-        // Check if options are populated in formConfig
         const shopSection = component.formConfig.find(s => s.fields.some(f => f.key === 'shopId'));
         const shopField = shopSection?.fields.find(f => f.key === 'shopId');
 
@@ -66,11 +89,31 @@ describe('UserFormComponent', () => {
     });
 
     it('should initialize form with required controls', () => {
-        expect(component.form.contains('firstName')).toBeTrue();
-        expect(component.form.contains('lastName')).toBeTrue();
-        expect(component.form.contains('email')).toBeTrue();
-        expect(component.form.contains('shopId')).toBeTrue();
-        expect(component.form.contains('profile')).toBeTrue();
+        console.log('Form keys:', Object.keys(component.form.controls));
+
+        const hasFirst = component.form.contains('firstName');
+        console.log('Has firstName:', hasFirst);
+        expect(hasFirst).toBeTrue();
+
+        const hasLast = component.form.contains('lastName');
+        console.log('Has lastName:', hasLast);
+        expect(hasLast).toBeTrue();
+
+        const hasEmail = component.form.contains('email');
+        console.log('Has email:', hasEmail);
+        expect(hasEmail).toBeTrue();
+
+        const hasShop = component.form.contains('shopId');
+        console.log('Has shopId:', hasShop);
+        expect(hasShop).toBeTrue();
+
+        const hasProfile = component.form.contains('profile');
+        console.log('Has profile:', hasProfile);
+        // Using get check as well
+        const profileCtrl = component.form.get('profile');
+        console.log('Profile control:', profileCtrl);
+        expect(profileCtrl).toBeDefined();
+        expect(profileCtrl).not.toBeNull();
     });
 
     it('should have profile defaulted and disabled', () => {
@@ -80,7 +123,6 @@ describe('UserFormComponent', () => {
     });
 
     it('should call service create when submitting valid form', () => {
-        // Set values
         component.form.patchValue({
             shopId: '1',
             firstName: 'Jean',

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CategoryService } from './category.service';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 describe('CategoryService', () => {
     let service: CategoryService;
@@ -26,36 +26,27 @@ describe('CategoryService', () => {
     });
 
     it('should get all categories (adapted response)', () => {
-        // Current implementation mocks pagination for a list response
-        const mockList = [{ id: '1', name: 'Cat 1', code: 'C1' }];
+        const mockList = [{ id: '1', name: 'Cat 1', code: 'C1', description: 'desc', tenantId: 't1' }];
 
-        service.getAll().subscribe(response => {
+        service.getAll({ page: 0, size: 10 }).subscribe(response => {
             expect(response.content).toHaveSize(1);
             expect(response.content[0].code).toBe('C1');
-            // Check mock page
             expect(response.page.totalElements).toBe(1);
         });
 
-        const req = httpMock.expectOne(`${apiUrl}`); // getAll calls base URL directly in current implementation? 
-        // Wait, let's verify if getAll appends params. BaseCrudService usually appends params.
-        // However, CategoryService overrides getAll.
-        // Let's assume the override calls this.http.get<CategoryResponse[]>(this.baseUrl) without params if they are ignored/stripped or just appended.
-        // Checking the previous file content, it seems it calls this.http.get<List<CategoryResponse>>(this.baseUrl).
-
+        const req = httpMock.expectOne(`${apiUrl}`);
         expect(req.request.method).toBe('GET');
         req.flush(mockList);
     });
 
     it('should create a category', () => {
         const newCat = { name: 'New Cat', code: 'NC' };
-        const mockResponse = { id: '2', ...newCat };
+        const mockResponse = { id: '2', ...newCat, description: 'desc', tenantId: 't1' };
 
         service.create(newCat as any).subscribe(response => {
             expect(response).toEqual(mockResponse);
         });
 
-        // Subclasses of BaseCrudService use create(item: Partial<T>): Observable<T>
-        // It calls http.post<T>(baseUrl, item)
         const req = httpMock.expectOne(apiUrl);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(newCat);

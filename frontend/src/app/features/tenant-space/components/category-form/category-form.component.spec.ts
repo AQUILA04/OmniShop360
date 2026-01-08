@@ -30,7 +30,11 @@ describe('CategoryFormComponent', () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        snapshot: { params: {} },
+                        snapshot: {
+                            params: {},
+                            data: {},
+                            paramMap: { get: () => null }
+                        },
                         paramMap: of({ get: () => null })
                     }
                 }
@@ -54,7 +58,8 @@ describe('CategoryFormComponent', () => {
     });
 
     it('should call create on submit when valid', () => {
-        component.form.patchValue({
+        // Correct property name is formGroup
+        component.formGroup.patchValue({
             name: 'Test Cat',
             code: 'TC',
             description: 'Desc'
@@ -62,7 +67,8 @@ describe('CategoryFormComponent', () => {
 
         categoryServiceSpy.create.and.returnValue(of({ id: '1', name: 'Test Cat' } as any));
 
-        component.onSubmit();
+        // Correct method call with argument
+        component.onSubmit(component.formGroup.value);
 
         expect(categoryServiceSpy.create).toHaveBeenCalled();
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/tenant/categories']);

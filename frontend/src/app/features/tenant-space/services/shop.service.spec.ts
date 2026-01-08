@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ShopService } from './shop.service';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 describe('ShopService', () => {
     let service: ShopService;
@@ -27,11 +27,11 @@ describe('ShopService', () => {
 
     it('should get all shops (paginated adaptation)', () => {
         const mockResponse = {
-            content: [{ id: '1', name: 'Test Shop' }],
-            page: { size: 20, number: 0, totalElements: 1, totalPages: 1 }
+            content: [{ id: '1', name: 'Test Shop', address: 'Addr', city: 'City', postalCode: '0000', phone: '123', email: 'e@mail.com', active: true, tenantId: 't1' }],
+            page: { size: 10, number: 0, totalElements: 1, totalPages: 1 }
         };
 
-        service.getAll().subscribe(response => {
+        service.getAll({ page: 0, size: 10 }).subscribe(response => {
             expect(response.content.length).toBe(1);
             expect(response.content[0].name).toBe('Test Shop');
         });
@@ -42,8 +42,9 @@ describe('ShopService', () => {
     });
 
     it('should create a shop', () => {
-        const newShop = { name: 'New Shop', city: 'Paris' };
-        const mockResponse = { id: '1', ...newShop };
+        const newShop = { name: 'New Shop', city: 'Paris', address: 'Addr', postalCode: '75001', phone: '123', email: 'test@shop.com' };
+        // The mock response must include all required Shop fields
+        const mockResponse = { id: '1', ...newShop, active: true, tenantId: 't1' };
 
         service.create(newShop as any).subscribe(response => {
             expect(response).toEqual(mockResponse);
@@ -58,7 +59,8 @@ describe('ShopService', () => {
     it('should update a shop', () => {
         const updateData = { name: 'Updated Shop' };
         const id = '1';
-        const mockResponse = { id, ...updateData };
+        // Return full object to be safe with types
+        const mockResponse = { id, ...updateData, city: 'City', address: 'Addr', postalCode: '0000', phone: '123', email: 'e@mail.com', active: true, tenantId: 't1' };
 
         service.update(id, updateData as any).subscribe(response => {
             expect(response).toEqual(mockResponse);
@@ -74,12 +76,13 @@ describe('ShopService', () => {
         const id = '1';
 
         service.delete(id).subscribe(response => {
-            expect(response).toBeUndefined();
+            // response can be null or undefined depending on HTTP status (204 vs 200)
+            expect(response).toBeNull();
         });
 
         const req = httpMock.expectOne(`${apiUrl}/${id}`);
         expect(req.request.method).toBe('DELETE');
-        req.flush(null); // delete usually returns 204 No Content (null body)
+        req.flush(null);
     });
 
     it('should create a shop admin', () => {

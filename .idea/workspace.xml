@@ -5,7 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint2: gestion des boutiques et produits (front)">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/category-form/category-form.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/category-form/category-form.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-list/shop-list.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-list/shop-list.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/tenant-settings/tenant-settings.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/tenant-settings/tenant-settings.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-form/user-form.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-form/user-form.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-list/user-list.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-list/user-list.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/category.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/category.service.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/product.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/product.service.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/shop.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/shop.service.spec.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,37 +96,38 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.dev.keycloak: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.dev: Compose Deployment (1).executor&quot;: &quot;Run&quot;,
-    &quot;Docker.dev: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.OmniShop360BackendApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/sprint2-front&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kahonsu/Documents/GitHub/OmniShop360/keycloak/themes/omnishop360/login/resources/img&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\kahonsu\\Documents\\GitHub\\OmniShop360\\frontend\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.dev.keycloak: Compose Deployment.executor": "Run",
+    "Docker.dev: Compose Deployment (1).executor": "Run",
+    "Docker.dev: Compose Deployment.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.OmniShop360BackendApplication.executor": "Debug",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "feature/sprint2-front",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360/keycloak/themes/omnishop360/login/resources/img",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.android.studio.ml.bot.mainConfigurable",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\Users\\kahonsu\\Documents\\GitHub\\OmniShop360\\frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1768762816556" />
     <option name="spentUsd" value="0.07415625" />
@@ -239,7 +249,7 @@
       <workItem from="1766513512191" duration="3758000" />
       <workItem from="1767454547403" duration="4504000" />
       <workItem from="1767682524633" duration="7667000" />
-      <workItem from="1767764823177" duration="4232000" />
+      <workItem from="1767764823177" duration="5384000" />
     </task>
     <task id="LOCAL-00001">
       <option name="closed" value="true" />

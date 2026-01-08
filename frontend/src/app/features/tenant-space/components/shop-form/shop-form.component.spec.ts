@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ShopFormComponent } from './shop-form.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ShopService } from '../../services/shop.service';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
@@ -7,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 import { SharedModule } from '../../../../shared/shared.module';
 
 describe('ShopFormComponent', () => {
@@ -22,15 +24,21 @@ describe('ShopFormComponent', () => {
         snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
 
         await TestBed.configureTestingModule({
-            imports: [ShopFormComponent, ReactiveFormsModule, NoopAnimationsModule, SharedModule], // Standalone component imported
+            declarations: [ShopFormComponent],
+            imports: [HttpClientTestingModule, ReactiveFormsModule, NoopAnimationsModule, SharedModule],
             providers: [
                 { provide: ShopService, useValue: shopServiceSpy },
                 { provide: Router, useValue: routerSpy },
                 { provide: MatSnackBar, useValue: snackBarSpy },
+                { provide: ToastrService, useValue: jasmine.createSpyObj('ToastrService', ['success', 'error']) },
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        snapshot: { params: {} },
+                        snapshot: {
+                            params: {},
+                            data: {},
+                            paramMap: { get: () => null }
+                        },
                         paramMap: of({ get: () => null })
                     }
                 }
@@ -59,7 +67,9 @@ describe('ShopFormComponent', () => {
             name: 'Test Shop',
             city: 'Test City',
             address: '123 Test St',
-            phone: '123456789'
+            postalCode: '12345',
+            phone: '123456789',
+            email: 'test@shop.com'
         });
 
         shopServiceSpy.create.and.returnValue(of({ id: '1', name: 'Test Shop' } as any));

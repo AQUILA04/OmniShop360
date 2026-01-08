@@ -3,6 +3,7 @@ import { TenantSettingsComponent } from './tenant-settings.component';
 import { TenantSettingsService } from '../../services/tenant-settings.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
 import { of, throwError } from 'rxjs';
 import { PricePolicy, TenantSettings } from '../../models/tenant-settings.model';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -26,7 +27,7 @@ describe('TenantSettingsComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [TenantSettingsComponent],
-            imports: [ReactiveFormsModule],
+            imports: [ReactiveFormsModule, MatRadioModule],
             providers: [
                 FormBuilder,
                 { provide: TenantSettingsService, useValue: mockSettingsService },

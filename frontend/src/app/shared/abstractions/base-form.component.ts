@@ -10,6 +10,7 @@ import { ToastService } from '../services/toast.service';
 export abstract class BaseFormComponent<T> implements OnInit {
   form!: FormGroup;
   isLoading = false;
+  isSubmitting = false;
   isEditMode = false;
   itemId: string | null = null;
 
@@ -18,7 +19,7 @@ export abstract class BaseFormComponent<T> implements OnInit {
   protected router = inject(Router);
   protected toastService = inject(ToastService);
 
-  constructor(protected service: BaseCrudService<T, string>) {}
+  constructor(protected service: BaseCrudService<T, string>) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -54,6 +55,7 @@ export abstract class BaseFormComponent<T> implements OnInit {
     }
 
     this.isLoading = true;
+    this.isSubmitting = true;
     const request = this.form.getRawValue();
 
     if (this.isEditMode && this.itemId) {
@@ -79,17 +81,19 @@ export abstract class BaseFormComponent<T> implements OnInit {
 
   protected handleSuccess(message: string): void {
     this.isLoading = false;
+    this.isSubmitting = false;
     this.toastService.showSuccess(message);
     this.router.navigate([this.getRedirectUrl()]);
   }
 
   protected handleError(error: any, defaultMessage: string): void {
     this.isLoading = false;
+    this.isSubmitting = false;
     console.error(defaultMessage, error);
 
     let errorMessage = defaultMessage;
     if (error.error && error.error.message) {
-        errorMessage = error.error.message;
+      errorMessage = error.error.message;
     }
 
     this.toastService.showError(errorMessage);

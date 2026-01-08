@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NgxPermissionsModule } from 'ngx-permissions';
+import { LayoutService } from '../layout.service';
 
 @Component({
-    selector: 'app-sidebar',
-    standalone: true,
-    imports: [CommonModule, RouterModule],
-    template: `
+  selector: 'app-sidebar',
+  standalone: true,
+  imports: [CommonModule, RouterModule, NgxPermissionsModule],
+  template: `
     <aside class="sidebar">
       <div class="logo">
         <img src="assets/logo.png" alt="OmniShop360" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2Q0YWYzNyIvPjwvc3ZnPg=='"/>
         <span>OmniShop360</span>
+        <button class="close-btn" (click)="closeSidebar()">✕</button>
       </div>
-      
+
       <nav class="menu">
         <a routerLink="/dashboard" routerLinkActive="active" class="menu-item">
           <i class="icon">🏠</i>
@@ -20,42 +23,68 @@ import { RouterModule } from '@angular/router';
         </a>
 
         <!-- Sample Group -->
-        <div class="menu-group">
-          <div class="menu-item group-header" (click)="toggleSample = !toggleSample" [class.active-group]="toggleSample">
-            <i class="icon">📂</i>
-            <span>Sample</span>
-            <i class="chevron" [class.expanded]="toggleSample">▼</i>
+<!--        <div class="menu-group">-->
+<!--          <div class="menu-item group-header" (click)="toggleSample = !toggleSample" [class.active-group]="toggleSample">-->
+<!--            <i class="icon">📂</i>-->
+<!--            <span>Sample</span>-->
+<!--            <i class="chevron" [class.expanded]="toggleSample">▼</i>-->
+<!--          </div>-->
+<!--          <div class="submenu" [class.expanded]="toggleSample">-->
+<!--            <a routerLink="/samples/dashboard" routerLinkActive="active" class="menu-item submenu-item">-->
+<!--              <span>Dashboard Sample</span>-->
+<!--            </a>-->
+<!--            <a routerLink="/samples/list" routerLinkActive="active" class="menu-item submenu-item">-->
+<!--              <span>Data List Sample</span>-->
+<!--            </a>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <!-- Tenant Admin Group -->
+        <div class="menu-group" *ngxPermissionsOnly="['ROLE_TENANT_ADMIN', 'ROLE_superadmin']">
+          <div class="menu-item group-header" (click)="toggleTenantAdmin = !toggleTenantAdmin" [class.active-group]="toggleTenantAdmin">
+            <i class="icon">🏢</i>
+            <span>Gestion Tenant</span>
+            <i class="chevron" [class.expanded]="toggleTenantAdmin">▼</i>
           </div>
-          <div class="submenu" [class.expanded]="toggleSample">
-            <a routerLink="/samples/dashboard" routerLinkActive="active" class="menu-item submenu-item">
-              <span>Dashboard Sample</span>
+          <div class="submenu" [class.expanded]="toggleTenantAdmin">
+            <a routerLink="/tenant/shops" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Boutiques</span>
             </a>
-            <a routerLink="/samples/list" routerLinkActive="active" class="menu-item submenu-item">
-              <span>Data List Sample</span>
+            <a routerLink="/tenant/categories" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Catégories</span>
+            </a>
+            <a routerLink="/tenant/catalog" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Catalogue Maître</span>
+            </a>
+            <a routerLink="/tenant/settings" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Paramètres</span>
+            </a>
+            <a routerLink="/tenant/users" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Utilisateurs</span>
             </a>
           </div>
         </div>
 
-        <a routerLink="/products" routerLinkActive="active" class="menu-item">
-          <i class="icon">📦</i>
-          <span>Products</span>
-        </a>
-        <a routerLink="/orders" routerLinkActive="active" class="menu-item">
-          <i class="icon">🛒</i>
-          <span>Orders</span>
-        </a>
-        <a routerLink="/tenants" routerLinkActive="active" class="menu-item">
-          <i class="icon">👥</i>
-          <span>Tenants</span>
-        </a>
-        <a routerLink="/settings" routerLinkActive="active" class="menu-item">
-          <i class="icon">⚙️</i>
-          <span>Settings</span>
-        </a>
+<!--        <a routerLink="/products" routerLinkActive="active" class="menu-item">-->
+<!--          <i class="icon">📦</i>-->
+<!--          <span>Products</span>-->
+<!--        </a>-->
+<!--        <a routerLink="/orders" routerLinkActive="active" class="menu-item">-->
+<!--          <i class="icon">🛒</i>-->
+<!--          <span>Orders</span>-->
+<!--        </a>-->
+<!--        <a routerLink="/tenants" routerLinkActive="active" class="menu-item" *ngxPermissionsOnly="['ROLE_superadmin']">-->
+<!--          <i class="icon">👥</i>-->
+<!--          <span>Tenants</span>-->
+<!--        </a>-->
+<!--        <a routerLink="/settings" routerLinkActive="active" class="menu-item">-->
+<!--          <i class="icon">⚙️</i>-->
+<!--          <span>Settings</span>-->
+<!--        </a>-->
       </nav>
     </aside>
   `,
-    styles: [`
+  styles: [`
     :host {
       display: block;
       height: 100vh;
@@ -64,7 +93,7 @@ import { RouterModule } from '@angular/router';
       width: 250px;
       flex-shrink: 0;
     }
-    
+
     .sidebar {
       height: 100%;
       display: flex;
@@ -81,8 +110,20 @@ import { RouterModule } from '@angular/router';
       font-size: 1.25rem;
       gap: 0.5rem;
       border-bottom: 1px solid rgba(255,255,255,0.1);
-      
+      position: relative;
+
       img { width: 24px; height: 24px; }
+    }
+
+    .close-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #94A3B8;
+      font-size: 1.2rem;
+      position: absolute;
+      right: 1rem;
+      cursor: pointer;
     }
 
     .menu {
@@ -120,7 +161,7 @@ import { RouterModule } from '@angular/router';
       .group-header {
         justify-content: space-between;
       }
-      
+
       .chevron {
         font-size: 0.7rem;
         transition: transform 0.3s;
@@ -133,16 +174,28 @@ import { RouterModule } from '@angular/router';
       overflow: hidden;
       transition: max-height 0.3s ease-out;
       background-color: rgba(0,0,0,0.2);
-      
+
       &.expanded { max-height: 500px; }
-      
+
       .submenu-item {
         padding-left: 3.5rem;
         font-size: 0.9rem;
       }
     }
+
+    @media (max-width: 768px) {
+      .close-btn {
+        display: block;
+      }
+    }
   `]
 })
 export class SidebarComponent {
-    toggleSample = true; // Open by default for visibility
+  toggleSample = true; // Open by default for visibility
+  toggleTenantAdmin = true; // Open by default for Tenant Admin
+  private layoutService = inject(LayoutService);
+
+  closeSidebar() {
+    this.layoutService.closeSidebar();
+  }
 }

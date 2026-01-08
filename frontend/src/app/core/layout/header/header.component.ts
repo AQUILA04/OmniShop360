@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '../../auth/auth.service';
+import { LayoutService } from '../layout.service';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,9 @@ import { AuthService } from '../../auth/auth.service';
   template: `
     <header class="header">
       <div class="left">
-        <!-- Breadcrumb or Sidebar Toggle (Mobile) could go here -->
+        <button mat-icon-button class="menu-toggle" (click)="toggleSidebar()">
+          <mat-icon>menu</mat-icon>
+        </button>
       </div>
       <div class="right">
         <div class="icon-btn">
@@ -63,6 +66,11 @@ import { AuthService } from '../../auth/auth.service';
       align-items: center;
       justify-content: space-between;
       padding: 0 2rem;
+    }
+
+    .menu-toggle {
+      display: none;
+      color: #64748B;
     }
 
     .right {
@@ -132,10 +140,25 @@ import { AuthService } from '../../auth/auth.service';
 
       .chevron { color: #94A3B8; font-size: 1.2rem; }
     }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 1rem;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .profile .info {
+        display: none;
+      }
+    }
   `]
 })
 export class HeaderComponent {
   private authService = inject(AuthService);
+  private layoutService = inject(LayoutService);
 
   get userName(): string {
     return this.authService.userProfile?.name || 'User';
@@ -151,5 +174,9 @@ export class HeaderComponent {
 
   logout() {
     this.authService.logout();
+  }
+
+  toggleSidebar() {
+    this.layoutService.toggleSidebar();
   }
 }

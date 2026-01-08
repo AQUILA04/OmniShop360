@@ -1,0 +1,52 @@
+// Ensure the host component takes full width to allow centering within it
+:host {
+    display: block;
+    width: 100%;
+}
+
+.page-centered-container {
+    max-width: 900px;
+    width: 100%; // Ensure it takes available width up to max-width
+    margin-left: auto; // Explicitly set margins
+    margin-right: auto;
+    padding: 0 30px;
+    box-sizing: border-box; // Prevent padding from affecting width
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    width: 100%; // Ensure header spans full width of container
+}
+
+::ng-deep .custom-form-container {
+    ::ng-deep .mat-mdc-form-field {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+// Fix button content alignment surgically - targeting the deepest label container
+::ng-deep .mdc-button__label {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    vertical-align: middle !important;
+}
+
+::ng-deep .mat-mdc-tab-body-content {
+    overflow: visible !important;
+}

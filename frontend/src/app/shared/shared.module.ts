@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 // Angular Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +19,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // Components
 import { GenericListComponent } from './components/generic-list/generic-list.component';
@@ -38,7 +45,14 @@ const MATERIAL_MODULES = [
   MatSidenavModule,
   MatListModule,
   MatMenuModule,
-  MatSelectModule
+  MatMenuModule,
+  MatSelectModule,
+  MatTabsModule,
+  MatRadioModule,
+  MatCheckboxModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatSlideToggleModule
 ];
 
 const COMPONENTS = [
@@ -58,6 +72,7 @@ const COMPONENTS = [
   exports: [
     CommonModule,
     ReactiveFormsModule,
+    NgxPermissionsModule,
     ...MATERIAL_MODULES,
     ...COMPONENTS
   ]

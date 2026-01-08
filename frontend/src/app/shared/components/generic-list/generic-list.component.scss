@@ -21,6 +21,8 @@ $hover-bg: #f1f5f9;
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 
   .header-content {
     h1 {
@@ -116,8 +118,14 @@ $hover-bg: #f1f5f9;
     backdrop-filter: blur(2px);
   }
 
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   table {
     width: 100%;
+    min-width: 800px; // Ensure table doesn't squish too much on small screens
 
     th.mat-header-cell {
       background-color: #f8fafc;
@@ -128,6 +136,7 @@ $hover-bg: #f1f5f9;
       letter-spacing: 0.05em;
       padding: 1.25rem 1.5rem;
       border-bottom: 1px solid $border-color;
+      white-space: nowrap;
 
       &:first-of-type {
         padding-left: 2rem;
@@ -139,6 +148,7 @@ $hover-bg: #f1f5f9;
       border-bottom: 1px solid $border-color;
       color: $text-primary;
       font-size: 0.9rem;
+      white-space: nowrap;
 
       &:first-of-type {
         padding-left: 2rem;
@@ -307,6 +317,28 @@ $hover-bg: #f1f5f9;
       mat-icon {
         color: #ef4444;
       }
+    }
+  }
+}
+
+// Mobile Responsive Styles
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .create-btn {
+      width: 100%;
+    }
+  }
+
+  .controls-bar {
+    .search-container {
+      max-width: 100%;
     }
   }
 }

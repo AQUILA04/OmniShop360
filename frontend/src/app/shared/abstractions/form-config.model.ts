@@ -1,6 +1,6 @@
 import { ValidatorFn } from '@angular/forms';
 
-export type FormFieldType = 'text' | 'email' | 'number' | 'password' | 'textarea' | 'select' | 'checkbox' | 'date';
+export type FormFieldType = 'text' | 'email' | 'number' | 'password' | 'textarea' | 'select' | 'checkbox' | 'date' | 'slide-toggle';
 
 export interface FormFieldConfig {
   key: string;              // Nom du contrôle (ex: 'email')
@@ -12,6 +12,7 @@ export interface FormFieldConfig {
   hint?: string;            // Texte d'aide
   disabled?: boolean;       // État initial
   cssClass?: string;        // Classe CSS pour la largeur (ex: 'half-width')
+  icon?: string;            // Icône prefix optionnelle (ex: 'email', 'person')
 }
 
 export interface FormSectionConfig {

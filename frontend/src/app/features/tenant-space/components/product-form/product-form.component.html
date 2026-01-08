@@ -1,0 +1,162 @@
+<div class="page-centered-container w-full">
+    <!-- Header with Back Button -->
+    <div class="form-header">
+        <h1 class="text-3xl font-bold text-gray-800" style="margin: 0;">{{ pageTitle }}</h1>
+        <button mat-stroked-button color="accent" (click)="cancel()" class="!text-gray-600 !border-gray-300">
+            <mat-icon>arrow_back</mat-icon>
+            Retour
+        </button>
+    </div>
+
+    <!-- Form Card -->
+    <mat-card class="!shadow-lg !rounded-xl">
+        <mat-card-content>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="custom-form-container pt-4">
+
+                <mat-tab-group class="custom-tabs">
+                    <!-- Tab 1: General -->
+                    <mat-tab label="Général">
+                        <div class="space-y-6 mt-6">
+                            <mat-form-field appearance="outline" class="w-full">
+                                <mat-label>Nom du Produit</mat-label>
+                                <input matInput formControlName="name" placeholder="Ex: T-Shirt Premium">
+                                <mat-icon matPrefix>inventory_2</mat-icon>
+                                <mat-error *ngIf="form.get('name')?.hasError('required')">Requis</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="w-full">
+                                <mat-label>SKU (Code Unique)</mat-label>
+                                <input matInput formControlName="sku" placeholder="Ex: TSH-001">
+                                <mat-icon matPrefix>qr_code</mat-icon>
+                                <mat-error *ngIf="form.get('sku')?.hasError('required')">Requis</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="w-full">
+                                <mat-label>Catégorie</mat-label>
+                                <mat-select formControlName="categoryId">
+                                    <mat-option *ngFor="let category of categories$ | async" [value]="category.id">
+                                        {{ category.name }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-icon matPrefix>category</mat-icon>
+                                <mat-error *ngIf="form.get('categoryId')?.hasError('required')">Requis</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="w-full">
+                                <mat-label>Description</mat-label>
+                                <textarea matInput formControlName="description" rows="4"
+                                    placeholder="Description détaillée du produit..."></textarea>
+                                <mat-icon matPrefix>description</mat-icon>
+                            </mat-form-field>
+                        </div>
+                    </mat-tab>
+
+                    <!-- Tab 2: Pricing -->
+                    <mat-tab label="Prix & Marge">
+                        <div class="space-y-6 mt-6">
+                            <mat-form-field appearance="outline" class="w-full">
+                                <mat-label>Prix de Vente (€)</mat-label>
+                                <input matInput type="number" formControlName="salePrice" placeholder="0.00">
+                                <mat-icon matPrefix>euro</mat-icon>
+                                <span matSuffix>€</span>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="w-full" *ngIf="canSeePurchasePrice">
+                                <mat-label>Prix d'Achat (€) - Confidentiel</mat-label>
+                                <input matInput type="number" formControlName="purchasePrice" placeholder="0.00">
+                                <mat-icon matPrefix color="warn">lock</mat-icon>
+                                <span matSuffix>€</span>
+                                <mat-hint>Visible uniquement pour les Tenant Admins</mat-hint>
+                            </mat-form-field>
+
+                            <!-- Margin Display -->
+                            <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200"
+                                *ngIf="marginPercentage !== null && canSeePurchasePrice">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <mat-icon class="text-blue-600">trending_up</mat-icon>
+                                        <span class="text-lg font-semibold text-gray-700">Marge Brute Estimée</span>
+                                    </div>
+                                    <span class="text-3xl font-bold" [class.text-green-600]="marginPercentage >= 30"
+                                        [class.text-orange-600]="marginPercentage >= 15 && marginPercentage < 30"
+                                        [class.text-red-600]="marginPercentage < 15">
+                                        {{ marginPercentage | number:'1.2-2' }} %
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                    <!-- Tab 3: Variants -->
+                    <mat-tab label="Variantes">
+                        <div class="mt-6 space-y-6">
+                            <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                <mat-checkbox formControlName="hasVariants" color="primary">
+                                    <span class="font-medium">Ce produit a des variantes (Taille, Couleur,
+                                        etc.)</span>
+                                </mat-checkbox>
+                            </div>
+
+                            <div *ngIf="form.get('hasVariants')?.value" formArrayName="variants" class="space-y-4">
+                                <div *ngFor="let variant of variants.controls; let i=index" [formGroupName]="i"
+                                    class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
+                                    <div class="space-y-4">
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <mat-label>SKU Variante</mat-label>
+                                            <input matInput formControlName="sku" placeholder="Ex: TSH-001-L">
+                                            <mat-icon matPrefix>tag</mat-icon>
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <mat-label>Taille</mat-label>
+                                            <input matInput formControlName="size" placeholder="Ex: L, XL">
+                                            <mat-icon matPrefix>straighten</mat-icon>
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <mat-label>Couleur</mat-label>
+                                            <input matInput formControlName="color" placeholder="Ex: Rouge, Bleu">
+                                            <mat-icon matPrefix>palette</mat-icon>
+                                        </mat-form-field>
+
+                                        <div class="flex justify-end">
+                                            <button mat-icon-button color="warn" (click)="removeVariant(i)"
+                                                type="button">
+                                                <mat-icon>delete</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button mat-stroked-button color="primary" (click)="addVariant()" type="button"
+                                    class="w-full">
+                                    <mat-icon>add_circle</mat-icon>
+                                    Ajouter une variante
+                                </button>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                </mat-tab-group>
+
+                <!-- Action Buttons -->
+                <div class="form-actions flex items-center justify-between pt-6 mt-6 border-t border-gray-200">
+                    <button mat-stroked-button color="warn" type="button" (click)="cancel()">
+                        Annuler
+                    </button>
+                    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || isSubmitting"
+                        class="!px-8">
+                        <ng-container *ngIf="!isSubmitting">
+                            <mat-icon>save</mat-icon>
+                            <span>Enregistrer</span>
+                        </ng-container>
+                        <ng-container *ngIf="isSubmitting">
+                            <mat-spinner diameter="20" class="inline-block align-middle"></mat-spinner>
+                            <span>Enregistrement...</span>
+                        </ng-container>
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,9 @@
+<app-generic-form [title]="pageTitle" [config]="formConfig" [isLoading]="isSubmitting" [formGroup]="form"
+    [mode]="'page'" [showBackButton]="true" [showFooter]="!isReadOnly" [actionsAlignment]="'space-between'"
+    [submitLabel]="getSubmitLabel()" (formSubmit)="onSubmit()" (formCancel)="cancel()">
+
+    <button header-actions *ngIf="isReadOnly" mat-flat-button color="primary" (click)="navigateToEdit()">
+        <mat-icon>edit</mat-icon>
+        Modifier
+    </button>
+</app-generic-form>

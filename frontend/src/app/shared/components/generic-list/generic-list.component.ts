@@ -9,7 +9,7 @@ import { ColumnConfig } from '../../abstractions/column-config.model';
   templateUrl: './generic-list.component.html',
   styleUrls: ['./generic-list.component.scss']
 })
-export class GenericListComponent<T extends { id: string; [key: string]: any }> implements AfterViewInit {
+export class GenericListComponent<T extends { id: string;[key: string]: any }> implements AfterViewInit {
 
   @Input() pageTitle: string = '';
   @Input() isLoading: boolean = true;
@@ -59,5 +59,19 @@ export class GenericListComponent<T extends { id: string; [key: string]: any }> 
 
   emitAction(action: string, item: T) {
     this.action.emit({ action, item });
+  }
+
+  getStatusLabel(value: any): string {
+    if (typeof value === 'boolean') {
+      return value ? 'Active' : 'Inactive';
+    }
+    return value || '-';
+  }
+
+  getStatusClass(value: any): string {
+    if (typeof value === 'boolean') {
+      return value ? 'active' : 'inactive';
+    }
+    return String(value).toLowerCase();
   }
 }

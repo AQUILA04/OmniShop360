@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint2: gestion des boutiques et produits (front)">
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/category-form/category-form.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/category-form/category-form.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-list/shop-list.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-list/shop-list.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/tenant-settings/tenant-settings.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/tenant-settings/tenant-settings.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-form/user-form.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-form/user-form.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-list/user-list.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-list/user-list.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/category.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/category.service.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/product.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/product.service.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/shop.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/shop.service.spec.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/sprints/sprint-3-backlog.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,12 +34,16 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="feature/add-theme-and-keycloak-frontend" />
-                    <option name="lastUsedInstant" value="1765797880" />
+                    <option name="branchName" value="backlog/sprint3" />
+                    <option name="lastUsedInstant" value="1768196473" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="develop" />
-                    <option name="lastUsedInstant" value="1765737459" />
+                    <option name="lastUsedInstant" value="1768196190" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/add-theme-and-keycloak-frontend" />
+                    <option name="lastUsedInstant" value="1765797880" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
@@ -113,7 +108,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "Spring Boot.OmniShop360BackendApplication.executor": "Debug",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "feature/sprint2-front",
+    "git-widget-placeholder": "backlog/sprint3",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360/keycloak/themes/omnishop360/login/resources/img",
@@ -250,6 +245,7 @@
       <workItem from="1767454547403" duration="4504000" />
       <workItem from="1767682524633" duration="7667000" />
       <workItem from="1767764823177" duration="5384000" />
+      <workItem from="1768195976344" duration="542000" />
     </task>
     <task id="LOCAL-00001">
       <option name="closed" value="true" />

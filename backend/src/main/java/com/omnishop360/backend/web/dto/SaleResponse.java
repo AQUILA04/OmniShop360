@@ -6,6 +6,7 @@ import lombok.Builder;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -29,6 +30,9 @@ public record SaleResponse(
         List<SaleItemResponse> items
 ) {
     public static SaleResponse from(Sale sale) {
+        if (Objects.isNull(sale)) {
+            return null;
+        }
         return SaleResponse.builder()
                 .id(sale.getId())
                 .saleNumber(sale.getSaleNumber())

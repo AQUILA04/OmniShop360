@@ -108,6 +108,9 @@ public class SaleService {
                 if (!variant.getProduct().getId().equals(product.getId())) {
                     throw new EntityNotFoundException("Product variant not found with id: " + itemRequest.variantId());
                 }
+                if (!Boolean.TRUE.equals(variant.getActive())) {
+                    throw new IllegalArgumentException("Product variant is not active: " + variant.getId());
+                }
                 if (variant.getSellingPrice() != null) {
                     unitPrice = variant.getSellingPrice();
                 }

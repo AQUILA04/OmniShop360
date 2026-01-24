@@ -61,12 +61,7 @@ public class SaleController {
             @ApiResponse(responseCode = "403", description = "Permissions insuffisantes")
     })
     public ResponseEntity<PageResponse<SaleResponse>> getSales(
-            @Parameter(description = "Numéro de page (défaut: 0)")
-            @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Taille de page (défaut: 20, max: 100)")
-            @RequestParam(defaultValue = "20") int size,
-            @Parameter(description = "Champ de tri (défaut: saleDate,desc)")
-            @RequestParam(defaultValue = "saleDate,desc") String sort,
+            Pageable pageable,
             @Parameter(description = "ID du client")
             @RequestParam(required = false) UUID customerId,
             @Parameter(description = "Recherche par numéro de vente, nom client, email, téléphone")
@@ -81,13 +76,6 @@ public class SaleController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
             @Parameter(description = "Date de fin (format: yyyy-MM-dd)")
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
-
-        int pageSize = Math.min(size, 100);
-        String[] sortParams = sort.split(",");
-        Sort.Direction direction = sortParams.length > 1 && "asc".equalsIgnoreCase(sortParams[1])
-                ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sortObj = Sort.by(direction, sortParams[0]);
-        Pageable pageable = PageRequest.of(page, pageSize, sortObj);
 
         SaleSearchDto searchDto = SaleSearchDto.builder()
                 .customerId(customerId)

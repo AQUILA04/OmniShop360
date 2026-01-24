@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -119,8 +121,7 @@ class CustomerControllerTest {
 
         when(customerService.getCustomers(any(), any())).thenReturn(pageResponse);
 
-        ResponseEntity<PageResponse<CustomerResponse>> response = customerController.getCustomers(
-                0, 20, "createdAt,desc", null, null, null, null);
+        ResponseEntity<PageResponse<CustomerResponse>> response = customerController.getCustomers(PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "createdAt")), null, null, null, null);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -144,8 +145,7 @@ class CustomerControllerTest {
 
         when(customerService.getCustomers(any(), any())).thenReturn(pageResponse);
 
-        ResponseEntity<PageResponse<CustomerResponse>> response = customerController.getCustomers(
-                0, 20, "lastName,asc", "john", "john.doe@test.com", "123456789", true);
+        ResponseEntity<PageResponse<CustomerResponse>> response = customerController.getCustomers(PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "lastName")), "john", "john.doe@test.com", "123456789", true);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -167,8 +167,7 @@ class CustomerControllerTest {
 
         when(customerService.getCustomers(any(), any())).thenReturn(pageResponse);
 
-        ResponseEntity<PageResponse<CustomerResponse>> response = customerController.getCustomers(
-                0, 200, "createdAt,desc", null, null, null, null);
+        ResponseEntity<PageResponse<CustomerResponse>> response = customerController.getCustomers(PageRequest.of(0, 200, Sort.by(Sort.Direction.DESC, "createdAt")), null, null, null, null);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());

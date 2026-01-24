@@ -90,12 +90,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "403", description = "Permissions insuffisantes")
     })
     public ResponseEntity<PageResponse<CustomerResponse>> getCustomers(
-            @Parameter(description = "Numéro de page (défaut: 0)")
-            @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Taille de page (défaut: 20, max: 100)")
-            @RequestParam(defaultValue = "20") int size,
-            @Parameter(description = "Champ de tri (défaut: createdAt,desc)")
-            @RequestParam(defaultValue = "createdAt,desc") String sort,
+            Pageable pageable,
             @Parameter(description = "Recherche par mot-clé (nom, prénom, email, téléphone)")
             @RequestParam(required = false) String keyword,
             @Parameter(description = "Filtrer par email")
@@ -105,13 +100,6 @@ public class CustomerController {
             @Parameter(description = "Filtrer par statut actif")
             @RequestParam(required = false) Boolean active) {
 
-        int pageSize = Math.min(size, 100);
-        String[] sortParams = sort.split(",");
-        Sort.Direction direction = sortParams.length > 1 && "asc".equalsIgnoreCase(sortParams[1])
-                ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sortObj = Sort.by(direction, sortParams[0]);
-
-        Pageable pageable = PageRequest.of(page, pageSize, sortObj);
         CustomerSearchDto searchDto = new CustomerSearchDto(null, keyword, email, phone, active);
         PageResponse<CustomerResponse> response = customerService.getCustomers(searchDto, pageable);
         return ResponseEntity.ok(response);

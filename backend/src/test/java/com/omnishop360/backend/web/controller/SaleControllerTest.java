@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -105,7 +107,7 @@ class SaleControllerTest {
         when(saleService.getSales(any(), any())).thenReturn(pageResponse);
 
         ResponseEntity<PageResponse<SaleResponse>> response = saleController.getSales(
-                0, 20, "saleDate,desc", null, null, null, null, null, null, null);
+                PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "saleDate")), null, null, null, null, null, null, null);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -130,7 +132,7 @@ class SaleControllerTest {
         when(saleService.getSales(any(), any())).thenReturn(pageResponse);
 
         ResponseEntity<PageResponse<SaleResponse>> response = saleController.getSales(
-                0, 20, "saleDate,asc", customerId, "test", Sale.PaymentMethod.CASH,
+                PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "saleDate")), customerId, "test", Sale.PaymentMethod.CASH,
                 Sale.PaymentStatus.PAID, Sale.SaleStatus.COMPLETED,
                 LocalDate.now().minusDays(7), LocalDate.now());
 
@@ -155,7 +157,7 @@ class SaleControllerTest {
         when(saleService.getSales(any(), any())).thenReturn(pageResponse);
 
         ResponseEntity<PageResponse<SaleResponse>> response = saleController.getSales(
-                0, 200, "saleDate,desc", null, null, null, null, null, null, null);
+                PageRequest.of(0, 200, Sort.by(Sort.Direction.DESC, "saleDate")), null, null, null, null, null, null, null);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());

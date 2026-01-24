@@ -7,6 +7,68 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.3.0] - 2025-01-24 - Sprint 3 Backend
+
+### Added
+- **Stock Management API** - Backend implementation for stock reception and inventory management
+  - `POST /api/v1/stock/movements` - Record stock reception (US-010)
+  - `GET /api/v1/stock/inventory` - View inventory with filtering and search (US-011)
+  - Stock entity with quantity tracking and low stock detection
+  - StockMovement entity for audit trail
+  - StockService with addStock, removeStock, and getInventory methods
+  - StockSpecification for advanced search using JPA Specifications
+- **Sales & POS API** - Backend implementation for sales transactions
+  - `POST /api/v1/sales/checkout` - Finalize sale and decrement stock atomically (US-013, US-014)
+  - `GET /api/v1/sales` - List sales with filtering and search
+  - `GET /api/v1/sales/{saleId}` - Get sale details
+  - Sale and SaleItem entities with price snapshot at sale time
+  - SaleService with transactional checkout method
+  - SaleSpecification for advanced search using JPA Specifications
+- **Customer Entity** - Customer entity for sales tracking
+- **ProductVariantRepository** - Repository for product variants
+- **API Contracts** - Contract documentation for frontend integration
+  - `contracts/stock-controller.v1.md` - Stock management API contract
+  - `contracts/sale-controller.v1.md` - Sales and POS API contract
+- **Unit and Integration Tests** - 100% test coverage for new code
+  - Tests for `StockService`
+  - Tests for `SaleService`
+  - Tests for `StockResponse` and `SaleResponse` DTOs
+
+### Changed
+- **Architecture** - Extended backend with stock and sales management following existing patterns
+  - Reused existing Specifications pattern for advanced searches
+  - Followed existing DTO and Service patterns
+  - Maintained transaction isolation per shop
+
+### Security
+- Implemented role-based access control for stock and sales endpoints
+  - Stock endpoints: `tenant_admin` or `shop_admin`
+  - Sales checkout: `tenant_admin`, `shop_admin`, or `cashier`
+  - Sales listing: `tenant_admin` or `shop_admin`
+- **Cashier Management** - Backend implementation for cashier creation
+  - `POST /api/v1/shops/{shopId}/cashiers` - Create cashier for a shop
+  - `CreateCashierRequest` DTO for cashier creation
+  - `ShopService.createCashier()` method with tenant and shop validation
+  - Shop Admin can only create cashiers for their own shop
+  - Tenant Admin can create cashiers for any shop in their tenant
+  - Updated `shop-controller.v1.md` contract (v1.1.0) with cashier endpoint
+  - Unit tests for cashier creation scenarios
+- **Customer Management API** - Backend implementation for customer CRUD operations
+  - `POST /api/v1/customers` - Create a new customer
+  - `PUT /api/v1/customers/{customerId}` - Update customer information
+  - `DELETE /api/v1/customers/{customerId}` - Delete customer (soft delete)
+  - `GET /api/v1/customers` - List customers with advanced search and filtering
+  - `GET /api/v1/customers/{customerId}` - Get customer details
+  - `CustomerService` with full CRUD operations
+  - `CustomerSpecification` for advanced search using JPA Specifications
+  - `CreateCustomerRequest`, `UpdateCustomerRequest`, `CustomerResponse`, `CustomerSearchDto` DTOs
+  - Accessible to `tenant_admin`, `shop_admin`, and `cashier` roles
+  - Multi-tenant isolation: users can only access customers from their tenant
+  - Unit tests for `CustomerService` with 100% coverage
+  - API contract `customer-controller.v1.md` for frontend integration
+
+---
+
 ## [0.2.0] - 2025-12-10 - Sprint 1 Backend
 
 ### Added

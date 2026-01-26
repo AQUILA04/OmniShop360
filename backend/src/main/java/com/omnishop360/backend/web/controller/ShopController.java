@@ -2,6 +2,7 @@ package com.omnishop360.backend.web.controller;
 
 import com.omnishop360.backend.domain.service.ShopService;
 import com.omnishop360.backend.web.dto.AdminUserResponse;
+import com.omnishop360.backend.web.dto.CreateCashierRequest;
 import com.omnishop360.backend.web.dto.CreateShopAdminRequest;
 import com.omnishop360.backend.web.dto.CreateShopRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
@@ -56,22 +57,10 @@ public class ShopController {
             @ApiResponse(responseCode = "403", description = "Permissions insuffisantes")
     })
     public ResponseEntity<PageResponse<ShopResponse>> getAllShops(
-            @Parameter(description = "Numéro de page (défaut: 0)")
-            @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Taille de page (défaut: 20, max: 100)")
-            @RequestParam(defaultValue = "20") int size,
-            @Parameter(description = "Champ de tri (défaut: createdAt,desc)")
-            @RequestParam(defaultValue = "createdAt,desc") String sort,
+            Pageable pageable,
             @Parameter(description = "Recherche par nom ou code")
             @RequestParam(required = false) String search) {
 
-        int pageSize = Math.min(size, 100);
-        String[] sortParams = sort.split(",");
-        Sort.Direction direction = sortParams.length > 1 && "asc".equalsIgnoreCase(sortParams[1])
-                ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sortObj = Sort.by(direction, sortParams[0]);
-
-        Pageable pageable = PageRequest.of(page, pageSize, sortObj);
         PageResponse<ShopResponse> response = shopService.getAllShops(pageable, search);
         return ResponseEntity.ok(response);
     }
@@ -108,6 +97,25 @@ public class ShopController {
         log.info("Creating shop admin for shop: {}", shopId);
         request.setShopId(shopId);
         var user = shopService.createShopAdmin(request);
+        AdminUserResponse response = AdminUserResponse.from(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/{shopId}/cashiers")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @Operation(summary = "Créer un Caissier", description = "Permet au Tenant Admin ou Shop Admin de créer un Caissier et de l'assigner à une boutique")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Caissier créé avec succès"),
+            @ApiResponse(responseCode = "400", description = "Données invalides"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes"),
+            @ApiResponse(responseCode = "404", description = "Boutique non trouvée")
+    })
+    public ResponseEntity<AdminUserResponse> createCashier(
+            @Parameter(description = "UUID de la boutique")
+            @PathVariable UUID shopId,
+            @Valid @RequestBody CreateCashierRequest request) {
+        log.info("Creating cashier for shop: {}", shopId);
+        var user = shopService.createCashier(shopId, request);
         AdminUserResponse response = AdminUserResponse.from(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

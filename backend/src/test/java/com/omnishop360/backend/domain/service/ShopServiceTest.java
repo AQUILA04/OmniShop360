@@ -7,6 +7,7 @@ import com.omnishop360.backend.domain.repository.ShopRepository;
 import com.omnishop360.backend.domain.repository.TenantRepository;
 import com.omnishop360.backend.domain.repository.UserRepository;
 import com.omnishop360.backend.infrastructure.adapter.KeycloakAdapter;
+import com.omnishop360.backend.web.dto.CreateCashierRequest;
 import com.omnishop360.backend.web.dto.CreateShopAdminRequest;
 import com.omnishop360.backend.web.dto.CreateShopRequest;
 import com.omnishop360.backend.web.dto.ShopResponse;
@@ -222,6 +223,108 @@ class ShopServiceTest {
         when(userRepository.existsByEmailAndDeletedFalse(request.getEmail())).thenReturn(true);
 
         assertThrows(IllegalArgumentException.class, () -> shopService.createShopAdmin(request));
+    }
+
+    @Test
+    @DisplayName("Should create cashier successfully")
+    void shouldCreateCashierSuccessfully() {
+        UUID shopId = shop.getId();
+        CreateCashierRequest request = new CreateCashierRequest();
+        request.setFirstName("Marie");
+        request.setLastName("Martin");
+        request.setEmail("marie.martin@test.com");
+
+        String keycloakId = "keycloak-id-456";
+        User cashier = new User();
+        cashier.setId(UUID.randomUUID());
+        cashier.setTenant(tenant);
+        cashier.setShop(shop);
+        cashier.setFirstName("Marie");
+        cashier.setLastName("Martin");
+        cashier.setEmail("marie.martin@test.com");
+        cashier.setKeycloakId(keycloakId);
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.empty());
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(userRepository.existsByEmailAndDeletedFalse(request.getEmail())).thenReturn(false);
+        when(keycloakAdapter.createUser(anyString(), anyString(), anyString(), anyString())).thenReturn(keycloakId);
+        doNothing().when(keycloakAdapter).setUserAttribute(anyString(), anyString(), anyString());
+        when(userRepository.save(any(User.class))).thenReturn(cashier);
+
+        User result = shopService.createCashier(shopId, request);
+
+        assertNotNull(result);
+        assertEquals(cashier.getEmail(), result.getEmail());
+        verify(keycloakAdapter).createUser(eq("marie.martin@test.com"), eq("Marie"), eq("Martin"), eq("cashier"));
+        verify(keycloakAdapter).setUserAttribute(eq(keycloakId), eq("shop_id"), eq(shopId.toString()));
+        verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Should create cashier successfully by shop admin for own shop")
+    void shouldCreateCashierSuccessfullyByShopAdminForOwnShop() {
+        UUID shopId = shop.getId();
+        CreateCashierRequest request = new CreateCashierRequest();
+        request.setFirstName("Marie");
+        request.setLastName("Martin");
+        request.setEmail("marie.martin@test.com");
+
+        String keycloakId = "keycloak-id-456";
+        User cashier = new User();
+        cashier.setId(UUID.randomUUID());
+        cashier.setTenant(tenant);
+        cashier.setShop(shop);
+        cashier.setFirstName("Marie");
+        cashier.setLastName("Martin");
+        cashier.setEmail("marie.martin@test.com");
+        cashier.setKeycloakId(keycloakId);
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(userRepository.existsByEmailAndDeletedFalse(request.getEmail())).thenReturn(false);
+        when(keycloakAdapter.createUser(anyString(), anyString(), anyString(), anyString())).thenReturn(keycloakId);
+        doNothing().when(keycloakAdapter).setUserAttribute(anyString(), anyString(), anyString());
+        when(userRepository.save(any(User.class))).thenReturn(cashier);
+
+        User result = shopService.createCashier(shopId, request);
+
+        assertNotNull(result);
+        assertEquals(cashier.getEmail(), result.getEmail());
+        verify(keycloakAdapter).createUser(eq("marie.martin@test.com"), eq("Marie"), eq("Martin"), eq("cashier"));
+    }
+
+    @Test
+    @DisplayName("Should throw exception when shop admin tries to create cashier for different shop")
+    void shouldThrowExceptionWhenShopAdminTriesToCreateCashierForDifferentShop() {
+        UUID shopId = shop.getId();
+        UUID differentShopId = UUID.randomUUID();
+        CreateCashierRequest request = new CreateCashierRequest();
+        request.setFirstName("Marie");
+        request.setLastName("Martin");
+        request.setEmail("marie.martin@test.com");
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(differentShopId));
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+
+        assertThrows(IllegalArgumentException.class, () -> shopService.createCashier(shopId, request));
+    }
+
+    @Test
+    @DisplayName("Should throw exception when email already exists for cashier")
+    void shouldThrowExceptionWhenEmailAlreadyExistsForCashier() {
+        UUID shopId = shop.getId();
+        CreateCashierRequest request = new CreateCashierRequest();
+        request.setEmail("existing@test.com");
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.empty());
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(userRepository.existsByEmailAndDeletedFalse(request.getEmail())).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () -> shopService.createCashier(shopId, request));
     }
 }
 

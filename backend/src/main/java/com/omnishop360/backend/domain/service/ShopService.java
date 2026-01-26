@@ -7,6 +7,7 @@ import com.omnishop360.backend.domain.repository.ShopRepository;
 import com.omnishop360.backend.domain.repository.TenantRepository;
 import com.omnishop360.backend.domain.repository.UserRepository;
 import com.omnishop360.backend.infrastructure.adapter.KeycloakAdapter;
+import com.omnishop360.backend.web.dto.CreateCashierRequest;
 import com.omnishop360.backend.web.dto.CreateShopAdminRequest;
 import com.omnishop360.backend.web.dto.CreateShopRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
@@ -142,6 +143,51 @@ public class ShopService {
 
         log.info("Shop admin created successfully: {} for shop: {}", admin.getId(), shop.getId());
         return admin;
+    }
+
+    @Transactional
+    public User createCashier(UUID shopId, CreateCashierRequest request) {
+        UUID tenantId = userContextService.getCurrentUserTenantId();
+        log.info("Creating cashier: {} for shop: {}", request.getEmail(), shopId);
+
+        Shop shop = shopRepository.findByIdAndDeletedFalse(shopId)
+                .orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + shopId));
+
+        if (!shop.getTenant().getId().equals(tenantId)) {
+            throw new EntityNotFoundException("Shop not found with id: " + shopId);
+        }
+
+        var currentUserShopId = userContextService.getCurrentUserShopId();
+        if (currentUserShopId.isPresent() && !currentUserShopId.get().equals(shopId)) {
+            throw new IllegalArgumentException("Shop Admin can only create cashiers for their own shop");
+        }
+
+        if (userRepository.existsByEmailAndDeletedFalse(request.getEmail())) {
+            throw new IllegalArgumentException("User with email already exists: " + request.getEmail());
+        }
+
+        String keycloakId = keycloakAdapter.createUser(
+                request.getEmail(),
+                request.getFirstName(),
+                request.getLastName(),
+                "cashier"
+        );
+
+        keycloakAdapter.setUserAttribute(keycloakId, "shop_id", shop.getId().toString());
+
+        User cashier = new User();
+        cashier.setTenant(shop.getTenant());
+        cashier.setShop(shop);
+        cashier.setFirstName(request.getFirstName());
+        cashier.setLastName(request.getLastName());
+        cashier.setEmail(request.getEmail());
+        cashier.setKeycloakId(keycloakId);
+        cashier.setActive(true);
+        cashier.setDeleted(false);
+        cashier = userRepository.save(cashier);
+
+        log.info("Cashier created successfully: {} for shop: {}", cashier.getId(), shop.getId());
+        return cashier;
     }
 
     private String generateShopCode(String shopName, UUID tenantId) {

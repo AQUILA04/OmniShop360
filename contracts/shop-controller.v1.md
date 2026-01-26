@@ -348,7 +348,10 @@ Authorization: Bearer <JWT_TOKEN>
 ### Backend
 - Le code de la boutique est auto-généré à partir du nom
 - Un Shop Admin créé est automatiquement lié à sa boutique via l'attribut `shop_id` dans Keycloak
+- Un Caissier créé est automatiquement lié à sa boutique via l'attribut `shop_id` dans Keycloak
 - L'isolation des données est garantie : un Shop Admin ne peut accéder qu'aux données de sa boutique
+- Un Shop Admin ne peut créer un caissier que pour sa propre boutique (vérification automatique)
+- Un Tenant Admin peut créer un caissier pour n'importe quelle boutique de son tenant
 
 ### Frontend
 - Utiliser `HttpClient` d'Angular pour les appels API

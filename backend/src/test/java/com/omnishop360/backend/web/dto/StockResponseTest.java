@@ -47,6 +47,72 @@ class StockResponseTest {
         assertEquals(product.getSku(), response.productSku());
         assertEquals(stock.getQuantity(), response.quantity());
         assertFalse(response.lowStock());
+        assertNull(response.sellingPrice());
+    }
+
+    @Test
+    @DisplayName("Should set sellingPrice from product when no variant")
+    void shouldSetSellingPriceFromProductWhenNoVariant() {
+        Tenant tenant = new Tenant();
+        tenant.setId(UUID.randomUUID());
+        Shop shop = new Shop();
+        shop.setId(UUID.randomUUID());
+        shop.setTenant(tenant);
+        Product product = new Product();
+        product.setId(UUID.randomUUID());
+        product.setTenant(tenant);
+        product.setName("Test Product");
+        product.setSku("TEST-SKU-001");
+        product.setSellingPrice(new BigDecimal("29.99"));
+        Stock stock = new Stock();
+        stock.setId(UUID.randomUUID());
+        stock.setTenant(tenant);
+        stock.setShop(shop);
+        stock.setProduct(product);
+        stock.setVariant(null);
+        stock.setQuantity(new BigDecimal("10.0"));
+        stock.setReservedQuantity(BigDecimal.ZERO);
+        stock.setAvailableQuantity(new BigDecimal("10.0"));
+        stock.setMinStockLevel(BigDecimal.ZERO);
+        StockResponse response = StockResponse.from(stock);
+        assertNotNull(response);
+        assertEquals(new BigDecimal("29.99"), response.sellingPrice());
+    }
+
+    @Test
+    @DisplayName("Should set sellingPrice from variant when present")
+    void shouldSetSellingPriceFromVariantWhenPresent() {
+        Tenant tenant = new Tenant();
+        tenant.setId(UUID.randomUUID());
+        Shop shop = new Shop();
+        shop.setId(UUID.randomUUID());
+        shop.setTenant(tenant);
+        Product product = new Product();
+        product.setId(UUID.randomUUID());
+        product.setTenant(tenant);
+        product.setName("Test Product");
+        product.setSku("TEST-SKU-001");
+        product.setSellingPrice(new BigDecimal("25.00"));
+        ProductVariant variant = new ProductVariant();
+        variant.setId(UUID.randomUUID());
+        variant.setTenant(tenant);
+        variant.setProduct(product);
+        variant.setName("Test Variant");
+        variant.setSku("TEST-VAR-001");
+        variant.setSellingPrice(new BigDecimal("32.50"));
+        Stock stock = new Stock();
+        stock.setId(UUID.randomUUID());
+        stock.setTenant(tenant);
+        stock.setShop(shop);
+        stock.setProduct(product);
+        stock.setVariant(variant);
+        stock.setQuantity(new BigDecimal("5.0"));
+        stock.setReservedQuantity(BigDecimal.ZERO);
+        stock.setAvailableQuantity(new BigDecimal("5.0"));
+        stock.setMinStockLevel(BigDecimal.ZERO);
+        StockResponse response = StockResponse.from(stock);
+        assertNotNull(response);
+        assertEquals(new BigDecimal("32.50"), response.sellingPrice());
     }
 
     @Test

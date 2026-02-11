@@ -20,6 +20,7 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - **Sales & POS API** - Backend implementation for sales transactions
   - `POST /api/v1/sales/checkout` - Finalize sale and decrement stock atomically (US-013, US-014)
   - `GET /api/v1/sales` - List sales with filtering and search
+  - `GET /api/v1/sales/products` - Search products with stock for sale (tenant_admin, shop_admin, cashier)
   - `GET /api/v1/sales/{saleId}` - Get sale details
   - Sale and SaleItem entities with price snapshot at sale time
   - SaleService with transactional checkout method
@@ -29,6 +30,7 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - **API Contracts** - Contract documentation for frontend integration
   - `contracts/stock-controller.v1.md` - Stock management API contract
   - `contracts/sale-controller.v1.md` - Sales and POS API contract
+  - `contracts/sale-controller.v1.1.md` - Sales - Product search for cashiers
 - **Unit and Integration Tests** - 100% test coverage for new code
   - Tests for `StockService`
   - Tests for `SaleService`
@@ -42,8 +44,9 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Security
 - Implemented role-based access control for stock and sales endpoints
-  - Stock endpoints: `tenant_admin` or `shop_admin`
+  - Stock endpoints: `tenant_admin`, `shop_admin`, or `stock_manager`
   - Sales checkout: `tenant_admin`, `shop_admin`, or `cashier`
+  - Sales product search: `tenant_admin`, `shop_admin`, or `cashier`
   - Sales listing: `tenant_admin` or `shop_admin`
 - **Cashier Management** - Backend implementation for cashier creation
   - `POST /api/v1/shops/{shopId}/cashiers` - Create cashier for a shop
@@ -53,6 +56,17 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Tenant Admin can create cashiers for any shop in their tenant
   - Updated `shop-controller.v1.md` contract (v1.1.0) with cashier endpoint
   - Unit tests for cashier creation scenarios
+- **Stock Manager Management** - Backend implementation for stock manager creation
+  - `POST /api/v1/shops/{shopId}/stock-managers` - Create stock manager for a shop
+  - `CreateStockManagerRequest` DTO for stock manager creation
+  - `ShopService.createStockManager()` method with tenant and shop validation
+  - Shop Admin can only create stock managers for their own shop
+  - Tenant Admin can create stock managers for any shop in their tenant
+  - Stock endpoints (`POST /stock/movements`, `GET /stock/inventory`) accessible to `stock_manager`
+  - Contract `shop-controller.v1.2.md` with stock manager endpoint
+  - Updated `stock-controller.v1.md` (v1.1.0) with stock_manager role
+  - Unit tests for stock manager creation in ShopServiceTest
+  - Integration test for POST /shops/{shopId}/stock-managers
 - **Customer Management API** - Backend implementation for customer CRUD operations
   - `POST /api/v1/customers` - Create a new customer
   - `PUT /api/v1/customers/{customerId}` - Update customer information
@@ -66,6 +80,15 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Multi-tenant isolation: users can only access customers from their tenant
   - Unit tests for `CustomerService` with 100% coverage
   - API contract `customer-controller.v1.md` for frontend integration
+- **User Management API** - Backend implementation for user listing
+  - `GET /api/v1/users` - List users with advanced search and filtering
+  - `UserService` with getUsers method
+  - `UserSpecification` for advanced search using JPA Specifications
+  - `UserResponse`, `UserSearchDto` DTOs
+  - Accessible to `superadmin` (all users) and `tenant_admin` (users of their tenant)
+  - API contract `user-controller.v1.md` for frontend integration
+  - Unit tests for `UserResponse`, `UserSpecification`, `UserService`, `UserController`
+  - Integration tests for `UserController`
 
 ---
 

@@ -2,10 +2,8 @@ package com.omnishop360.backend.web.controller;
 
 import com.omnishop360.backend.domain.entity.Sale;
 import com.omnishop360.backend.domain.service.SaleService;
-import com.omnishop360.backend.web.dto.CheckoutRequest;
-import com.omnishop360.backend.web.dto.PageResponse;
-import com.omnishop360.backend.web.dto.SaleResponse;
-import com.omnishop360.backend.web.dto.SaleSearchDto;
+import com.omnishop360.backend.domain.service.StockService;
+import com.omnishop360.backend.web.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,9 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +30,7 @@ import java.util.UUID;
 public class SaleController {
 
     private final SaleService saleService;
+    private final StockService stockService;
 
     @PostMapping("/checkout")
     @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
@@ -52,8 +49,25 @@ public class SaleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/products")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Rechercher les produits pour la vente",
+               description = "Liste paginée des produits avec stock de la boutique (nom, SKU, prix, quantités)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste récupérée avec succès"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes")
+    })
+    public ResponseEntity<PageResponse<StockResponse>> getProductsForSale(
+            Pageable pageable,
+            @Parameter(description = "Recherche par nom ou SKU")
+            @RequestParam(required = false) String search) {
+        StockSearchDto searchDto = StockSearchDto.builder().keyword(search).build();
+        PageResponse<StockResponse> response = stockService.getInventory(searchDto, pageable);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping
-    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
     @Operation(summary = "Lister les ventes", 
                description = "Récupère la liste paginée des ventes de la boutique")
     @ApiResponses(value = {
@@ -92,7 +106,7 @@ public class SaleController {
     }
 
     @GetMapping("/{saleId}")
-    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
     @Operation(summary = "Récupérer une vente par ID", 
                description = "Récupère les détails d'une vente spécifique")
     @ApiResponses(value = {

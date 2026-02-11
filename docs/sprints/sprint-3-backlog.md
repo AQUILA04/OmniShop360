@@ -10,7 +10,9 @@
 | ID | User Story | Rôle | Priorité | Points | Dépendances |
 |:---|:---|:---|:---|:---:|:---|
 | **US-010** | En tant que **Gestionnaire de Stock**, je veux enregistrer une **Réception de Marchandises** pour mettre à jour les quantités disponibles dans ma boutique. | Stock Mgr | 🔴 Must | 5 | Sprint 2 |
-| **US-011** | En tant que **Shop Admin**, je veux consulter l'état des stocks de ma boutique en temps réel pour éviter les ruptures. | Shop Admin | 🔴 Must | 3 | US-010 |
+| **US-011** | En tant que **Gestionnaire de Stock** ou **Shop Admin**, je veux consulter l'état des stocks de ma boutique en temps réel pour éviter les ruptures. | Stock Mgr, Shop Admin | 🔴 Must | 3 | US-010 |
+
+**Note :** Le rôle Gestionnaire de Stock (stock_manager) est créé via `POST /api/v1/shops/{shopId}/stock-managers` par un tenant_admin ou shop_admin.
 
 ### Epic: Point de Vente (POS) & Ventes
 | ID | User Story | Rôle | Priorité | Points | Dépendances |
@@ -27,6 +29,7 @@
 1. **[Task-BE-13]** Créer l'entité `Stock_Entry` (id, product_id, shop_id, quantity, type[IN/OUT], timestamp).
 2. **[Task-BE-14]** Créer le service de mouvement de stock avec protection `@Transactional` (une vente = une décrémentation atomique).
 3. **[Task-BE-15]** Implémenter l'API `POST /api/v1/stock/movements` pour les réceptions manuelles.
+4. **[Task-BE-15b]** Implémenter l'API `POST /api/v1/shops/{shopId}/stock-managers` pour créer un Gestionnaire de Stock (comme pour les caissiers).
 4. **[Task-BE-16]** Créer les entités `Sale` et `Sale_Item` (Stockage du prix de vente pratiqué au moment de l'achat).
 5. **[Task-BE-17]** Développer l'API `POST /api/v1/sales/checkout` (Validation panier + Mise à jour stock).
 

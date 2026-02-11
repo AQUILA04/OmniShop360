@@ -1,12 +1,7 @@
 package com.omnishop360.backend.web.controller;
 
 import com.omnishop360.backend.domain.service.ShopService;
-import com.omnishop360.backend.web.dto.AdminUserResponse;
-import com.omnishop360.backend.web.dto.CreateCashierRequest;
-import com.omnishop360.backend.web.dto.CreateShopAdminRequest;
-import com.omnishop360.backend.web.dto.CreateShopRequest;
-import com.omnishop360.backend.web.dto.PageResponse;
-import com.omnishop360.backend.web.dto.ShopResponse;
+import com.omnishop360.backend.web.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,9 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -116,6 +109,25 @@ public class ShopController {
             @Valid @RequestBody CreateCashierRequest request) {
         log.info("Creating cashier for shop: {}", shopId);
         var user = shopService.createCashier(shopId, request);
+        AdminUserResponse response = AdminUserResponse.from(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/{shopId}/stock-managers")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @Operation(summary = "Créer un Gestionnaire de Stock", description = "Permet au Tenant Admin ou Shop Admin de créer un Gestionnaire de Stock et de l'assigner à une boutique")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Gestionnaire de stock créé avec succès"),
+            @ApiResponse(responseCode = "400", description = "Données invalides"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes"),
+            @ApiResponse(responseCode = "404", description = "Boutique non trouvée")
+    })
+    public ResponseEntity<AdminUserResponse> createStockManager(
+            @Parameter(description = "UUID de la boutique")
+            @PathVariable UUID shopId,
+            @Valid @RequestBody CreateStockManagerRequest request) {
+        log.info("Creating stock manager for shop: {}", shopId);
+        var user = shopService.createStockManager(shopId, request);
         AdminUserResponse response = AdminUserResponse.from(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

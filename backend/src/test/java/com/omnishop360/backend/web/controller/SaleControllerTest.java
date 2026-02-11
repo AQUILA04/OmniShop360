@@ -2,9 +2,11 @@ package com.omnishop360.backend.web.controller;
 
 import com.omnishop360.backend.domain.entity.Sale;
 import com.omnishop360.backend.domain.service.SaleService;
+import com.omnishop360.backend.domain.service.StockService;
 import com.omnishop360.backend.web.dto.CheckoutRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.SaleResponse;
+import com.omnishop360.backend.web.dto.StockResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,9 +24,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("SaleController Tests")
@@ -32,6 +36,9 @@ class SaleControllerTest {
 
     @Mock
     private SaleService saleService;
+
+    @Mock
+    private StockService stockService;
 
     @InjectMocks
     private SaleController saleController;
@@ -175,5 +182,67 @@ class SaleControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(saleResponse, response.getBody());
         verify(saleService).getSaleById(saleId);
+    }
+
+    @Test
+    @DisplayName("Should get products for sale successfully")
+    void shouldGetProductsForSaleSuccessfully() {
+        StockResponse stockItem = StockResponse.builder()
+                .id(UUID.randomUUID())
+                .productId(productId)
+                .productName("Test Product")
+                .productSku("TEST-SKU")
+                .variantId(null)
+                .variantName(null)
+                .variantSku(null)
+                .quantity(new BigDecimal("10.0"))
+                .availableQuantity(new BigDecimal("10.0"))
+                .minStockLevel(BigDecimal.ZERO)
+                .maxStockLevel(null)
+                .lowStock(false)
+                .sellingPrice(new BigDecimal("29.99"))
+                .build();
+        PageResponse<StockResponse> pageResponse = PageResponse.<StockResponse>builder()
+                .content(List.of(stockItem))
+                .page(com.omnishop360.backend.web.dto.PageResponse.PageInfo.builder()
+                        .size(20)
+                        .number(0)
+                        .totalElements(1L)
+                        .totalPages(1)
+                        .build())
+                .build();
+        when(stockService.getInventory(any(), any())).thenReturn(pageResponse);
+
+        ResponseEntity<PageResponse<StockResponse>> response = saleController.getProductsForSale(
+                PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "product.name")), "test");
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().getContent().size());
+        assertEquals(new BigDecimal("29.99"), response.getBody().getContent().get(0).sellingPrice());
+        verify(stockService).getInventory(any(), any());
+    }
+
+    @Test
+    @DisplayName("Should get products for sale with pageable")
+    void shouldGetProductsForSaleWithPageable() {
+        PageResponse<StockResponse> pageResponse = PageResponse.<StockResponse>builder()
+                .content(List.of())
+                .page(com.omnishop360.backend.web.dto.PageResponse.PageInfo.builder()
+                        .size(20)
+                        .number(0)
+                        .totalElements(0L)
+                        .totalPages(0)
+                        .build())
+                .build();
+        when(stockService.getInventory(any(), any())).thenReturn(pageResponse);
+
+        ResponseEntity<PageResponse<StockResponse>> response = saleController.getProductsForSale(
+                PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "product.name")), null);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(stockService).getInventory(any(), any());
     }
 }

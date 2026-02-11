@@ -9,6 +9,7 @@ import com.omnishop360.backend.domain.repository.UserRepository;
 import com.omnishop360.backend.infrastructure.adapter.KeycloakAdapter;
 import com.omnishop360.backend.web.dto.CreateCashierRequest;
 import com.omnishop360.backend.web.dto.CreateShopAdminRequest;
+import com.omnishop360.backend.web.dto.CreateStockManagerRequest;
 import com.omnishop360.backend.web.dto.CreateShopRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.ShopResponse;
@@ -188,6 +189,51 @@ public class ShopService {
 
         log.info("Cashier created successfully: {} for shop: {}", cashier.getId(), shop.getId());
         return cashier;
+    }
+
+    @Transactional
+    public User createStockManager(UUID shopId, CreateStockManagerRequest request) {
+        UUID tenantId = userContextService.getCurrentUserTenantId();
+        log.info("Creating stock manager: {} for shop: {}", request.getEmail(), shopId);
+
+        Shop shop = shopRepository.findByIdAndDeletedFalse(shopId)
+                .orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + shopId));
+
+        if (!shop.getTenant().getId().equals(tenantId)) {
+            throw new EntityNotFoundException("Shop not found with id: " + shopId);
+        }
+
+        var currentUserShopId = userContextService.getCurrentUserShopId();
+        if (currentUserShopId.isPresent() && !currentUserShopId.get().equals(shopId)) {
+            throw new IllegalArgumentException("Shop Admin can only create stock managers for their own shop");
+        }
+
+        if (userRepository.existsByEmailAndDeletedFalse(request.getEmail())) {
+            throw new IllegalArgumentException("User with email already exists: " + request.getEmail());
+        }
+
+        String keycloakId = keycloakAdapter.createUser(
+                request.getEmail(),
+                request.getFirstName(),
+                request.getLastName(),
+                "stock_manager"
+        );
+
+        keycloakAdapter.setUserAttribute(keycloakId, "shop_id", shop.getId().toString());
+
+        User stockManager = new User();
+        stockManager.setTenant(shop.getTenant());
+        stockManager.setShop(shop);
+        stockManager.setFirstName(request.getFirstName());
+        stockManager.setLastName(request.getLastName());
+        stockManager.setEmail(request.getEmail());
+        stockManager.setKeycloakId(keycloakId);
+        stockManager.setActive(true);
+        stockManager.setDeleted(false);
+        stockManager = userRepository.save(stockManager);
+
+        log.info("Stock manager created successfully: {} for shop: {}", stockManager.getId(), shop.getId());
+        return stockManager;
     }
 
     private String generateShopCode(String shopName, UUID tenantId) {

@@ -133,11 +133,14 @@ Avant de merger :
 | `tenant-controller.v1.2.md` | 1.2.0 | Gestion des Tenants (Pricing Policy) | 🟢 Actif |
 | `shop-controller.v1.md` | 1.0.0 | Gestion des Boutiques | 🟢 Actif |
 | `shop-controller.v1.1.md` | 1.1.0 | Gestion des Boutiques (Création de Caissiers) | 🟢 Actif |
+| `shop-controller.v1.2.md` | 1.2.0 | Gestion des Boutiques (Création de Gestionnaires de Stock) | 🟢 Actif |
 | `product-controller.v1.md` | 1.0.0 | Gestion du Catalogue de Produits | 🟢 Actif |
 | `category-controller.v1.md` | 1.0.0 | Gestion des Catégories de Produits | 🟢 Actif |
-| `stock-controller.v1.md` | 1.0.0 | Gestion des Stocks et Inventaires | 🟢 Actif |
+| `stock-controller.v1.md` | 1.1.0 | Gestion des Stocks et Inventaires (rôle stock_manager) | 🟢 Actif |
 | `sale-controller.v1.md` | 1.0.0 | Gestion des Ventes et Transactions POS | 🟢 Actif |
+| `sale-controller.v1.1.md` | 1.1.0 | Ventes – Recherche produits pour la vente (avec stock) | 🟢 Actif |
 | `customer-controller.v1.md` | 1.0.0 | Gestion des Clients | 🟢 Actif |
+| `user-controller.v1.md` | 1.0.0 | Gestion des Utilisateurs | 🟢 Actif |
 
 ---
 

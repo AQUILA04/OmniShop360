@@ -17,9 +17,11 @@ import org.springframework.http.ResponseEntity;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("StockController Tests")
@@ -61,6 +63,7 @@ class StockControllerTest {
                 .availableQuantity(new BigDecimal("10.0"))
                 .minStockLevel(new BigDecimal("5.0"))
                 .lowStock(false)
+                .sellingPrice(new BigDecimal("50.00"))
                 .build();
     }
 

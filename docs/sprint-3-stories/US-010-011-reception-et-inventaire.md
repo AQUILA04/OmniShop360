@@ -3,6 +3,13 @@
 ## Description
 Il s'agit de l'entrée initiale de marchandises. Contrairement au catalogue (théorique), ici on manipule des quantités physiques liées à une boutique précise.
 
+## Rôles habilités
+- **Stock Manager (Gestionnaire de Stock)** : Peut enregistrer les réceptions et consulter l'inventaire de sa boutique
+- **Shop Admin** : Peut enregistrer les réceptions et consulter l'inventaire de sa boutique
+- **Tenant Admin** : Peut enregistrer les réceptions et consulter l'inventaire de toutes les boutiques du tenant
+
+La création d'un Gestionnaire de Stock s'effectue via `POST /api/v1/shops/{shopId}/stock-managers` (tenant_admin ou shop_admin).
+
 ## Spécifications Techniques (Backend)
 - **Service `StockService` :** Doit exposer une méthode `addStock(productId, shopId, quantity)`.
 - **Validation :** Vérifier que le `productId` existe dans le catalogue du Tenant auquel appartient la boutique.

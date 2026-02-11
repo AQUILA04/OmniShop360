@@ -20,7 +20,8 @@ public record StockResponse(
         BigDecimal availableQuantity,
         BigDecimal minStockLevel,
         BigDecimal maxStockLevel,
-        boolean lowStock
+        boolean lowStock,
+        BigDecimal sellingPrice
 ) {
     public static StockResponse from(Stock stock) {
         if (Objects.isNull(stock)) {
@@ -31,6 +32,12 @@ public record StockResponse(
                 && stock.getAvailableQuantity() != null 
                 && stock.getAvailableQuantity().compareTo(stock.getMinStockLevel()) < 0;
         
+        BigDecimal sellingPrice = null;
+        if (stock.getVariant() != null && stock.getVariant().getSellingPrice() != null) {
+            sellingPrice = stock.getVariant().getSellingPrice();
+        } else if (stock.getProduct() != null && stock.getProduct().getSellingPrice() != null) {
+            sellingPrice = stock.getProduct().getSellingPrice();
+        }
         return StockResponse.builder()
                 .id(stock.getId())
                 .productId(stock.getProduct().getId())
@@ -44,6 +51,7 @@ public record StockResponse(
                 .minStockLevel(stock.getMinStockLevel())
                 .maxStockLevel(stock.getMaxStockLevel())
                 .lowStock(lowStock)
+                .sellingPrice(sellingPrice)
                 .build();
     }
 }

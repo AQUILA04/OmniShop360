@@ -1,6 +1,6 @@
 # Contrat API - Stock Controller
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Date de création:** 2025-01-24  
 **Dernière modification:** 2025-01-24  
 **Responsable Backend:** À définir  
@@ -13,6 +13,7 @@
 | Version | Date | Auteur | Modifications |
 |:---|:---|:---|:---|
 | 1.0.0 | 2025-01-24 | AI Developer | Création initiale du contrat pour la gestion des stocks et inventaires |
+| 1.1.0 | 2025-01-24 | AI Developer | Ajout du rôle stock_manager pour réception et inventaire |
 
 ---
 
@@ -41,7 +42,7 @@ Authorization: Bearer <JWT_TOKEN>
 
 **Endpoint:** `POST /stock/movements`
 
-**Rôle requis:** `tenant_admin` ou `shop_admin`
+**Rôle requis:** `tenant_admin`, `shop_admin` ou `stock_manager`
 
 **Description:** Permet d'enregistrer une réception de marchandises pour augmenter le stock disponible dans une boutique.
 
@@ -114,7 +115,7 @@ Authorization: Bearer <JWT_TOKEN>
   "timestamp": "2025-01-24T10:30:00Z",
   "status": 403,
   "error": "Forbidden",
-  "message": "Insufficient permissions. Required role: tenant_admin or shop_admin",
+  "message": "Insufficient permissions. Required role: tenant_admin, shop_admin or stock_manager",
   "path": "/api/v1/stock/movements"
 }
 ```
@@ -136,7 +137,7 @@ Authorization: Bearer <JWT_TOKEN>
 
 **Endpoint:** `GET /stock/inventory`
 
-**Rôle requis:** `tenant_admin` ou `shop_admin`
+**Rôle requis:** `tenant_admin`, `shop_admin` ou `stock_manager`
 
 **Description:** Récupère la liste paginée des stocks de la boutique avec possibilité de filtrage et recherche.
 
@@ -197,7 +198,7 @@ GET /stock/inventory?page=0&size=20&sort=product.name,asc&keyword=chaussure&lowS
   "timestamp": "2025-01-24T10:30:00Z",
   "status": 403,
   "error": "Forbidden",
-  "message": "Insufficient permissions. Required role: tenant_admin or shop_admin",
+  "message": "Insufficient permissions. Required role: tenant_admin, shop_admin or stock_manager",
   "path": "/api/v1/stock/inventory"
 }
 ```
@@ -252,7 +253,7 @@ GET /stock/inventory?page=0&size=20&sort=product.name,asc&keyword=chaussure&lowS
 ## Notes d'implémentation
 
 ### Backend
-- L'utilisateur doit être associé à une boutique pour gérer le stock
+- L'utilisateur doit être associé à une boutique pour gérer le stock (tenant_admin, shop_admin ou stock_manager)
 - Chaque réception crée automatiquement un mouvement de stock de type `RECEIPT`
 - Le stock est isolé par boutique : un utilisateur ne peut voir/modifier que le stock de sa boutique
 - Le champ `lowStock` est calculé automatiquement en comparant `availableQuantity` avec `minStockLevel`

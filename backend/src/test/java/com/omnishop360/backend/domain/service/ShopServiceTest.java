@@ -7,10 +7,7 @@ import com.omnishop360.backend.domain.repository.ShopRepository;
 import com.omnishop360.backend.domain.repository.TenantRepository;
 import com.omnishop360.backend.domain.repository.UserRepository;
 import com.omnishop360.backend.infrastructure.adapter.KeycloakAdapter;
-import com.omnishop360.backend.web.dto.CreateCashierRequest;
-import com.omnishop360.backend.web.dto.CreateShopAdminRequest;
-import com.omnishop360.backend.web.dto.CreateShopRequest;
-import com.omnishop360.backend.web.dto.ShopResponse;
+import com.omnishop360.backend.web.dto.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -325,6 +322,108 @@ class ShopServiceTest {
         when(userRepository.existsByEmailAndDeletedFalse(request.getEmail())).thenReturn(true);
 
         assertThrows(IllegalArgumentException.class, () -> shopService.createCashier(shopId, request));
+    }
+
+    @Test
+    @DisplayName("Should create stock manager successfully")
+    void shouldCreateStockManagerSuccessfully() {
+        UUID shopId = shop.getId();
+        CreateStockManagerRequest request = new CreateStockManagerRequest();
+        request.setFirstName("Pierre");
+        request.setLastName("Leroy");
+        request.setEmail("pierre.leroy@test.com");
+
+        String keycloakId = "keycloak-id-789";
+        User stockManager = new User();
+        stockManager.setId(UUID.randomUUID());
+        stockManager.setTenant(tenant);
+        stockManager.setShop(shop);
+        stockManager.setFirstName("Pierre");
+        stockManager.setLastName("Leroy");
+        stockManager.setEmail("pierre.leroy@test.com");
+        stockManager.setKeycloakId(keycloakId);
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.empty());
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(userRepository.existsByEmailAndDeletedFalse(request.getEmail())).thenReturn(false);
+        when(keycloakAdapter.createUser(anyString(), anyString(), anyString(), anyString())).thenReturn(keycloakId);
+        doNothing().when(keycloakAdapter).setUserAttribute(anyString(), anyString(), anyString());
+        when(userRepository.save(any(User.class))).thenReturn(stockManager);
+
+        User result = shopService.createStockManager(shopId, request);
+
+        assertNotNull(result);
+        assertEquals(stockManager.getEmail(), result.getEmail());
+        verify(keycloakAdapter).createUser(eq("pierre.leroy@test.com"), eq("Pierre"), eq("Leroy"), eq("stock_manager"));
+        verify(keycloakAdapter).setUserAttribute(eq(keycloakId), eq("shop_id"), eq(shopId.toString()));
+        verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Should create stock manager successfully by shop admin for own shop")
+    void shouldCreateStockManagerSuccessfullyByShopAdminForOwnShop() {
+        UUID shopId = shop.getId();
+        CreateStockManagerRequest request = new CreateStockManagerRequest();
+        request.setFirstName("Pierre");
+        request.setLastName("Leroy");
+        request.setEmail("pierre.leroy@test.com");
+
+        String keycloakId = "keycloak-id-789";
+        User stockManager = new User();
+        stockManager.setId(UUID.randomUUID());
+        stockManager.setTenant(tenant);
+        stockManager.setShop(shop);
+        stockManager.setFirstName("Pierre");
+        stockManager.setLastName("Leroy");
+        stockManager.setEmail("pierre.leroy@test.com");
+        stockManager.setKeycloakId(keycloakId);
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(userRepository.existsByEmailAndDeletedFalse(request.getEmail())).thenReturn(false);
+        when(keycloakAdapter.createUser(anyString(), anyString(), anyString(), anyString())).thenReturn(keycloakId);
+        doNothing().when(keycloakAdapter).setUserAttribute(anyString(), anyString(), anyString());
+        when(userRepository.save(any(User.class))).thenReturn(stockManager);
+
+        User result = shopService.createStockManager(shopId, request);
+
+        assertNotNull(result);
+        assertEquals(stockManager.getEmail(), result.getEmail());
+        verify(keycloakAdapter).createUser(eq("pierre.leroy@test.com"), eq("Pierre"), eq("Leroy"), eq("stock_manager"));
+    }
+
+    @Test
+    @DisplayName("Should throw exception when shop admin tries to create stock manager for different shop")
+    void shouldThrowExceptionWhenShopAdminTriesToCreateStockManagerForDifferentShop() {
+        UUID shopId = shop.getId();
+        UUID differentShopId = UUID.randomUUID();
+        CreateStockManagerRequest request = new CreateStockManagerRequest();
+        request.setFirstName("Pierre");
+        request.setLastName("Leroy");
+        request.setEmail("pierre.leroy@test.com");
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(differentShopId));
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+
+        assertThrows(IllegalArgumentException.class, () -> shopService.createStockManager(shopId, request));
+    }
+
+    @Test
+    @DisplayName("Should throw exception when email already exists for stock manager")
+    void shouldThrowExceptionWhenEmailAlreadyExistsForStockManager() {
+        UUID shopId = shop.getId();
+        CreateStockManagerRequest request = new CreateStockManagerRequest();
+        request.setEmail("existing@test.com");
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.empty());
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(userRepository.existsByEmailAndDeletedFalse(request.getEmail())).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () -> shopService.createStockManager(shopId, request));
     }
 }
 

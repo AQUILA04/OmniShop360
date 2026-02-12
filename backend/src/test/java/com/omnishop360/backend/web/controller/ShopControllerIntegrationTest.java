@@ -190,5 +190,39 @@ class ShopControllerIntegrationTest {
                 .andExpect(jsonPath("$.id").value(shop.getId().toString()))
                 .andExpect(jsonPath("$.name").value("Test Shop"));
     }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_tenant_admin", username = "keycloak-admin-id")
+    @DisplayName("POST /v1/shops/{shopId}/stock-managers should create stock manager successfully")
+    void shouldCreateStockManagerSuccessfully() throws Exception {
+        Shop shop = new Shop();
+        shop.setTenant(tenant);
+        shop.setName("Test Shop");
+        shop.setCode("SHOP1");
+        shop.setAddress("123 Test Street");
+        shop.setActive(true);
+        shop.setDeleted(false);
+        shop = shopRepository.save(shop);
+
+        when(userContextService.getCurrentUserShopId()).thenReturn(java.util.Optional.empty());
+
+        String requestBody = """
+                {
+                  "firstName": "Pierre",
+                  "lastName": "Leroy",
+                  "email": "pierre.leroy@test.com"
+                }
+                """;
+
+        mockMvc.perform(post("/v1/shops/" + shop.getId() + "/stock-managers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.firstName").value("Pierre"))
+                .andExpect(jsonPath("$.lastName").value("Leroy"))
+                .andExpect(jsonPath("$.email").value("pierre.leroy@test.com"))
+                .andExpect(jsonPath("$.keycloakId").exists());
+    }
 }
 

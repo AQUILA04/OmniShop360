@@ -33,7 +33,7 @@ public class StockController {
     private final StockService stockService;
 
     @PostMapping("/movements")
-    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'stock_manager')")
     @Operation(summary = "Enregistrer une réception de marchandises", 
                description = "Permet d'ajouter du stock à une boutique (réception)")
     @ApiResponses(value = {
@@ -50,7 +50,7 @@ public class StockController {
     }
 
     @GetMapping("/inventory")
-    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'stock_manager')")
     @Operation(summary = "Consulter l'inventaire", 
                description = "Récupère la liste paginée des stocks de la boutique")
     @ApiResponses(value = {

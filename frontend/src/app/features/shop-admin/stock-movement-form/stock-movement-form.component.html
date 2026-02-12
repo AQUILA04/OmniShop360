@@ -1,0 +1,10 @@
+<app-generic-form
+  [title]="pageTitle"
+  [config]="formConfig"
+  [formGroup]="form"
+  [isLoading]="isSubmitting"
+  submitLabel="Enregistrer"
+  cancelLabel="Annuler"
+  (formSubmit)="onGenericFormSubmit($event)"
+  (formCancel)="cancel()">
+</app-generic-form>

@@ -17,6 +17,12 @@ export class GenericListComponent<T extends { id: string;[key: string]: any }> i
   @Input() resultsLength: number = 0;
   @Input() defaultSort: { active: string; direction: SortDirection } = { active: 'createdAt', direction: 'desc' };
 
+  // Action Visibility Controls
+  @Input() showCreateButton: boolean = true;
+  @Input() showDetailsButton: boolean = true;
+  @Input() showEditButton: boolean = true;
+  @Input() showDeleteButton: boolean = true;
+
   @Input()
   set data(data: T[]) {
     this.dataSource.data = data;
@@ -36,8 +42,15 @@ export class GenericListComponent<T extends { id: string;[key: string]: any }> i
   dataSource = new MatTableDataSource<T>();
   displayedColumns: string[] = [];
 
+  get hasActions(): boolean {
+    return this.showDetailsButton || this.showEditButton || this.showDeleteButton || !!this.specificActionsTemplate;
+  }
+
   ngOnChanges() {
-    this.displayedColumns = [...this.columnsConfig.map(c => c.key), 'actions'];
+    this.displayedColumns = this.columnsConfig.map(c => c.key);
+    if (this.hasActions) {
+      this.displayedColumns.push('actions');
+    }
   }
 
   ngAfterViewInit() {
@@ -55,6 +68,24 @@ export class GenericListComponent<T extends { id: string;[key: string]: any }> i
     if (!item) return '';
     const value = key.split('.').reduce((obj: any, k: string) => obj && obj[k], item);
     return value === null || value === undefined ? '-' : value;
+  }
+
+  getFormattedValue(column: ColumnConfig, item: T): any {
+    const rawValue = this.getFieldValue(column.key, item);
+
+    // If there's a mapValue function, use it to transform the value
+    if (column.mapValue) {
+      return column.mapValue(rawValue, item);
+    }
+
+    return rawValue;
+  }
+
+  getCellClass(column: ColumnConfig, item: T): string {
+    if (typeof column.cssClass === 'function') {
+      return column.cssClass(item);
+    }
+    return column.cssClass || '';
   }
 
   emitAction(action: string, item: T) {

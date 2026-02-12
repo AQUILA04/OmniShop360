@@ -22,22 +22,6 @@ import { LayoutService } from '../layout.service';
           <span>Dashboard</span>
         </a>
 
-        <!-- Sample Group -->
-<!--        <div class="menu-group">-->
-<!--          <div class="menu-item group-header" (click)="toggleSample = !toggleSample" [class.active-group]="toggleSample">-->
-<!--            <i class="icon">📂</i>-->
-<!--            <span>Sample</span>-->
-<!--            <i class="chevron" [class.expanded]="toggleSample">▼</i>-->
-<!--          </div>-->
-<!--          <div class="submenu" [class.expanded]="toggleSample">-->
-<!--            <a routerLink="/samples/dashboard" routerLinkActive="active" class="menu-item submenu-item">-->
-<!--              <span>Dashboard Sample</span>-->
-<!--            </a>-->
-<!--            <a routerLink="/samples/list" routerLinkActive="active" class="menu-item submenu-item">-->
-<!--              <span>Data List Sample</span>-->
-<!--            </a>-->
-<!--          </div>-->
-<!--        </div>-->
 
         <!-- Tenant Admin Group -->
         <div class="menu-group" *ngxPermissionsOnly="['ROLE_TENANT_ADMIN', 'ROLE_superadmin']">
@@ -65,22 +49,30 @@ import { LayoutService } from '../layout.service';
           </div>
         </div>
 
-<!--        <a routerLink="/products" routerLinkActive="active" class="menu-item">-->
-<!--          <i class="icon">📦</i>-->
-<!--          <span>Products</span>-->
-<!--        </a>-->
-<!--        <a routerLink="/orders" routerLinkActive="active" class="menu-item">-->
-<!--          <i class="icon">🛒</i>-->
-<!--          <span>Orders</span>-->
-<!--        </a>-->
-<!--        <a routerLink="/tenants" routerLinkActive="active" class="menu-item" *ngxPermissionsOnly="['ROLE_superadmin']">-->
-<!--          <i class="icon">👥</i>-->
-<!--          <span>Tenants</span>-->
-<!--        </a>-->
-<!--        <a routerLink="/settings" routerLinkActive="active" class="menu-item">-->
-<!--          <i class="icon">⚙️</i>-->
-<!--          <span>Settings</span>-->
-<!--        </a>-->
+        <!-- Shop Admin Group -->
+        <div class="menu-group" *ngxPermissionsOnly="['ROLE_SHOP_ADMIN', 'ROLE_STOCK_MANAGER', 'ROLE_superadmin']">
+          <div class="menu-item group-header" (click)="toggleShopAdmin = !toggleShopAdmin" [class.active-group]="toggleShopAdmin">
+            <i class="icon">🏪</i>
+            <span>Gestion Boutique</span>
+            <i class="chevron" [class.expanded]="toggleShopAdmin">▼</i>
+          </div>
+          <div class="submenu" [class.expanded]="toggleShopAdmin">
+            <a routerLink="/shop-admin/inventory" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Gestion des Stocks</span>
+            </a>
+            <a routerLink="/shop-admin/stock-movement" routerLinkActive="active" class="menu-item submenu-item">
+              <span>Mouvements de Stock</span>
+            </a>
+            <a routerLink="/tenant/users" routerLinkActive="active" class="menu-item submenu-item" *ngxPermissionsOnly="['ROLE_SHOP_ADMIN', 'ROLE_superadmin']">
+              <span>Utilisateurs</span>
+            </a>
+          </div>
+        </div>
+
+        <a routerLink="/tenants" routerLinkActive="active" class="menu-item" *ngxPermissionsOnly="['ROLE_superadmin']">
+          <i class="icon">👥</i>
+          <span>Tenants</span>
+        </a>
       </nav>
     </aside>
   `,
@@ -193,6 +185,7 @@ import { LayoutService } from '../layout.service';
 export class SidebarComponent {
   toggleSample = true; // Open by default for visibility
   toggleTenantAdmin = true; // Open by default for Tenant Admin
+  toggleShopAdmin = true; // Open by default for Shop Admin
   private layoutService = inject(LayoutService);
 
   closeSidebar() {

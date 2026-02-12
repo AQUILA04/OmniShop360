@@ -7,7 +7,7 @@
       <p class="subtitle" *ngIf="resultsLength > 0">{{ resultsLength }} entries found</p>
     </div>
 
-    <button mat-flat-button color="primary" class="create-btn" (click)="emitAction('create', $any({}))">
+    <button *ngIf="showCreateButton" mat-flat-button color="primary" class="create-btn" (click)="emitAction('create', $any({}))">
       <mat-icon>add</mat-icon>
       <span>Create New</span>
     </button>
@@ -38,7 +38,7 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!col.sortable">
             {{ col.label }}
           </th>
-          <td mat-cell *matCellDef="let row">
+          <td mat-cell *matCellDef="let row" [ngClass]="getCellClass(col, row)">
             <div [ngSwitch]="col.type">
               <!-- Status Badge -->
               <span *ngSwitchCase="'status'" class="status-pill"
@@ -49,15 +49,15 @@
 
               <!-- Date Formats -->
               <span *ngSwitchCase="'date'" class="text-secondary">
-                {{ getFieldValue(col.key, row) | date: 'mediumDate' }}
+                {{ getFormattedValue(col, row) | date: 'mediumDate' }}
               </span>
               <span *ngSwitchCase="'datetime'" class="text-secondary">
-                {{ getFieldValue(col.key, row) | date: 'medium' }}
+                {{ getFormattedValue(col, row) | date: 'medium' }}
               </span>
 
               <!-- Default Text -->
               <span *ngSwitchDefault class="text-primary">
-                {{ getFieldValue(col.key, row) }}
+                {{ getFormattedValue(col, row) }}
               </span>
             </div>
           </td>
@@ -71,21 +71,23 @@
               <mat-icon>more_horiz</mat-icon>
             </button>
             <mat-menu #menu="matMenu" xPosition="before" class="custom-menu">
-              <button mat-menu-item (click)="emitAction('details', row)">
+              <button *ngIf="showDetailsButton" mat-menu-item (click)="emitAction('details', row)">
                 <mat-icon>visibility</mat-icon>
                 <span>View Details</span>
               </button>
-              <button mat-menu-item (click)="emitAction('edit', row)">
+              <button *ngIf="showEditButton" mat-menu-item (click)="emitAction('edit', row)">
                 <mat-icon>edit</mat-icon>
                 <span>Edit</span>
               </button>
 
-              <mat-divider></mat-divider>
+              <mat-divider *ngIf="(showDetailsButton || showEditButton) && specificActionsTemplate"></mat-divider>
 
               <ng-container *ngIf="specificActionsTemplate" [ngTemplateOutlet]="specificActionsTemplate"
                 [ngTemplateOutletContext]="{$implicit: row}"></ng-container>
 
-              <button mat-menu-item (click)="emitAction('delete', row)" class="delete-item">
+              <mat-divider *ngIf="(showDetailsButton || showEditButton || specificActionsTemplate) && showDeleteButton"></mat-divider>
+
+              <button *ngIf="showDeleteButton" mat-menu-item (click)="emitAction('delete', row)" class="delete-item">
                 <mat-icon color="warn">delete_outline</mat-icon>
                 <span class="text-warn">Delete</span>
               </button>
@@ -115,8 +117,8 @@
           <mat-icon>inbox</mat-icon>
         </div>
         <h3>No records found</h3>
-        <p>Get started by creating a new item.</p>
-        <button mat-stroked-button color="primary" (click)="emitAction('create', $any({}))">
+        <p>Get started by creating new item.</p>
+        <button *ngIf="showCreateButton" mat-stroked-button color="primary" (click)="emitAction('create', $any({}))">
           Create Now
         </button>
       </div>

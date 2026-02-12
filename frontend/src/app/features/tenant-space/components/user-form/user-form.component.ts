@@ -5,6 +5,7 @@ import { FormSectionConfig } from '../../../../shared/abstractions/form-config.m
 import { ShopAdminService } from '../../services/shop-admin.service';
 import { ShopService } from '../../services/shop.service';
 import { SharedModule } from '../../../../shared/shared.module';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 @Component({
     selector: 'app-user-form',
@@ -13,7 +14,8 @@ import { SharedModule } from '../../../../shared/shared.module';
     templateUrl: './user-form.component.html'
 })
 export class UserFormComponent extends BaseFormComponent<any> {
-    pageTitle = 'Nouveau Shop Admin';
+    pageTitle = 'Nouvel Utilisateur';
+    isShopAdmin = false;
 
     formConfig: FormSectionConfig[] = [
         {
@@ -46,9 +48,11 @@ export class UserFormComponent extends BaseFormComponent<any> {
                     label: 'Profil',
                     type: 'select',
                     validators: [Validators.required],
-                    options: [{ label: 'Administrateur de boutique', value: 'SHOP_ADMIN' }],
-                    disabled: true,
-                    hint: 'Seul le profil Administrateur de boutique est disponible pour le moment.',
+                    options: [
+                        { label: 'Administrateur de boutique', value: 'SHOP_ADMIN' },
+                        { label: 'Caissier', value: 'CASHIER' }
+                    ],
+                    disabled: false,
                     icon: 'badge'
                 }
             ]
@@ -57,7 +61,8 @@ export class UserFormComponent extends BaseFormComponent<any> {
 
     constructor(
         protected shopAdminService: ShopAdminService,
-        private shopService: ShopService
+        private shopService: ShopService,
+        private permissionsService: NgxPermissionsService
     ) {
         super(shopAdminService);
     }
@@ -68,10 +73,42 @@ export class UserFormComponent extends BaseFormComponent<any> {
             firstName: ['', [Validators.required, Validators.minLength(2)]],
             lastName: ['', [Validators.required, Validators.minLength(2)]],
             email: ['', [Validators.required, Validators.email]],
-            profile: [{ value: 'SHOP_ADMIN', disabled: true }, Validators.required]
+            profile: ['SHOP_ADMIN', Validators.required]
         });
 
+        this.checkPermissions();
         this.loadShops();
+    }
+
+    checkPermissions(): void {
+        const permissions = this.permissionsService.getPermissions();
+
+        // If Tenant Admin, they have full access (can create SHOP_ADMIN and CASHIER)
+        if (permissions['ROLE_TENANT_ADMIN'] || permissions['ROLE_superadmin']) {
+            return;
+        }
+
+        // If Shop Admin (and not Tenant Admin), restrict to Cashier
+        if (permissions['ROLE_SHOP_ADMIN']) {
+            this.isShopAdmin = true;
+
+            // Shop Admin can only create Cashiers
+            this.form.get('profile')?.setValue('CASHIER');
+            // We disable the control so they can't change it, but we need the value
+            // Note: Disabled controls are not included in form.value, but are in form.getRawValue()
+            this.form.get('profile')?.disable();
+
+            // Update profile options to only show Cashier and update hint
+            const profileSection = this.formConfig.find(s => s.fields.some(f => f.key === 'profile'));
+            if (profileSection) {
+                const profileField = profileSection.fields.find(f => f.key === 'profile');
+                if (profileField) {
+                    profileField.options = [{ label: 'Caissier', value: 'CASHIER' }];
+                    profileField.disabled = true;
+                    profileField.hint = 'En tant qu\'administrateur de boutique, vous ne pouvez créer que des caissiers.';
+                }
+            }
+        }
     }
 
     loadShops(): void {
@@ -93,6 +130,13 @@ export class UserFormComponent extends BaseFormComponent<any> {
                             label: `${shop.name} (${shop.city})`,
                             value: shop.id
                         }));
+
+                        // If Shop Admin and only one shop, auto-select it
+                        if (this.isShopAdmin && shops.length === 1) {
+                            this.form.get('shopId')?.setValue(shops[0].id);
+                            // We can also disable it if we want to enforce it
+                            // this.form.get('shopId')?.disable();
+                        }
                     }
                 }
             },
@@ -112,5 +156,25 @@ export class UserFormComponent extends BaseFormComponent<any> {
 
     getSubmitLabel(): string {
         return this.isEditMode ? 'Modifier' : 'Créer l\'utilisateur';
+    }
+
+    override onSubmit(): void {
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.isLoading = true;
+        this.isSubmitting = true;
+        // Use getRawValue() to include disabled fields (like profile for Shop Admin)
+        const request = this.form.getRawValue();
+
+        this.service.create(request).subscribe({
+            next: () => {
+                this.handleSuccess('Utilisateur créé avec succès');
+            },
+            error: (error) => {
+                this.handleError(error, 'Erreur lors de la création de l\'utilisateur');
+            }
+        });
     }
 }

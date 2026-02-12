@@ -16,7 +16,7 @@ export class UserListComponent extends BaseListComponent<any> {
   columnsConfig: ColumnConfig[] = [
     { key: 'firstName', label: 'Prénom', sortable: true, type: 'text' },
     { key: 'lastName', label: 'Nom', sortable: true, type: 'text' },
-    { key: 'email', label: 'Email', sortable: true, type: 'email' },
+    { key: 'email', label: 'Email', sortable: true, type: 'text' },
     // Add status or role if available
   ];
 
@@ -29,6 +29,8 @@ export class UserListComponent extends BaseListComponent<any> {
     // In a real scenario, this would call super.loadData()
     // For now, ensuring no crash if endpoint doesn't exist 
     // or if we just want to show the list structure
-    super.loadData();
+    this.data = [];
+    this.resultsLength = 0;
+    this.isLoading = false;
   }
 }

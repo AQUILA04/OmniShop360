@@ -1,0 +1,46 @@
+<div class="pos-container">
+  <div class="product-grid">
+    <div class="search-bar">
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Rechercher un produit (Nom, SKU)...">
+    </div>
+    <div class="products">
+      <div *ngFor="let product of products" class="product-card" (click)="addToCart(product)">
+        <div class="product-name">{{ product.name }}</div>
+        <div class="product-sku">{{ product.sku }}</div>
+        <div class="product-price">{{ product.price | currency:'EUR' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-panel">
+    <div class="cart-header">
+      <h2>Panier</h2>
+      <button (click)="clearCart()" class="clear-btn">Vider</button>
+    </div>
+
+    <div class="cart-items">
+      <div *ngFor="let item of cartItems" class="cart-item">
+        <div class="item-info">
+          <span class="item-name">{{ item.productName }}</span>
+          <span class="item-price">{{ item.price | currency:'EUR' }}</span>
+        </div>
+        <div class="item-controls">
+          <button (click)="updateQuantity(item.productId, item.quantity - 1)">-</button>
+          <span>{{ item.quantity }}</span>
+          <button (click)="updateQuantity(item.productId, item.quantity + 1)">+</button>
+          <button (click)="removeFromCart(item.productId)" class="remove-btn">×</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-footer">
+      <div class="total">
+        <span>Total TTC</span>
+        <span class="amount">{{ totalAmount | currency:'EUR' }}</span>
+      </div>
+      <button class="checkout-btn" [disabled]="cartItems.length === 0" (click)="checkout()">
+        Encaisser
+      </button>
+    </div>
+  </div>
+</div>

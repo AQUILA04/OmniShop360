@@ -36,7 +36,18 @@ export const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
-            only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
+            only: ['ROLE_TENANT_ADMIN', 'ROLE_SHOP_ADMIN', 'ROLE_superadmin'],
+            redirectTo: '/dashboard'
+          }
+        }
+      },
+      {
+        path: 'shop-admin',
+        loadChildren: () => import('./features/shop-admin/shop-admin.module').then(m => m.ShopAdminModule),
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: ['ROLE_SHOP_ADMIN', 'ROLE_STOCK_MANAGER', 'ROLE_superadmin'],
             redirectTo: '/dashboard'
           }
         }

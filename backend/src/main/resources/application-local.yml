@@ -2,8 +2,8 @@ spring:
   application:
     name: omnishop-backend
   
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+#  profiles:
+#    active: ${SPRING_PROFILES_ACTIVE:dev}
   
   devtools:
     restart:

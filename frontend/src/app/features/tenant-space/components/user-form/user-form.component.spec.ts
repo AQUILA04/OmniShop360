@@ -10,6 +10,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from '../../../../shared/shared.module';
 import { PagedResponse } from '../../../../shared/models/paged-response.model';
 import { Shop } from '../../models/shop.model';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 describe('UserFormComponent', () => {
     let component: UserFormComponent;
@@ -43,6 +44,9 @@ describe('UserFormComponent', () => {
         // Mock shop return
         shopServiceSpy.getAll.and.returnValue(of(mockPagedShops));
 
+        const permissionsServiceSpy = jasmine.createSpyObj('NgxPermissionsService', ['getPermissions', 'loadPermissions']);
+        permissionsServiceSpy.getPermissions.and.returnValue({});
+
         await TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
@@ -66,6 +70,10 @@ describe('UserFormComponent', () => {
                         },
                         paramMap: of({ get: () => null })
                     }
+                },
+                {
+                    provide: NgxPermissionsService,
+                    useValue: permissionsServiceSpy
                 }
             ]
         }).compileComponents();
@@ -116,10 +124,10 @@ describe('UserFormComponent', () => {
         expect(profileCtrl).not.toBeNull();
     });
 
-    it('should have profile defaulted and disabled', () => {
+    it('should have profile defaulted and enabled', () => {
         const profileControl = component.form.get('profile');
         expect(profileControl?.value).toBe('SHOP_ADMIN');
-        expect(profileControl?.disabled).toBeTrue();
+        expect(profileControl?.disabled).toBeFalse();
     });
 
     it('should call service create when submitting valid form', () => {

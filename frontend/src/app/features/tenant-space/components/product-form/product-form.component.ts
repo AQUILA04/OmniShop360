@@ -47,7 +47,7 @@ export class ProductFormComponent extends BaseFormComponent<Product> {
             description: [''],
 
             // Pricing
-            sellingPrice: [0, [Validators.required, Validators.min(0)]],
+            salePrice: [0, [Validators.required, Validators.min(0)]],
             purchasePrice: [0, [Validators.min(0)]],
 
             hasVariants: [false],

@@ -40,7 +40,7 @@ spring:
         order_updates: true
   
   flyway:
-    enabled: true
+    enabled: false
     baseline-on-migrate: true
     baseline-description: "init"
     baseline-version: 0

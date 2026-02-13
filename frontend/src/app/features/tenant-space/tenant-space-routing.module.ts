@@ -118,7 +118,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
             permissions: {
-                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_SHOP_ADMIN', 'ROLE_superadmin'],
                 redirectTo: '/login'
             }
         }
@@ -129,7 +129,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
             permissions: {
-                only: ['ROLE_TENANT_ADMIN', 'ROLE_superadmin'],
+                only: ['ROLE_TENANT_ADMIN', 'ROLE_SHOP_ADMIN', 'ROLE_superadmin'],
                 redirectTo: '/login'
             }
         }

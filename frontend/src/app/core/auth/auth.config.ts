@@ -31,6 +31,7 @@ export function initializeOAuth(oauthService: OAuthService, router: Router, perm
       }
       if (e.type === 'logout') {
         permissionsService.flushPermissions();
+        localStorage.removeItem('currentShopId');
       }
     });
 
@@ -75,6 +76,21 @@ function loadPermissions(oauthService: OAuthService, permissionsService: NgxPerm
 
     // Extract Keycloak realm roles from access token
     const realmRoles = payload.realm_access?.roles || [];
+
+    // Store currentShopId if user is shop_admin or cashier
+    if (realmRoles.includes('shop_admin') || realmRoles.includes('cashier')) {
+      const shopId = payload['shop_id'];
+      if (shopId) {
+        localStorage.setItem('currentShopId', shopId);
+      } else {
+        console.warn('Shop ID not found in token for shop_admin/cashier');
+        // Fallback or handle missing shop_id if necessary, for now we might want to clear it or keep previous behavior
+        // But based on request, we should use the value from token.
+        localStorage.removeItem('currentShopId');
+      }
+    } else {
+      localStorage.removeItem('currentShopId');
+    }
 
     // Add ROLE_ prefix and normalize to uppercase for ngx-permissions
     const roles = [...realmRoles].map(role => `ROLE_${role.toUpperCase()}`);

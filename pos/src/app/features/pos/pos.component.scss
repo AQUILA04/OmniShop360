@@ -1,0 +1,204 @@
+.pos-header {
+  height: 64px;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+  z-index: 100;
+  position: relative;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.logo-icon {
+  background: var(--color-primary);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.store-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.store-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-text-primary);
+}
+
+.register-info {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.datetime-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  padding-right: 32px;
+  border-right: 1px solid var(--color-border);
+}
+
+.time {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-text-primary);
+}
+
+.date {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.user-profile-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.user-profile-wrapper:hover {
+  background-color: #F3F4F6;
+}
+
+.user-avatar-circle {
+  width: 36px;
+  height: 36px;
+  background-color: #FFEDD5;
+  /* Light Orange */
+  color: #EA580C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.cashier-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.cashier-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.cashier-role {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.chevron {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 220px;
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+  padding: 8px 0;
+  margin-top: 8px;
+  z-index: 1000;
+}
+
+.dropdown-item {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.dropdown-item svg {
+  min-width: 18px;
+  /* Prevent shrinking */
+}
+
+.dropdown-item:hover {
+  background-color: #F3F4F6;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 6px 0;
+}
+
+.text-danger {
+  color: var(--color-error);
+}
+
+.pos-layout {
+  display: flex;
+  height: calc(100vh - 64px);
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--color-background);
+}
+
+.left-panel {
+  flex: 65;
+  height: 100%;
+  overflow: hidden;
+}
+
+.right-panel {
+  flex: 35;
+  height: 100%;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+@media (max-width: 1024px) {
+  .pos-layout {
+    flex-direction: column;
+  }
+
+  .left-panel {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .right-panel {
+    height: auto;
+    border-top: 1px solid var(--color-border);
+  }
+}

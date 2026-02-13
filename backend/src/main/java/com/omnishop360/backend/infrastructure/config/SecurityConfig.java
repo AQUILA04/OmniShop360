@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class SecurityConfig {
 
     @Value("${omnishop.security.cors.allowed-origins}")
-    private String[] allowedOrigins;
+    private List<String> allowedOrigins;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
     private String jwkSetUri;
@@ -38,28 +38,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/actuator/**",
-                    "/v1/public/**",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/swagger-ui.html/**",
-                    "/v3/api-docs/**",
-                    "/swagger-resources/**",
-                    "/webjars/**",
-                    "/swagger-config/**"
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt
-                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
-            );
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/actuator/**",
+                                "/v1/public/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui.html/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/swagger-config/**")
+                        .permitAll()
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
         return http.build();
     }
@@ -79,7 +76,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(allowedOrigins));
+        configuration.setAllowedOriginPatterns(allowedOrigins);
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -97,18 +94,17 @@ public class SecurityConfig {
         @Override
         public Collection<GrantedAuthority> convert(Jwt jwt) {
             Map<String, Object> realmAccess = jwt.getClaim("realm_access");
-            
+
             if (realmAccess == null || !realmAccess.containsKey("roles")) {
                 return List.of();
             }
 
             @SuppressWarnings("unchecked")
             List<String> roles = (List<String>) realmAccess.get("roles");
-            
+
             return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .collect(Collectors.toList());
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                    .collect(Collectors.toList());
         }
     }
 }
-

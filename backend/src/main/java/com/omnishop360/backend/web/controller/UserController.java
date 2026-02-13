@@ -31,7 +31,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('superadmin', 'tenant_admin')")
+    @PreAuthorize("hasAnyRole('superadmin', 'tenant_admin', 'shop_admin')")
     @Operation(summary = "Lister les utilisateurs",
                description = "Récupère la liste paginée des utilisateurs. Superadmin voit tous les utilisateurs, Tenant Admin voit ceux de son tenant.")
     @ApiResponses(value = {

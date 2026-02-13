@@ -71,4 +71,17 @@
       color: #f44336;
     }
   }
+
+  .low-stock {
+    color: #ef4444 !important; /* Red color for low stock */
+    font-weight: bold;
+  }
+
+  .mat-mdc-row .mat-mdc-cell {
+    &.low-stock {
+      background-color: #fef2f2 !important; /* Light red background */
+      color: #dc2626 !important; /* Darker red text */
+      font-weight: bold;
+    }
+  }
 }

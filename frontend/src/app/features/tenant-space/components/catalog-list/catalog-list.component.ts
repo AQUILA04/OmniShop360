@@ -27,8 +27,8 @@ export class CatalogListComponent extends BaseListComponent<Product> {
     columnsConfig: ColumnConfig[] = [
         { key: 'name', label: 'Produit', sortable: true },
         { key: 'sku', label: 'SKU', sortable: true },
-        { key: 'category', label: 'Catégorie', sortable: true },
-        { key: 'salePrice', label: 'Prix Vente', type: 'currency', sortable: true }
+        { key: 'categoryName', label: 'Catégorie', sortable: true },
+        { key: 'sellingPrice', label: 'Prix Vente', type: 'currency', sortable: true }
     ];
 
     constructor(protected productService: ProductService) {

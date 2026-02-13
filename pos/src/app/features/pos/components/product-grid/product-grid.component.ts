@@ -55,8 +55,8 @@ import { FormsModule } from '@angular/forms';
             <div class="product-image-placeholder" [style.background-color]="getProductColor(product.name)">
                <span>{{ product.name.charAt(0) }}</span>
             </div>
-            <div class="stock-badge" [class.low-stock]="product.stock < 5">
-               {{ product.stock || 12 }} in stock
+            <div class="stock-badge" [class.low-stock]="product.stockLevel < 5">
+               {{ product.stockLevel || 11 }} in stock
             </div>
           </div>
           

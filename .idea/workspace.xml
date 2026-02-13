@@ -5,19 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint3: impl sprint 3 part 1">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/application-local.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/pos/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/app.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-form/user-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-form/user-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-list/user-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-list/user-list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/shop-admin.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/services/shop-admin.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/models/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/models/user.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/pos/angular.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/app.routes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/src/app/core/services/sale.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/core/services/sale.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/product-grid/product-grid.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/product-grid/product-grid.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/environments/environment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/styles.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -268,7 +268,7 @@
       <workItem from="1769424464523" duration="10604000" />
       <workItem from="1770013131581" duration="4851000" />
       <workItem from="1770885899747" duration="1796000" />
-      <workItem from="1770897166754" duration="6547000" />
+      <workItem from="1770897166754" duration="11993000" />
     </task>
     <task id="LOCAL-00001">
       <option name="closed" value="true" />

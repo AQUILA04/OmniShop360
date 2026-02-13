@@ -50,7 +50,8 @@ export class UserFormComponent extends BaseFormComponent<any> {
                     validators: [Validators.required],
                     options: [
                         { label: 'Administrateur de boutique', value: 'SHOP_ADMIN' },
-                        { label: 'Caissier', value: 'CASHIER' }
+                        { label: 'Caissier', value: 'CASHIER' },
+                        { label: 'Gestionnaire de stock', value: 'STOCK_MANAGER' }
                     ],
                     disabled: false,
                     icon: 'badge'
@@ -92,20 +93,23 @@ export class UserFormComponent extends BaseFormComponent<any> {
         if (permissions['ROLE_SHOP_ADMIN']) {
             this.isShopAdmin = true;
 
-            // Shop Admin can only create Cashiers
-            this.form.get('profile')?.setValue('CASHIER');
-            // We disable the control so they can't change it, but we need the value
-            // Note: Disabled controls are not included in form.value, but are in form.getRawValue()
-            this.form.get('profile')?.disable();
+            // Shop Admin can create Cashiers and Stock Managers
+            // We set a default value but keep it enabled
+            if (!this.form.get('profile')?.value || this.form.get('profile')?.value === 'SHOP_ADMIN') {
+                this.form.get('profile')?.setValue('CASHIER');
+            }
 
-            // Update profile options to only show Cashier and update hint
+            // Update profile options to only show Cashier and Stock Manager
             const profileSection = this.formConfig.find(s => s.fields.some(f => f.key === 'profile'));
             if (profileSection) {
                 const profileField = profileSection.fields.find(f => f.key === 'profile');
                 if (profileField) {
-                    profileField.options = [{ label: 'Caissier', value: 'CASHIER' }];
-                    profileField.disabled = true;
-                    profileField.hint = 'En tant qu\'administrateur de boutique, vous ne pouvez créer que des caissiers.';
+                    profileField.options = [
+                        { label: 'Caissier', value: 'CASHIER' },
+                        { label: 'Gestionnaire de stock', value: 'STOCK_MANAGER' }
+                    ];
+                    // profileField.disabled = true; // No longer disabled
+                    profileField.hint = 'En tant qu\'administrateur de boutique, vous pouvez créer des caissiers et des gestionnaires de stock.';
                 }
             }
         }

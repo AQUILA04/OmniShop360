@@ -11,5 +11,10 @@ export const routes: Routes = [
     path: '',
     redirectTo: 'pos',
     pathMatch: 'full'
+  },
+  {
+    path: 'back-office',
+    loadChildren: () => import('./features/back-office/back-office.routes').then(m => m.BACK_OFFICE_ROUTES),
+    canActivate: [authGuard]
   }
 ];

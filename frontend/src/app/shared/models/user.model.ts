@@ -13,4 +13,8 @@ export interface UserResponse {
   lastName: string;
   email: string;
   keycloakId?: string;
+  active?: boolean;
+  tenantId?: string;
+  shopId?: string;
+  createdAt?: string;
 }

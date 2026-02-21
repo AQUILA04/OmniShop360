@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -210,6 +211,61 @@ class ProductControllerIntegrationTest {
         mockMvc.perform(get("/v1/products/" + product.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.costPrice").isEmpty());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_tenant_admin", username = "keycloak-admin-id")
+    @DisplayName("PUT /v1/products/{id} should update product and return 200")
+    void shouldUpdateProductAndReturn200() throws Exception {
+        Product product = new Product();
+        product.setTenant(tenant);
+        product.setName("Test Product");
+        product.setSku("TEST-SKU-001");
+        product.setSellingPrice(new BigDecimal("20.00"));
+        product.setCostPrice(new BigDecimal("10.00"));
+        product.setTaxRate(new BigDecimal("20.00"));
+        product.setUnit("UNIT");
+        product.setActive(true);
+        product.setDeleted(false);
+        product = productRepository.save(product);
+
+        String requestBody = """
+                {
+                  "name": "Updated Product",
+                  "sku": "UPD-SKU-001",
+                  "description": "Updated",
+                  "costPrice": 15.00,
+                  "sellingPrice": 25.00,
+                  "taxRate": 20.00,
+                  "unit": "UNIT",
+                  "active": true
+                }
+                """;
+
+        mockMvc.perform(put("/v1/products/" + product.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated Product"))
+                .andExpect(jsonPath("$.sku").value("UPD-SKU-001"));
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_tenant_admin", username = "keycloak-admin-id")
+    @DisplayName("PUT /v1/products/{id} should return 404 for non-existent product")
+    void shouldReturn404WhenUpdateNonExistentProduct() throws Exception {
+        String requestBody = """
+                {
+                  "name": "Valid Product",
+                  "sku": "SKU1",
+                  "sellingPrice": 1.00
+                }
+                """;
+
+        mockMvc.perform(put("/v1/products/00000000-0000-0000-0000-000000000000")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNotFound());
     }
 }
 

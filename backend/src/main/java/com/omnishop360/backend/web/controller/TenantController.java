@@ -5,6 +5,8 @@ import com.omnishop360.backend.web.dto.CreateTenantRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.TenantResponse;
 import com.omnishop360.backend.web.dto.UpdateTenantPricingPolicyRequest;
+import com.omnishop360.backend.web.dto.UpdateTenantRequest;
+import com.omnishop360.backend.web.dto.UpdateTenantStatusRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -88,6 +90,55 @@ public class TenantController {
             @PathVariable UUID tenantId) {
         log.debug("Fetching tenant: {}", tenantId);
         TenantResponse response = tenantService.getTenantById(tenantId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{tenantId}")
+    @PreAuthorize("hasRole('superadmin')")
+    @Operation(summary = "Modifier un tenant", description = "Met à jour les informations d'un tenant")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tenant modifié avec succès"),
+            @ApiResponse(responseCode = "400", description = "Données invalides"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes"),
+            @ApiResponse(responseCode = "404", description = "Tenant non trouvé")
+    })
+    public ResponseEntity<TenantResponse> updateTenant(
+            @Parameter(description = "UUID du tenant") @PathVariable UUID tenantId,
+            @Valid @RequestBody UpdateTenantRequest request) {
+        log.info("Updating tenant: {}", tenantId);
+        TenantResponse response = tenantService.updateTenant(tenantId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{tenantId}")
+    @PreAuthorize("hasRole('superadmin')")
+    @Operation(summary = "Supprimer un tenant", description = "Suppression logique (soft delete), statut passé à DELETED")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Tenant supprimé avec succès"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes"),
+            @ApiResponse(responseCode = "404", description = "Tenant non trouvé")
+    })
+    public ResponseEntity<Void> deleteTenant(
+            @Parameter(description = "UUID du tenant") @PathVariable UUID tenantId) {
+        log.info("Deleting tenant: {}", tenantId);
+        tenantService.deleteTenant(tenantId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{tenantId}/status")
+    @PreAuthorize("hasRole('superadmin')")
+    @Operation(summary = "Modifier le statut d'un tenant", description = "Active ou suspend un tenant (ACTIVE ou SUSPENDED)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Statut mis à jour avec succès"),
+            @ApiResponse(responseCode = "400", description = "Données invalides"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes"),
+            @ApiResponse(responseCode = "404", description = "Tenant non trouvé")
+    })
+    public ResponseEntity<TenantResponse> updateTenantStatus(
+            @Parameter(description = "UUID du tenant") @PathVariable UUID tenantId,
+            @Valid @RequestBody UpdateTenantStatusRequest request) {
+        log.info("Updating tenant status: {}", tenantId);
+        TenantResponse response = tenantService.updateTenantStatus(tenantId, request);
         return ResponseEntity.ok(response);
     }
 

@@ -11,6 +11,8 @@ import com.omnishop360.backend.web.dto.CreateTenantRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.TenantResponse;
 import com.omnishop360.backend.web.dto.UpdateTenantPricingPolicyRequest;
+import com.omnishop360.backend.web.dto.UpdateTenantRequest;
+import com.omnishop360.backend.web.dto.UpdateTenantStatusRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class TenantService {
+
+    private static final String TENANT_NOT_FOUND_MSG = "Tenant not found with id: ";
 
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
@@ -99,10 +103,12 @@ public class TenantService {
     @Transactional(readOnly = true)
     public TenantResponse getTenantById(UUID tenantId) {
         log.debug("Fetching tenant: {}", tenantId);
-
         Tenant tenant = tenantRepository.findByIdAndDeletedFalse(tenantId)
-                .orElseThrow(() -> new EntityNotFoundException("Tenant not found with id: " + tenantId));
+                .orElseThrow(() -> new EntityNotFoundException(TENANT_NOT_FOUND_MSG + tenantId));
+        return toResponse(tenant);
+    }
 
+    private TenantResponse toResponse(Tenant tenant) {
         long adminCount = userRepository.countByTenantId(tenant.getId());
         TenantResponse response = TenantResponse.from(tenant);
         if (response != null) {
@@ -112,8 +118,46 @@ public class TenantService {
             }
             response.setShopCount(0);
         }
-
         return response;
+    }
+
+    @Transactional
+    public TenantResponse updateTenant(UUID tenantId, UpdateTenantRequest request) {
+        log.info("Updating tenant: {}", tenantId);
+        Tenant tenant = tenantRepository.findByIdAndDeletedFalse(tenantId)
+                .orElseThrow(() -> new EntityNotFoundException(TENANT_NOT_FOUND_MSG + tenantId));
+        tenant.setCompanyName(request.getCompanyName());
+        tenant.setContactEmail(request.getContactEmail());
+        tenant = tenantRepository.save(tenant);
+        log.info("Tenant updated successfully: {}", tenantId);
+        return toResponse(tenant);
+    }
+
+    @Transactional
+    public TenantResponse updateTenantStatus(UUID tenantId, UpdateTenantStatusRequest request) {
+        if (request.getStatus() == TenantStatus.DELETED) {
+            throw new IllegalArgumentException("Status must be ACTIVE or SUSPENDED");
+        }
+        log.info("Updating tenant status: {} to {}", tenantId, request.getStatus());
+        Tenant tenant = tenantRepository.findByIdAndDeletedFalse(tenantId)
+                .orElseThrow(() -> new EntityNotFoundException(TENANT_NOT_FOUND_MSG + tenantId));
+        tenant.setStatus(request.getStatus());
+        tenant.setActive(request.getStatus() == TenantStatus.ACTIVE);
+        tenant = tenantRepository.save(tenant);
+        log.info("Tenant status updated successfully: {}", tenantId);
+        return toResponse(tenant);
+    }
+
+    @Transactional
+    public void deleteTenant(UUID tenantId) {
+        log.info("Deleting tenant: {}", tenantId);
+        Tenant tenant = tenantRepository.findByIdAndDeletedFalse(tenantId)
+                .orElseThrow(() -> new EntityNotFoundException(TENANT_NOT_FOUND_MSG + tenantId));
+        tenant.setDeleted(true);
+        tenant.setActive(false);
+        tenant.setStatus(TenantStatus.DELETED);
+        tenantRepository.save(tenant);
+        log.info("Tenant deleted successfully: {}", tenantId);
     }
 
     private String generateTenantCode(String companyName) {
@@ -146,7 +190,7 @@ public class TenantService {
         log.info("Updating pricing policy for tenant: {} to {}", tenantId, request.getPricingPolicy());
 
         Tenant tenant = tenantRepository.findByIdAndDeletedFalse(tenantId)
-                .orElseThrow(() -> new EntityNotFoundException("Tenant not found with id: " + tenantId));
+                .orElseThrow(() -> new EntityNotFoundException(TENANT_NOT_FOUND_MSG + tenantId));
 
         tenant.setPricingPolicy(request.getPricingPolicy());
         tenant = tenantRepository.save(tenant);

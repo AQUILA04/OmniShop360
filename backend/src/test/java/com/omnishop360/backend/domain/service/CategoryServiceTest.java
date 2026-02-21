@@ -6,6 +6,7 @@ import com.omnishop360.backend.domain.repository.CategoryRepository;
 import com.omnishop360.backend.domain.repository.TenantRepository;
 import com.omnishop360.backend.web.dto.CategoryResponse;
 import com.omnishop360.backend.web.dto.CreateCategoryRequest;
+import com.omnishop360.backend.web.dto.UpdateCategoryRequest;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -182,6 +183,45 @@ class CategoryServiceTest {
         when(categoryRepository.findByIdAndDeletedFalse(categoryId)).thenReturn(Optional.of(category));
 
         assertThrows(EntityNotFoundException.class, () -> categoryService.getCategoryById(categoryId));
+    }
+
+    @Test
+    @DisplayName("Should update category successfully")
+    void shouldUpdateCategorySuccessfully() {
+        UpdateCategoryRequest request = new UpdateCategoryRequest("Updated Name", "UPD-CODE", "Updated desc", null);
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(categoryRepository.findByIdAndDeletedFalse(category.getId())).thenReturn(Optional.of(category));
+        when(categoryRepository.existsByTenantIdAndCodeAndDeletedFalse(tenantId, "UPD-CODE")).thenReturn(false);
+        when(categoryRepository.save(any(Category.class))).thenReturn(category);
+
+        CategoryResponse response = categoryService.updateCategory(category.getId(), request);
+
+        assertNotNull(response);
+        verify(categoryRepository).save(any(Category.class));
+    }
+
+    @Test
+    @DisplayName("Should throw when update category not found")
+    void shouldThrowWhenUpdateCategoryNotFound() {
+        UpdateCategoryRequest request = new UpdateCategoryRequest("A", "B", null, null);
+        UUID categoryId = UUID.randomUUID();
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(categoryRepository.findByIdAndDeletedFalse(categoryId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> categoryService.updateCategory(categoryId, request));
+        verify(categoryRepository, never()).save(any(Category.class));
+    }
+
+    @Test
+    @DisplayName("Should throw when update category code already exists")
+    void shouldThrowWhenUpdateCategoryCodeAlreadyExists() {
+        UpdateCategoryRequest request = new UpdateCategoryRequest("Name", "OTHER-CODE", null, null);
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(categoryRepository.findByIdAndDeletedFalse(category.getId())).thenReturn(Optional.of(category));
+        when(categoryRepository.existsByTenantIdAndCodeAndDeletedFalse(tenantId, "OTHER-CODE")).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () -> categoryService.updateCategory(category.getId(), request));
+        verify(categoryRepository, never()).save(any(Category.class));
     }
 }
 

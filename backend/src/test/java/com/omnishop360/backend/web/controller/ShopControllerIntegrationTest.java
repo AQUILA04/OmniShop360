@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -223,6 +224,56 @@ class ShopControllerIntegrationTest {
                 .andExpect(jsonPath("$.lastName").value("Leroy"))
                 .andExpect(jsonPath("$.email").value("pierre.leroy@test.com"))
                 .andExpect(jsonPath("$.keycloakId").exists());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_tenant_admin", username = "keycloak-admin-id")
+    @DisplayName("PUT /v1/shops/{id} should update shop and return 200")
+    void shouldUpdateShopAndReturn200() throws Exception {
+        Shop shop = new Shop();
+        shop.setTenant(tenant);
+        shop.setName("Test Shop");
+        shop.setCode("SHOP1");
+        shop.setAddress("123 Test Street");
+        shop.setActive(true);
+        shop.setDeleted(false);
+        shop = shopRepository.save(shop);
+
+        String requestBody = """
+                {
+                  "name": "Updated Shop",
+                  "address": "456 New Street",
+                  "city": "New City",
+                  "postalCode": "99999",
+                  "country": "New Country",
+                  "phone": "999",
+                  "email": "updated@shop.com"
+                }
+                """;
+
+        mockMvc.perform(put("/v1/shops/" + shop.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated Shop"))
+                .andExpect(jsonPath("$.address").value("456 New Street"));
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_tenant_admin", username = "keycloak-admin-id")
+    @DisplayName("PUT /v1/shops/{id} should return 404 for non-existent shop")
+    void shouldReturn404WhenUpdateNonExistentShop() throws Exception {
+        String requestBody = """
+                {
+                  "name": "Valid Shop",
+                  "address": "12345 Address"
+                }
+                """;
+
+        mockMvc.perform(put("/v1/shops/00000000-0000-0000-0000-000000000000")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNotFound());
     }
 }
 

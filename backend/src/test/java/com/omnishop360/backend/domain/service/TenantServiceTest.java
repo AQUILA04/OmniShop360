@@ -10,6 +10,8 @@ import com.omnishop360.backend.infrastructure.adapter.KeycloakAdapter;
 import com.omnishop360.backend.web.dto.CreateTenantRequest;
 import com.omnishop360.backend.web.dto.TenantResponse;
 import com.omnishop360.backend.web.dto.UpdateTenantPricingPolicyRequest;
+import com.omnishop360.backend.web.dto.UpdateTenantRequest;
+import com.omnishop360.backend.web.dto.UpdateTenantStatusRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -292,6 +294,95 @@ class TenantServiceTest {
 
         assertNotNull(response);
         verify(tenantRepository).save(any(Tenant.class));
+    }
+
+    @Test
+    @DisplayName("Should update tenant successfully")
+    void shouldUpdateTenantSuccessfully() {
+        UUID tenantId = savedTenant.getId();
+        UpdateTenantRequest request = new UpdateTenantRequest("New Company Name", "newcontact@acme.com");
+        when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(savedTenant));
+        when(tenantRepository.save(any(Tenant.class))).thenReturn(savedTenant);
+        when(userRepository.countByTenantId(tenantId)).thenReturn(1L);
+
+        TenantResponse response = tenantService.updateTenant(tenantId, request);
+
+        assertNotNull(response);
+        verify(tenantRepository).save(any(Tenant.class));
+        verify(tenantRepository).findByIdAndDeletedFalse(tenantId);
+    }
+
+    @Test
+    @DisplayName("Should throw when update tenant not found")
+    void shouldThrowWhenUpdateTenantNotFound() {
+        UUID tenantId = UUID.randomUUID();
+        UpdateTenantRequest request = new UpdateTenantRequest("New Name", "new@acme.com");
+        when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.empty());
+
+        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+                () -> tenantService.updateTenant(tenantId, request));
+        verify(tenantRepository, never()).save(any(Tenant.class));
+    }
+
+    @Test
+    @DisplayName("Should update tenant status to SUSPENDED successfully")
+    void shouldUpdateTenantStatusToSuspendedSuccessfully() {
+        UUID tenantId = savedTenant.getId();
+        UpdateTenantStatusRequest request = new UpdateTenantStatusRequest(TenantStatus.SUSPENDED);
+        when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(savedTenant));
+        when(tenantRepository.save(any(Tenant.class))).thenReturn(savedTenant);
+        when(userRepository.countByTenantId(tenantId)).thenReturn(1L);
+
+        TenantResponse response = tenantService.updateTenantStatus(tenantId, request);
+
+        assertNotNull(response);
+        verify(tenantRepository).save(any(Tenant.class));
+    }
+
+    @Test
+    @DisplayName("Should throw when update status with DELETED")
+    void shouldThrowWhenUpdateStatusWithDeleted() {
+        UUID tenantId = savedTenant.getId();
+        UpdateTenantStatusRequest request = new UpdateTenantStatusRequest(TenantStatus.DELETED);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> tenantService.updateTenantStatus(tenantId, request));
+        verify(tenantRepository, never()).save(any(Tenant.class));
+    }
+
+    @Test
+    @DisplayName("Should throw when update status tenant not found")
+    void shouldThrowWhenUpdateStatusTenantNotFound() {
+        UUID tenantId = UUID.randomUUID();
+        UpdateTenantStatusRequest request = new UpdateTenantStatusRequest(TenantStatus.ACTIVE);
+        when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.empty());
+
+        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+                () -> tenantService.updateTenantStatus(tenantId, request));
+        verify(tenantRepository, never()).save(any(Tenant.class));
+    }
+
+    @Test
+    @DisplayName("Should delete tenant successfully")
+    void shouldDeleteTenantSuccessfully() {
+        UUID tenantId = savedTenant.getId();
+        when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(savedTenant));
+        when(tenantRepository.save(any(Tenant.class))).thenReturn(savedTenant);
+
+        tenantService.deleteTenant(tenantId);
+
+        verify(tenantRepository).save(any(Tenant.class));
+    }
+
+    @Test
+    @DisplayName("Should throw when delete tenant not found")
+    void shouldThrowWhenDeleteTenantNotFound() {
+        UUID tenantId = UUID.randomUUID();
+        when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.empty());
+
+        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+                () -> tenantService.deleteTenant(tenantId));
+        verify(tenantRepository, never()).save(any(Tenant.class));
     }
 }
 

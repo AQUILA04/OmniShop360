@@ -9,6 +9,7 @@ import com.omnishop360.backend.domain.repository.TenantRepository;
 import com.omnishop360.backend.web.dto.CreateProductRequest;
 import com.omnishop360.backend.web.dto.ProductResponse;
 import com.omnishop360.backend.web.dto.ProductVariantRequest;
+import com.omnishop360.backend.web.dto.UpdateProductRequest;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -208,6 +209,49 @@ class ProductServiceTest {
         when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> productService.getProductById(productId));
+    }
+
+    @Test
+    @DisplayName("Should update product successfully")
+    void shouldUpdateProductSuccessfully() {
+        UpdateProductRequest request = new UpdateProductRequest(
+                "Updated Product", "UPD-SKU", "Desc", null, null, "UNIT",
+                new BigDecimal("11.00"), new BigDecimal("22.00"), new BigDecimal("20.00"), true);
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(productRepository.findByIdAndDeletedFalse(product.getId())).thenReturn(Optional.of(product));
+        when(productRepository.existsByTenantIdAndSkuAndDeletedFalse(tenantId, "UPD-SKU")).thenReturn(false);
+        when(productRepository.save(any(Product.class))).thenReturn(product);
+
+        ProductResponse response = productService.updateProduct(product.getId(), request);
+
+        assertNotNull(response);
+        verify(productRepository).save(any(Product.class));
+    }
+
+    @Test
+    @DisplayName("Should throw when update product not found")
+    void shouldThrowWhenUpdateProductNotFound() {
+        UpdateProductRequest request = new UpdateProductRequest(
+                "A", "B", null, null, null, "UNIT", BigDecimal.ZERO, new BigDecimal("1"), BigDecimal.ZERO, null);
+        UUID productId = UUID.randomUUID();
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> productService.updateProduct(productId, request));
+        verify(productRepository, never()).save(any(Product.class));
+    }
+
+    @Test
+    @DisplayName("Should throw when update product SKU already exists")
+    void shouldThrowWhenUpdateProductSkuAlreadyExists() {
+        UpdateProductRequest request = new UpdateProductRequest(
+                "Name", "OTHER-SKU", null, null, null, "UNIT", BigDecimal.ZERO, new BigDecimal("1"), BigDecimal.ZERO, null);
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(productRepository.findByIdAndDeletedFalse(product.getId())).thenReturn(Optional.of(product));
+        when(productRepository.existsByTenantIdAndSkuAndDeletedFalse(tenantId, "OTHER-SKU")).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () -> productService.updateProduct(product.getId(), request));
+        verify(productRepository, never()).save(any(Product.class));
     }
 }
 

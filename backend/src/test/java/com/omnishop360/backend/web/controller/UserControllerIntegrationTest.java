@@ -1,7 +1,9 @@
 package com.omnishop360.backend.web.controller;
 
+import com.omnishop360.backend.domain.entity.Shop;
 import com.omnishop360.backend.domain.entity.Tenant;
 import com.omnishop360.backend.domain.entity.User;
+import com.omnishop360.backend.domain.repository.ShopRepository;
 import com.omnishop360.backend.domain.repository.TenantRepository;
 import com.omnishop360.backend.domain.repository.UserRepository;
 import com.omnishop360.backend.domain.service.UserContextService;
@@ -17,6 +19,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -38,6 +42,9 @@ class UserControllerIntegrationTest {
     private TenantRepository tenantRepository;
 
     @Autowired
+    private ShopRepository shopRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @MockBean
@@ -52,6 +59,7 @@ class UserControllerIntegrationTest {
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
+        shopRepository.deleteAll();
         tenantRepository.deleteAll();
 
         tenant = new Tenant();
@@ -107,5 +115,41 @@ class UserControllerIntegrationTest {
     void shouldReturn403ForUnauthorizedUser() throws Exception {
         mockMvc.perform(get("/v1/users"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_shop_admin", username = "keycloak-shop-admin-id")
+    @DisplayName("GET /v1/users should return only users of the shop for shop_admin")
+    void shouldReturnOnlyShopUsersForShopAdmin() throws Exception {
+        Shop shop = new Shop();
+        shop.setTenant(tenant);
+        shop.setName("Test Shop");
+        shop.setCode("SHOP1");
+        shop.setAddress("1 Test St");
+        shop.setActive(true);
+        shop.setDeleted(false);
+        shop = shopRepository.save(shop);
+
+        User shopUser = new User();
+        shopUser.setTenant(tenant);
+        shopUser.setShop(shop);
+        shopUser.setFirstName("Shop");
+        shopUser.setLastName("User");
+        shopUser.setEmail("shopuser@test.com");
+        shopUser.setKeycloakId("keycloak-shop-user-id");
+        shopUser.setActive(true);
+        shopUser.setDeleted(false);
+        userRepository.save(shopUser);
+
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shop.getId()));
+        when(keycloakAdapter.getRealmRoleNames("keycloak-shop-user-id")).thenReturn(java.util.List.of("cashier"));
+
+        mockMvc.perform(get("/v1/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].email").value("shopuser@test.com"))
+                .andExpect(jsonPath("$.content[0].shopId").value(shop.getId().toString()))
+                .andExpect(jsonPath("$.page.totalElements").value(1));
     }
 }

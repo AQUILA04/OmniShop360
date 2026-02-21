@@ -126,6 +126,7 @@ class UserServiceTest {
 
         try (MockedStatic<SecurityUtils> mockedSecurity = mockStatic(SecurityUtils.class)) {
             mockedSecurity.when(SecurityUtils::isSuperAdmin).thenReturn(false);
+            mockedSecurity.when(SecurityUtils::isShopAdmin).thenReturn(false);
             when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
             when(userRepository.findAll(any(Specification.class), eq(pageable)))
                     .thenReturn(emptyPage);
@@ -135,6 +136,60 @@ class UserServiceTest {
             assertNotNull(response);
             assertTrue(response.getContent().isEmpty());
             verify(keycloakAdapter, never()).getRealmRoleNames(anyString());
+        }
+    }
+
+    @Test
+    @DisplayName("Should get users for shop_admin with shop filter")
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    void shouldGetUsersForShopAdminWithShopFilter() {
+        UUID shopId = UUID.randomUUID();
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<User> userPage = new PageImpl<>(List.of(user));
+        UserSearchDto searchDto = UserSearchDto.builder().keyword("john").build();
+
+        when(keycloakAdapter.getRealmRoleNames(anyString())).thenReturn(List.of("shop_admin"));
+        try (MockedStatic<SecurityUtils> mockedSecurity = mockStatic(SecurityUtils.class)) {
+            mockedSecurity.when(SecurityUtils::isSuperAdmin).thenReturn(false);
+            mockedSecurity.when(SecurityUtils::isShopAdmin).thenReturn(true);
+            when(userContextService.getCurrentUserShopId()).thenReturn(java.util.Optional.of(shopId));
+            when(userRepository.findAll(any(Specification.class), eq(pageable)))
+                    .thenReturn(userPage);
+
+            PageResponse<UserResponse> response = userService.getUsers(searchDto, pageable);
+
+            assertNotNull(response);
+            assertEquals(1, response.getContent().size());
+            verify(userContextService).getCurrentUserShopId();
+            verify(userContextService, never()).getCurrentUserTenantId();
+            verify(userRepository).findAll(any(Specification.class), eq(pageable));
+        }
+    }
+
+    @Test
+    @DisplayName("Should get users for shop_admin without shop with tenant fallback")
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    void shouldGetUsersForShopAdminWithoutShopWithTenantFallback() {
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<User> userPage = new PageImpl<>(List.of(user));
+        UserSearchDto searchDto = UserSearchDto.builder().build();
+
+        when(keycloakAdapter.getRealmRoleNames(anyString())).thenReturn(List.of("shop_admin"));
+        try (MockedStatic<SecurityUtils> mockedSecurity = mockStatic(SecurityUtils.class)) {
+            mockedSecurity.when(SecurityUtils::isSuperAdmin).thenReturn(false);
+            mockedSecurity.when(SecurityUtils::isShopAdmin).thenReturn(true);
+            when(userContextService.getCurrentUserShopId()).thenReturn(java.util.Optional.empty());
+            when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+            when(userRepository.findAll(any(Specification.class), eq(pageable)))
+                    .thenReturn(userPage);
+
+            PageResponse<UserResponse> response = userService.getUsers(searchDto, pageable);
+
+            assertNotNull(response);
+            assertEquals(1, response.getContent().size());
+            verify(userContextService).getCurrentUserShopId();
+            verify(userContextService).getCurrentUserTenantId();
+            verify(userRepository).findAll(any(Specification.class), eq(pageable));
         }
     }
 }

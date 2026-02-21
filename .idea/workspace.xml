@@ -4,24 +4,72 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint3: impl sprint 3 part 1">
+    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint4-Analytics-Controller-Audit-Log-Controller-User-Controller-2-Analytics-Export-Audit-Logs-Vault-1">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateCategoryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateProductRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateShopRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateTenantRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateTenantStatusRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/db/migration/V9__create_users_aud_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/category-controller.v1.1.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/product-controller.v1.1.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/shop-controller.v1.3.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/tenant-controller.v1.3.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/Tenant.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/Tenant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/AuditLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/AuditLogService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/CategoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ShopService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ShopService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/TenantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/TenantService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/SecurityUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/SecurityUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/AuditLogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/AuditLogController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/CategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ShopController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ShopController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/TenantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/TenantController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/AuditLogServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/AuditLogServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/CategoryServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/CategoryServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/ProductServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/ProductServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/ShopServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/ShopServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/TenantServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/TenantServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/UserServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/UserServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/CategoryControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/CategoryControllerIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/ProductControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/ProductControllerIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/ShopControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/ShopControllerIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/TenantControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/TenantControllerIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/UserControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/UserControllerIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/audit-log-controller.v1.md" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/audit-log-controller.v1.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/user-controller.v2.md" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/user-controller.v2.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/pos/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/pos/package.json" afterDir="false" />
+    </list>
+    <list id="28103352-43e2-4852-97fd-59c1c37de819" name="configs" comment="configs">
+      <change afterPath="$PROJECT_DIR$/keycloak-config/.terraform/providers/registry.terraform.io/keycloak/keycloak/5.5.0/windows_amd64/terraform-provider-keycloak_v5.5.0.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/dev/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/deploy/dev/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfstate" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfstate.backup" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfstate.backup" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak-config/terraform.tfvars" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CopilotPersistence">
-    <persistenceIdMap>
-      <entry key="_C:/Users/kahonsu/Documents/GitHub/OmniShop360" value="36FZsOtq7U21YNwq4yPvMAbslU7" />
-    </persistenceIdMap>
-  </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="1121" />
+    <option name="cachedIndexableFilesCount" value="845" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -39,20 +87,12 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="feature/sprint-3-front" />
-                    <option name="lastUsedInstant" value="1770974203" />
-                  </RecentBranch>
-                  <RecentBranch>
-                    <option name="branchName" value="backlog/sprint3" />
-                    <option name="lastUsedInstant" value="1768196473" />
+                    <option name="branchName" value="feature/add-theme-and-keycloak-frontend" />
+                    <option name="lastUsedInstant" value="1765797880" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="develop" />
-                    <option name="lastUsedInstant" value="1768196190" />
-                  </RecentBranch>
-                  <RecentBranch>
-                    <option name="branchName" value="feature/add-theme-and-keycloak-frontend" />
-                    <option name="lastUsedInstant" value="1765797880" />
+                    <option name="lastUsedInstant" value="1765737459" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
@@ -77,6 +117,43 @@
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/.idea/workspace.xml">
+      <ranges>
+        <range start1="6" end1="7" start2="6" end2="51" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="8" end1="8" start2="52" end2="56" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="13" end1="18" start2="61" end2="61" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="20" end1="21" start2="63" end2="64" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="24" end1="24" start2="67" end2="72" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="41" end1="47" start2="89" end2="91" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="50" end1="55" start2="94" end2="95" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="79" end1="79" start2="119" end2="156" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="90" end1="90" start2="167" end2="170" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="102" end1="133" start2="182" end2="227" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="134" end1="135" start2="228" end2="232" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="136" end1="138" start2="233" end2="235" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="140" end1="141" start2="237" end2="238" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="144" end1="145" start2="241" end2="241" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="156" end1="156" start2="252" end2="267" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="157" end1="158" start2="268" end2="269" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="217" end1="217" start2="328" end2="329" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="218" end1="219" start2="330" end2="331" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="225" end1="226" start2="337" end2="337" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="227" end1="227" start2="338" end2="340" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="233" end1="235" start2="346" end2="348" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="241" end1="241" start2="354" end2="355" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="253" end1="264" start2="367" end2="375" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="297" end1="298" start2="408" end2="409" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="299" end1="300" start2="410" end2="411" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="303" end1="304" start2="414" end2="415" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="305" end1="306" start2="416" end2="417" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="307" end1="308" start2="418" end2="419" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="311" end1="312" start2="422" end2="423" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="313" end1="314" start2="424" end2="465" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="324" end1="327" start2="475" end2="481" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+      </ranges>
+    </file>
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>

@@ -31,7 +31,7 @@ public class AuditLogController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('superadmin', 'tenant_admin')")
-    @Operation(summary = "Lister les logs d'audit", description = "Liste paginée des modifications (Stock, Sale, Product)")
+    @Operation(summary = "Lister les logs d'audit", description = "Liste paginée des modifications (Stock, Sale, Product, User)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Liste récupérée avec succès"),
             @ApiResponse(responseCode = "403", description = "Permissions insuffisantes")
@@ -44,7 +44,7 @@ public class AuditLogController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
             @Parameter(description = "Filtrer par utilisateur (Keycloak sub)")
             @RequestParam(required = false) String userId,
-            @Parameter(description = "Filtrer par type d'entité: Stock, Sale, Product")
+            @Parameter(description = "Filtrer par type d'entité: Stock, Sale, Product, User")
             @RequestParam(required = false) String entityType,
             @Parameter(description = "Filtrer par tenant (superadmin uniquement)")
             @RequestParam(required = false) UUID tenantId) {

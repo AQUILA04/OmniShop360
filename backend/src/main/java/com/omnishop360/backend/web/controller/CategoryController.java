@@ -3,6 +3,7 @@ package com.omnishop360.backend.web.controller;
 import com.omnishop360.backend.domain.service.CategoryService;
 import com.omnishop360.backend.web.dto.CategoryResponse;
 import com.omnishop360.backend.web.dto.CreateCategoryRequest;
+import com.omnishop360.backend.web.dto.UpdateCategoryRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -68,6 +69,23 @@ public class CategoryController {
             @PathVariable UUID categoryId) {
         log.debug("Fetching category: {}", categoryId);
         CategoryResponse response = categoryService.getCategoryById(categoryId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{categoryId}")
+    @PreAuthorize("hasRole('tenant_admin')")
+    @Operation(summary = "Modifier une catégorie", description = "Met à jour les informations d'une catégorie")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Catégorie modifiée avec succès"),
+            @ApiResponse(responseCode = "400", description = "Données invalides"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes"),
+            @ApiResponse(responseCode = "404", description = "Catégorie non trouvée")
+    })
+    public ResponseEntity<CategoryResponse> updateCategory(
+            @Parameter(description = "UUID de la catégorie") @PathVariable UUID categoryId,
+            @Valid @RequestBody UpdateCategoryRequest request) {
+        log.info("Updating category: {}", categoryId);
+        CategoryResponse response = categoryService.updateCategory(categoryId, request);
         return ResponseEntity.ok(response);
     }
 }

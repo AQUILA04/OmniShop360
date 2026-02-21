@@ -1,6 +1,6 @@
 # Contrat API - User Controller (v2)
 
-**Version:** 2.0.0  
+**Version:** 2.1.0  
 **Date de création:** 2025-01-24  
 **Dernière modification:** 2026-02-21  
 **Responsable Backend:** À définir  
@@ -14,6 +14,7 @@
 |:---|:---|:---|:---|
 | 1.0.0 | 2025-01-24 | AI Developer | Création initiale du contrat pour la gestion des utilisateurs |
 | 2.0.0 | 2026-02-21 | AI Developer | Ajout du champ `role` dans la réponse (liste utilisateurs) pour identifier le rôle de chaque utilisateur |
+| 2.1.0 | 2026-02-21 | AI Developer | Comportement GET /users par rôle : superadmin = tous ; tenant_admin = son tenant ; shop_admin = sa boutique uniquement |
 
 ---
 
@@ -44,7 +45,7 @@ Authorization: Bearer <JWT_TOKEN>
 
 **Rôle requis:** `superadmin` ou `tenant_admin` ou `shop_admin`
 
-**Description:** Récupère la liste paginée des utilisateurs avec le rôle de chaque utilisateur. Le Super Admin voit tous les utilisateurs du système. Le Tenant Admin ne voit que les utilisateurs de son tenant.
+**Description:** Récupère la liste paginée des utilisateurs avec le rôle de chaque utilisateur. Comportement selon le rôle appelant : **superadmin** : tous les utilisateurs du système ; **tenant_admin** : uniquement les utilisateurs de son tenant ; **shop_admin** : uniquement les utilisateurs de sa boutique.
 
 #### Request
 
@@ -61,7 +62,7 @@ Authorization: Bearer <JWT_TOKEN>
 - `email` (optional): Filtrer par email exact
 - `active` (optional): Filtrer par statut actif (true/false)
 - `tenantId` (optional): Filtrer par tenant (superadmin uniquement)
-- `shopId` (optional): Filtrer par boutique
+- `shopId` (optional): Filtrer par boutique (superadmin ou tenant_admin uniquement ; ignoré pour shop_admin, qui voit uniquement sa boutique)
 
 **Exemple:**
 ```
@@ -104,7 +105,7 @@ GET /users?page=0&size=20&sort=lastName,asc&keyword=john&active=true
   "timestamp": "2025-01-24T10:30:00Z",
   "status": 403,
   "error": "Forbidden",
-  "message": "Insufficient permissions. Required role: superadmin or tenant_admin",
+  "message": "Insufficient permissions. Required role: superadmin, tenant_admin or shop_admin",
   "path": "/api/v1/users"
 }
 ```
@@ -146,8 +147,7 @@ GET /users?page=0&size=20&sort=lastName,asc&keyword=john&active=true
 ## Notes d'implémentation
 
 ### Backend
-- L'isolation des données est garantie : un tenant_admin ne peut accéder qu'aux utilisateurs de son tenant
-- Le superadmin voit tous les utilisateurs et peut filtrer par tenantId ou shopId
+- L'isolation des données est garantie : **superadmin** voit tous les utilisateurs et peut filtrer par tenantId ou shopId ; **tenant_admin** ne voit que les utilisateurs de son tenant (filtre shopId optionnel dans le tenant) ; **shop_admin** ne voit que les utilisateurs de sa boutique (tenantId/shopId de la requête ignorés)
 - Les recherches utilisent JPA Specifications pour des filtres dynamiques
 - Les utilisateurs supprimés (soft delete) ne sont pas retournés
 - Le champ `role` est résolu via Keycloak (rôles realm effectifs), puis filtré pour ne garder que les rôles métier (superadmin, tenant_admin, shop_admin, cashier, stock_manager). Les rôles techniques Keycloak (uma_authorization, default-roles-*, etc.) sont exclus. Si plusieurs rôles métier, ils sont retournés séparés par ", ". En cas d'erreur ou d'aucun rôle métier, `role` est null

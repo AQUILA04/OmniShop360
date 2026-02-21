@@ -81,4 +81,23 @@ class AuditLogServiceTest {
         assertNotNull(result);
         verify(entityManager, atLeast(1)).createNativeQuery(anyString());
     }
+
+    @Test
+    @DisplayName("Should return audit logs when filtering by entityType User")
+    void shouldReturnAuditLogsWhenFilteringByEntityTypeUser() {
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        Query countQuery = mock(Query.class);
+        Query dataQuery = mock(Query.class);
+        when(entityManager.createNativeQuery(anyString())).thenReturn(dataQuery).thenReturn(countQuery);
+        when(countQuery.getSingleResult()).thenReturn(0L);
+        when(dataQuery.getResultList()).thenReturn(List.of());
+
+        AuditLogSearchDto searchDto = AuditLogSearchDto.builder().entityType("User").build();
+        PageResponse<AuditLogEntry> result = auditLogService.getAuditLogs(searchDto, pageable);
+
+        assertNotNull(result);
+        assertTrue(result.getContent().isEmpty());
+        assertEquals(0L, result.getPage().getTotalElements());
+        verify(entityManager, atLeast(1)).createNativeQuery(argThat(sql -> sql != null && sql.contains("users_aud")));
+    }
 }

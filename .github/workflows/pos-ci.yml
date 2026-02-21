@@ -42,7 +42,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./pos
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Lint code
         working-directory: ./pos

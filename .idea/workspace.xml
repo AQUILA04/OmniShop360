@@ -4,46 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="sprint4-Analytics-Controller-Audit-Log-Controller-User-Controller-2-Analytics-Export-Audit-Logs-Vault-1">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateCategoryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateProductRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateShopRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateTenantRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/dto/UpdateTenantStatusRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/db/migration/V9__create_users_aud_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/category-controller.v1.1.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/product-controller.v1.1.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/shop-controller.v1.3.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/tenant-controller.v1.3.md" afterDir="false" />
+    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="Audit Log Controller Category Controller Product Controller Shop Controller Tenant Controller User Controller (v2)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/Tenant.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/Tenant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/AuditLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/AuditLogService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/CategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ProductService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ShopService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/ShopService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/TenantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/TenantService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/domain/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/SecurityUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/infrastructure/config/SecurityUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/AuditLogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/AuditLogController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ShopController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/ShopController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/TenantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/omnishop360/backend/web/controller/TenantController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/AuditLogServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/AuditLogServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/CategoryServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/CategoryServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/ProductServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/ProductServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/ShopServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/ShopServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/TenantServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/TenantServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/UserServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/domain/service/UserServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/CategoryControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/CategoryControllerIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/ProductControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/ProductControllerIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/ShopControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/ShopControllerIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/TenantControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/TenantControllerIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/UserControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/omnishop360/backend/web/controller/UserControllerIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/audit-log-controller.v1.md" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/audit-log-controller.v1.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/user-controller.v2.md" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/user-controller.v2.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/pos/angular.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/pos/package.json" afterDir="false" />
     </list>
@@ -67,7 +29,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="sprint4-Analytics-Controller-Audit-Log-Controller-User-Controller-2-Analytics-Export-Audit-Logs-Vault-1" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -120,37 +82,33 @@
   <component name="LineStatusTrackerManager">
     <file path="$PROJECT_DIR$/.idea/workspace.xml">
       <ranges>
-        <range start1="6" end1="7" start2="6" end2="51" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
-        <range start1="8" end1="8" start2="52" end2="56" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
-        <range start1="13" end1="18" start2="61" end2="61" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
-        <range start1="20" end1="21" start2="63" end2="64" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
-        <range start1="24" end1="24" start2="67" end2="72" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
-        <range start1="41" end1="47" start2="89" end2="91" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
-        <range start1="50" end1="55" start2="94" end2="95" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
-        <range start1="79" end1="79" start2="119" end2="156" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
-        <range start1="90" end1="90" start2="167" end2="170" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="102" end1="133" start2="182" end2="227" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="134" end1="135" start2="228" end2="232" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="136" end1="138" start2="233" end2="235" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="140" end1="141" start2="237" end2="238" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="144" end1="145" start2="241" end2="241" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="156" end1="156" start2="252" end2="267" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="157" end1="158" start2="268" end2="269" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="217" end1="217" start2="328" end2="329" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="218" end1="219" start2="330" end2="331" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="225" end1="226" start2="337" end2="337" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="227" end1="227" start2="338" end2="340" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="233" end1="235" start2="346" end2="348" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="241" end1="241" start2="354" end2="355" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="253" end1="264" start2="367" end2="375" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="297" end1="298" start2="408" end2="409" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="299" end1="300" start2="410" end2="411" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="303" end1="304" start2="414" end2="415" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="305" end1="306" start2="416" end2="417" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="307" end1="308" start2="418" end2="419" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="311" end1="312" start2="422" end2="423" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="313" end1="314" start2="424" end2="465" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
-        <range start1="324" end1="327" start2="475" end2="481" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="6" end1="17" start2="6" end2="7" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="18" end1="47" start2="8" end2="8" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="69" end1="70" start2="30" end2="31" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="122" end1="153" start2="83" end2="110" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="167" end1="167" start2="124" end2="127" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="179" end1="210" start2="139" end2="184" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="211" end1="212" start2="185" end2="189" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="213" end1="215" start2="190" end2="192" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="217" end1="218" start2="194" end2="195" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="221" end1="222" start2="198" end2="198" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="233" end1="233" start2="209" end2="224" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="234" end1="235" start2="225" end2="226" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="294" end1="294" start2="285" end2="286" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="295" end1="296" start2="287" end2="288" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="302" end1="302" start2="294" end2="295" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="303" end1="304" start2="296" end2="297" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="310" end1="312" start2="303" end2="305" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="318" end1="318" start2="311" end2="312" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="330" end1="341" start2="324" end2="332" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="374" end1="375" start2="365" end2="366" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="376" end1="377" start2="367" end2="368" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="380" end1="381" start2="371" end2="372" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="382" end1="383" start2="373" end2="374" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="384" end1="385" start2="375" end2="376" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="388" end1="389" start2="379" end2="420" changelist="28103352-43e2-4852-97fd-59c1c37de819" />
+        <range start1="390" end1="391" start2="421" end2="430" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
+        <range start1="401" end1="404" start2="440" end2="447" changelist="52a02212-66b0-4d60-a114-01f9f3398698" />
       </ranges>
     </file>
   </component>
@@ -177,39 +135,56 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.dev.keycloak: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.dev: Compose Deployment (1).executor&quot;: &quot;Run&quot;,
-    &quot;Docker.dev: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.omnishop-backend [flyway:repair...].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.OmniShop360BackendApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/sprint-3-front&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kahonsu/Documents/GitHub/OmniShop360/backend/src/main/resources&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.android.studio.ml.bot.mainConfigurable&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\kahonsu\\Documents\\GitHub\\OmniShop360\\frontend\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.dev.keycloak: Compose Deployment.executor": "Run",
+    "Docker.dev: Compose Deployment (1).executor": "Run",
+    "Docker.dev: Compose Deployment.executor": "Run",
+    "JUnit.CustomerControllerTest.executor": "Debug",
+    "JUnit.CustomerSpecificationTest.executor": "Debug",
+    "JUnit.SaleControllerTest.executor": "Debug",
+    "JUnit.SaleSpecificationTest.executor": "Debug",
+    "JUnit.ShopServiceTest.executor": "Debug",
+    "JUnit.StockControllerTest.executor": "Debug",
+    "JUnit.StockControllerTest.shouldGetInventoryWithAllSearchParameters.executor": "Debug",
+    "JUnit.StockResponseTest.executor": "Debug",
+    "JUnit.StockResponseTest.shouldReturnNullWhenStockIsNull.executor": "Debug",
+    "JUnit.StockServiceTest.executor": "Debug",
+    "JUnit.StockServiceTest.shouldRemoveStockSuccessfully.executor": "Debug",
+    "JUnit.StockSpecificationTest.executor": "Debug",
+    "Maven.omnishop-backend [clean,install].executor": "Run",
+    "Maven.omnishop-backend [verify].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.OmniShop360BackendApplication.executor": "Debug",
+    "augment.onboarding.workspace.first.indexed.C:/code/OmniShop360": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "Audit-Log-Controller-Category-Controller-Product-Controller-Shop-Controll…-(v2)",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360/keycloak/themes/omnishop360/login/resources/img",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\code\\OmniShop360\\frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1771354809890" />
     <option name="spentUsd" value="0.017974751" />
@@ -388,7 +363,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770886090164</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00012" summary="Audit Log Controller Category Controller Product Controller Shop Controller Tenant Controller User Controller (v2)">
+      <option name="closed" value="true" />
+      <created>1771696701932</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1771696701932</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -399,9 +382,13 @@
     <MESSAGE value="frontend setup update" />
     <MESSAGE value="sprint1: complete tenant management, test with backend, setup Generic service and base component for DRY architecture. fix keycloak integration." />
     <MESSAGE value="sprint1: update changelog" />
-    <MESSAGE value="sprint2: gestion des boutiques et produits (front)" />
-    <MESSAGE value="sprint3: impl sprint 3 part 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="sprint3: impl sprint 3 part 1" />
+    <MESSAGE value="sprint2: US-005 &amp; US-006 : Gestion des Boutiques" />
+    <MESSAGE value="sprint3: cashier-customer-sale-and-Stock-controller.v1" />
+    <MESSAGE value="sprint3: cashier-customer-sale-and-Stock-controller.v1 : fix tests" />
+    <MESSAGE value="sprint3: Sale Controller, Shop Controller, Stock Controller, User Controller" />
+    <MESSAGE value="sprint4-Analytics-Controller-Audit-Log-Controller-User-Controller-2-Analytics-Export-Audit-Logs-Vault-1" />
+    <MESSAGE value="Audit Log Controller Category Controller Product Controller Shop Controller Tenant Controller User Controller (v2)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Audit Log Controller Category Controller Product Controller Shop Controller Tenant Controller User Controller (v2)" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

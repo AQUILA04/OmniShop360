@@ -66,15 +66,15 @@ describe('ProductFormComponent', () => {
     describe('Margin Calculation', () => {
         it('should calculate margin correctly', () => {
             component.form.patchValue({
-                salePrice: 100,
+                sellingPrice: 100,
                 purchasePrice: 60
             });
             expect(component.marginPercentage).toBe(40);
         });
 
-        it('should return null if salePrice is 0', () => {
+        it('should return null if sellingPrice is 0', () => {
             component.form.patchValue({
-                salePrice: 0,
+              sellingPrice: 0,
                 purchasePrice: 60
             });
             expect(component.marginPercentage).toBeNull();

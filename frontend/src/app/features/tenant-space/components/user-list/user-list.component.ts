@@ -19,7 +19,7 @@ export class UserListComponent extends BaseListComponent<UserResponse> {
     { key: 'lastName', label: 'Nom', sortable: true, type: 'text' },
     { key: 'email', label: 'Email', sortable: true, type: 'text' },
     { key: 'active', label: 'Statut', sortable: true, type: 'text', mapValue: (val: boolean) => val ? 'Actif' : 'Inactif' },
-    { key: 'roles', label: 'Rôles', sortable: false, type: 'text', mapValue: (roles: any) => Array.isArray(roles) ? roles.join(', ') : '-' }
+    { key: 'role', label: 'Rôles', sortable: false, type: 'text', mapValue: (roles: any) => Array.isArray(roles) ? roles.join(', ') : roles }
   ];
 
   constructor(protected shopAdminService: ShopAdminService) {

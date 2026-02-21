@@ -3,11 +3,14 @@ package com.omnishop360.backend.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Audited
 @Table(name = "stock", uniqueConstraints = {
     @UniqueConstraint(name = "uk_stock_product_shop", columnNames = {"tenant_id", "shop_id", "product_id", "variant_id"})
 })
@@ -20,18 +23,22 @@ public class Stock {
     @Column(name = "id", updatable = false, nullable = false)
     private java.util.UUID id;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id", nullable = false, updatable = false)
     private Tenant tenant;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", nullable = false, updatable = false)
     private Shop shop;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false, updatable = false)
     private Product product;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "variant_id")
     private ProductVariant variant;

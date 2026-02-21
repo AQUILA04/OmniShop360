@@ -84,4 +84,44 @@ class UserResponseTest {
         UserResponse response = UserResponse.from(null);
         assertNull(response);
     }
+
+    @Test
+    @DisplayName("Should create UserResponse with role when from(User, role) is used")
+    void shouldCreateUserResponseWithRole() {
+        Tenant tenant = new Tenant();
+        tenant.setId(UUID.randomUUID());
+        tenant.setCompanyName("ACME Corp");
+        User user = new User();
+        user.setId(UUID.randomUUID());
+        user.setTenant(tenant);
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setEmail("john@test.com");
+        user.setKeycloakId("keycloak-789");
+        user.setActive(true);
+
+        UserResponse response = UserResponse.from(user, "tenant_admin");
+
+        assertNotNull(response);
+        assertEquals("tenant_admin", response.getRole());
+        assertEquals("John", response.getFirstName());
+    }
+
+    @Test
+    @DisplayName("Should create UserResponse with null role when from(User) is used")
+    void shouldCreateUserResponseWithNullRoleWhenFromUserOnly() {
+        Tenant tenant = new Tenant();
+        tenant.setId(UUID.randomUUID());
+        User user = new User();
+        user.setId(UUID.randomUUID());
+        user.setTenant(tenant);
+        user.setFirstName("Jane");
+        user.setEmail("jane@test.com");
+        user.setKeycloakId("keycloak-999");
+
+        UserResponse response = UserResponse.from(user);
+
+        assertNotNull(response);
+        assertNull(response.getRole());
+    }
 }

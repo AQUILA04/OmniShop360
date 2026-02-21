@@ -14,6 +14,15 @@ L'application est structurée en modules pour une meilleure organisation et une 
     - `dashboard`: Tableaux de bord et rapports.
 - **`models`**: Contient les interfaces et modèles de données de l'application.
 
+## Contrats API (Sprint 4+)
+
+Les endpoints suivants sont documentés dans `contracts/` à la racine du monorepo pour l’intégration frontend :
+
+- **Analytics** : `contracts/analytics-controller.v1.md` (v1.0.0) — `GET /api/v1/analytics/summary`, `GET /api/v1/analytics/export` (PDF/Excel).
+- **Audit Logs** : `contracts/audit-log-controller.v1.md` (v1.0.0) — `GET /api/v1/audit-logs` (liste paginée des modifications Stock, Sale, Product).
+
+Utiliser ces contrats pour les services Angular et les interfaces TypeScript correspondantes.
+
 ## Fonctionnalités Clés
 
 - **Interface Réactive** : Développée avec Angular 17 et le pattern Signal.

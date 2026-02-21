@@ -7,6 +7,40 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.4.0] - 2025-02-21 - Sprint 4 Backend
+
+### Added
+- **Analytics & Dashboard (US-015, US-016)** - Backend implementation for tableaux de bord
+  - `GET /api/v1/analytics/summary` - Synthèse (CA, transactions, panier moyen, évolution, top produits)
+  - Paramètres optionnels: `shopId`, `fromDate`, `toDate`
+  - Rôles: `tenant_admin`, `shop_admin`, `cashier`
+  - AnalyticsService, DTOs (AnalyticsSummaryResponse, SalesEvolutionEntry, TopProductEntry)
+  - Requêtes d'agrégation dans SaleRepository (JPQL et native)
+- **Export PDF / Excel (US-017)** - Export des rapports de ventes
+  - `GET /api/v1/analytics/export` - Format PDF ou EXCEL
+  - Dépendances: Apache POI (Excel), OpenPDF (PDF)
+  - ExportService avec isolation tenant/shop
+- **Audit Logs (US-019)** - Journaux d'audit avec Hibernate Envers
+  - `GET /api/v1/audit-logs` - Liste paginée des modifications (Stock, Sale, Product)
+  - Entités auditées: Stock, Sale, Product
+  - AuditRevisionEntity avec userId et tenantId, AuditRevisionListener
+  - AuditLogService, AuditLogController
+  - Rôles: `superadmin`, `tenant_admin`
+  - Migration Flyway V5 pour tables revision_info, stock_aud, sales_aud, products_aud
+- **Intégration HashiCorp Vault (US-018, V-018)** - Gestion des secrets
+  - bootstrap.yml avec configuration Vault (AppRole, KV backend)
+  - Activation conditionnelle: `VAULT_ENABLED`, `VAULT_URI`, `VAULT_ROLE_ID`, `VAULT_SECRET_ID`
+  - spring-cloud-starter-vault-config et spring-cloud-starter-bootstrap
+  - Désactivation par défaut en dev (spring.cloud.vault.enabled: false)
+- **API Contracts** - Nouveaux contrats pour le frontend
+  - `contracts/analytics-controller.v1.md` - Analytics et export
+  - `contracts/audit-log-controller.v1.md` - Journaux d'audit
+- **Tests** - Couverture des nouveaux composants
+  - AnalyticsServiceTest, ExportServiceTest, AnalyticsControllerIntegrationTest
+  - AuditLogServiceTest, AuditLogControllerIntegrationTest
+
+---
+
 ## [0.3.0] - 2025-01-24 - Sprint 3 Backend
 
 ### Added

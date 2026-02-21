@@ -141,6 +141,9 @@ Avant de merger :
 | `sale-controller.v1.1.md` | 1.1.0 | Ventes – Recherche produits pour la vente (avec stock) | 🟢 Actif |
 | `customer-controller.v1.md` | 1.0.0 | Gestion des Clients | 🟢 Actif |
 | `user-controller.v1.md` | 1.0.0 | Gestion des Utilisateurs | 🟢 Actif |
+| `user-controller.v2.md` | 2.0.0 | Liste utilisateurs avec rôle (champ `role`) | 🟢 Actif |
+| `analytics-controller.v1.md` | 1.0.0 | Tableaux de bord et export PDF/Excel (US-015, US-016, US-017) | 🟢 Actif |
+| `audit-log-controller.v1.md` | 1.0.0 | Journaux d'audit (US-019) | 🟢 Actif |
 
 ---
 

@@ -7,6 +7,7 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -193,6 +194,24 @@ public class KeycloakAdapter {
         } catch (Exception e) {
             log.error("Error getting attribute {} for user: {}", attributeName, keycloakId, e);
             return null;
+        }
+    }
+
+    public List<String> getRealmRoleNames(String keycloakId) {
+        try {
+            UsersResource usersResource = getRealmResource().users();
+            UserResource userResource = usersResource.get(keycloakId);
+            List<RoleRepresentation> roles = userResource.roles().realmLevel().listEffective();
+            if (roles == null) {
+                return Collections.emptyList();
+            }
+            return roles.stream()
+                    .map(RoleRepresentation::getName)
+                    .filter(name -> name != null && !name.isBlank())
+                    .toList();
+        } catch (Exception e) {
+            log.debug("Could not get realm roles for user {}: {}", keycloakId, e.getMessage());
+            return Collections.emptyList();
         }
     }
 }

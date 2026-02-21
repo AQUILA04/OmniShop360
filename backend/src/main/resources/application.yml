@@ -1,10 +1,14 @@
 spring:
   application:
     name: omnishop-backend
-  
+
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
-  
+
   devtools:
     restart:
       enabled: true
@@ -40,7 +44,7 @@ spring:
         order_updates: true
   
   flyway:
-    enabled: false
+    enabled: true
     baseline-on-migrate: true
     baseline-description: "init"
     baseline-version: 0
@@ -160,4 +164,4 @@ keycloak:
   url: ${KEYCLOAK_URL:http://localhost:8080}
   realm: ${KEYCLOAK_REALM:omnishop360}
   client-id: ${KEYCLOAK_CLIENT_ID:omnishop-backend}
-  client-secret: ${KEYCLOAK_CLIENT_SECRET:EQ6htUCANB9j72Hp730g1pmlcofc3gtR}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET:lKnCcfdttkf5A2AMAM8qQBHU93FnpqvE}

@@ -3,6 +3,9 @@ package com.omnishop360.backend.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Audited
 @Table(name = "sales", uniqueConstraints = {
     @UniqueConstraint(name = "uk_sale_number_tenant", columnNames = {"tenant_id", "sale_number"})
 })
@@ -23,14 +27,17 @@ public class Sale {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id", nullable = false, updatable = false)
     private Tenant tenant;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", nullable = false, updatable = false)
     private Shop shop;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
@@ -84,6 +91,7 @@ public class Sale {
     @Column(name = "version")
     private Long version;
 
+    @NotAudited
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SaleItem> items = new ArrayList<>();
 

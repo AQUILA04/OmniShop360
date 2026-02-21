@@ -26,8 +26,13 @@ public class UserResponse {
     private UUID shopId;
     private String shopName;
     private LocalDateTime createdAt;
+    private String role;
 
     public static UserResponse from(User user) {
+        return from(user, null);
+    }
+
+    public static UserResponse from(User user, String role) {
         if (user == null) {
             return null;
         }
@@ -43,6 +48,7 @@ public class UserResponse {
                 .shopId(user.getShop() != null ? user.getShop().getId() : null)
                 .shopName(user.getShop() != null ? user.getShop().getName() : null)
                 .createdAt(user.getCreatedAt())
+                .role(role)
                 .build();
     }
 }

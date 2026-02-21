@@ -5,6 +5,7 @@ import com.omnishop360.backend.domain.entity.User;
 import com.omnishop360.backend.domain.repository.TenantRepository;
 import com.omnishop360.backend.domain.repository.UserRepository;
 import com.omnishop360.backend.domain.service.UserContextService;
+import com.omnishop360.backend.infrastructure.adapter.KeycloakAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,6 +42,9 @@ class UserControllerIntegrationTest {
 
     @MockBean
     private UserContextService userContextService;
+
+    @MockBean
+    private KeycloakAdapter keycloakAdapter;
 
     private Tenant tenant;
     private User tenantAdmin;
@@ -68,6 +73,7 @@ class UserControllerIntegrationTest {
         tenantAdmin = userRepository.save(tenantAdmin);
 
         when(userContextService.getCurrentUserTenantId()).thenReturn(tenant.getId());
+        when(keycloakAdapter.getRealmRoleNames(anyString())).thenReturn(java.util.List.of("tenant_admin"));
     }
 
     @Test
@@ -80,6 +86,7 @@ class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.content[0].email").value("admin@test.com"))
                 .andExpect(jsonPath("$.content[0].firstName").value("Admin"))
                 .andExpect(jsonPath("$.content[0].tenantCompanyName").value("Test Company"))
+                .andExpect(jsonPath("$.content[0].role").value("tenant_admin"))
                 .andExpect(jsonPath("$.page").exists())
                 .andExpect(jsonPath("$.page.totalElements").value(1));
     }

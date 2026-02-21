@@ -3,6 +3,7 @@ package com.omnishop360.backend.domain.service;
 import com.omnishop360.backend.domain.entity.Tenant;
 import com.omnishop360.backend.domain.entity.User;
 import com.omnishop360.backend.domain.repository.UserRepository;
+import com.omnishop360.backend.infrastructure.adapter.KeycloakAdapter;
 import com.omnishop360.backend.infrastructure.config.SecurityUtils;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.UserResponse;
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -38,6 +40,9 @@ class UserServiceTest {
 
     @Mock
     private UserContextService userContextService;
+
+    @Mock
+    private KeycloakAdapter keycloakAdapter;
 
     @InjectMocks
     private UserService userService;
@@ -70,6 +75,7 @@ class UserServiceTest {
         Page<User> userPage = new PageImpl<>(List.of(user));
         UserSearchDto searchDto = UserSearchDto.builder().keyword("john").build();
 
+        when(keycloakAdapter.getRealmRoleNames(anyString())).thenReturn(List.of("tenant_admin"));
         try (MockedStatic<SecurityUtils> mockedSecurity = mockStatic(SecurityUtils.class)) {
             mockedSecurity.when(SecurityUtils::isSuperAdmin).thenReturn(false);
             when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
@@ -80,6 +86,7 @@ class UserServiceTest {
 
             assertNotNull(response);
             assertEquals(1, response.getContent().size());
+            assertEquals("tenant_admin", response.getContent().get(0).getRole());
             verify(userContextService).getCurrentUserTenantId();
             verify(userRepository).findAll(any(Specification.class), eq(pageable));
         }
@@ -93,6 +100,7 @@ class UserServiceTest {
         Page<User> userPage = new PageImpl<>(List.of(user));
         UserSearchDto searchDto = UserSearchDto.builder().tenantId(tenantId).build();
 
+        when(keycloakAdapter.getRealmRoleNames(anyString())).thenReturn(List.of("superadmin"));
         try (MockedStatic<SecurityUtils> mockedSecurity = mockStatic(SecurityUtils.class)) {
             mockedSecurity.when(SecurityUtils::isSuperAdmin).thenReturn(true);
             when(userRepository.findAll(any(Specification.class), eq(pageable)))
@@ -102,6 +110,7 @@ class UserServiceTest {
 
             assertNotNull(response);
             assertEquals(1, response.getContent().size());
+            assertEquals("superadmin", response.getContent().get(0).getRole());
             verify(userContextService, never()).getCurrentUserTenantId();
             verify(userRepository).findAll(any(Specification.class), eq(pageable));
         }
@@ -125,6 +134,7 @@ class UserServiceTest {
 
             assertNotNull(response);
             assertTrue(response.getContent().isEmpty());
+            verify(keycloakAdapter, never()).getRealmRoleNames(anyString());
         }
     }
 }

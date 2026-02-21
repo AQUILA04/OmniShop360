@@ -1,4 +1,9 @@
 spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    vault:
+      enabled: false
   # Database Configuration (Local)
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:omnishop360}
@@ -29,7 +34,7 @@ spring:
 
   # Flyway Configuration
   flyway:
-    enabled: false
+    enabled: true
     baseline-on-migrate: true
     baseline-description: "init"
     baseline-version: 0
@@ -173,4 +178,4 @@ keycloak:
   url: ${KEYCLOAK_URL:http://localhost:8080}
   realm: ${KEYCLOAK_REALM:omnishop360}
   client-id: ${KEYCLOAK_CLIENT_ID:omnishop-backend}
-  client-secret: ${KEYCLOAK_CLIENT_SECRET:EQ6htUCANB9j72Hp730g1pmlcofc3gtR}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET:lKnCcfdttkf5A2AMAM8qQBHU93FnpqvE}

@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'stock_manager')")
     @Operation(summary = "Lister tous les produits", description = "Récupère la liste paginée des produits du catalogue maître")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Liste des produits récupérée avec succès"),
@@ -75,7 +75,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'stock_manager')")
     @Operation(summary = "Récupérer un produit par ID", description = "Récupère les détails d'un produit spécifique")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Produit récupéré avec succès"),

@@ -47,7 +47,7 @@ export class ProductFormComponent extends BaseFormComponent<Product> {
             description: [''],
 
             // Pricing
-            salePrice: [0, [Validators.required, Validators.min(0)]],
+            sellingPrice: [0, [Validators.required, Validators.min(0)]],
             purchasePrice: [0, [Validators.min(0)]],
 
             hasVariants: [false],
@@ -107,7 +107,7 @@ export class ProductFormComponent extends BaseFormComponent<Product> {
 
     // Margin Calculation
     get marginPercentage(): number | null {
-        const sale = this.form.get('salePrice')?.value;
+        const sale = this.form.get('sellingPrice')?.value;
         const purchase = this.form.get('purchasePrice')?.value;
 
         if (sale > 0 && purchase >= 0) {

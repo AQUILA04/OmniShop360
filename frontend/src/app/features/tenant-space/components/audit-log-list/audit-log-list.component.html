@@ -1,0 +1,43 @@
+<div class="audit-logs-page">
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">Journaux d'Audit</h1>
+        <p class="page-subtitle">Historique des modifications sur les stocks, ventes et produits</p>
+    </div>
+
+    <!-- Filters -->
+    <mat-card class="filters-card">
+        <div class="filters-row">
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Date début</mat-label>
+                <input matInput type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Date fin</mat-label>
+                <input matInput type="date" [(ngModel)]="filterToDate" (change)="applyFilters()">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Type d'entité</mat-label>
+                <mat-select [(ngModel)]="filterEntityType" (selectionChange)="applyFilters()">
+                    <mat-option [value]="''">Tous</mat-option>
+                    <mat-option value="Stock">Stock</mat-option>
+                    <mat-option value="Sale">Vente</mat-option>
+                    <mat-option value="Product">Produit</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Utilisateur (ID)</mat-label>
+                <input matInput [(ngModel)]="filterUserId" (keyup.enter)="applyFilters()" placeholder="Keycloak sub ID">
+            </mat-form-field>
+        </div>
+    </mat-card>
+
+    <!-- Generic List -->
+    <app-generic-list [pageTitle]="''" [isLoading]="isLoading" [data]="data" [columnsConfig]="columnsConfig"
+        [resultsLength]="resultsLength" [showCreateButton]="false" [showDetailsButton]="false" [showEditButton]="false"
+        [showDeleteButton]="false" (pageChange)="onPageChange($event)" (sortChange)="onSortChange($event)">
+    </app-generic-list>
+</div>

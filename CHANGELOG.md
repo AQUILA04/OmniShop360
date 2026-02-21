@@ -41,6 +41,38 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.4.0] - 2025-02-21 - Sprint 4 Frontend
+
+### Added
+- **Dashboard Analytics (US-015, US-016)** - Tableau de bord avec KPIs et graphiques
+  - `DashboardComponent` refondé avec filtres (date range, sélecteur boutique)
+  - 3 cartes KPI : Chiffre d'affaires, Transactions, Panier moyen
+  - `SalesChartComponent` — graphique linéaire Chart.js (évolution CA quotidien)
+  - `TopProductsChartComponent` — graphique barres horizontales (top 5 produits)
+  - `KpiCardComponent` — composant réutilisable avec formatage monétaire (XOF)
+  - Sélecteur de boutique visible uniquement pour `tenant_admin`
+  - Dépendances : `chart.js`, `ng2-charts@6`
+- **Export PDF / Excel (US-017)** - Boutons d'export sur le dashboard
+  - Téléchargement blob via `AnalyticsService.exportReport()`
+  - Formats supportés : PDF et EXCEL
+- **Audit Logs (US-019)** - Journal d'audit en lecture seule
+  - `AuditLogListComponent` avec `GenericListComponent` (sans actions CRUD)
+  - Filtres : date début/fin, type d'entité (Stock/Sale/Product), utilisateur
+  - Labels français : Création, Modification, Suppression
+  - Route `/tenant/audit-logs` protégée par `superadmin` / `tenant_admin`
+- **Services** - Nouveaux services pour le Sprint 4
+  - `AnalyticsService` — `getSummary()` et `exportReport()`
+  - `AuditLogService` — `getAll()` avec filtres spécifiques et mapping id
+- **Modèles** - DTOs TypeScript alignés sur le backend
+  - `AnalyticsSummaryResponse`, `SalesEvolutionEntry`, `TopProductEntry`, `ExportFormat`
+  - `AuditLogEntry`
+- **Navigation** - Lien "📋 Journaux d'audit" ajouté dans la sidebar (groupe Tenant Admin)
+- **Tests unitaires**
+  - `analytics.service.spec.ts` (5 tests : summary, filtres, export blob)
+  - `audit-log.service.spec.ts` (3 tests : pagination, filtres, mapping id)
+
+---
+
 ## [0.3.0] - 2025-01-24 - Sprint 3 Backend
 
 ### Added

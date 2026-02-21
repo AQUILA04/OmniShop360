@@ -24,7 +24,7 @@ import { LayoutService } from '../layout.service';
 
 
         <!-- Tenant Admin Group -->
-        <div class="menu-group" *ngxPermissionsOnly="['ROLE_TENANT_ADMIN', 'ROLE_superadmin']">
+        <div class="menu-group" *ngxPermissionsOnly="['ROLE_TENANT_ADMIN', 'ROLE_superadmin', 'ROLE_SUPERADMIN']">
           <div class="menu-item group-header" (click)="toggleTenantAdmin = !toggleTenantAdmin" [class.active-group]="toggleTenantAdmin">
             <i class="icon">🏢</i>
             <span>Gestion Tenant</span>
@@ -46,11 +46,14 @@ import { LayoutService } from '../layout.service';
             <a routerLink="/tenant/users" routerLinkActive="active" class="menu-item submenu-item">
               <span>Utilisateurs</span>
             </a>
+            <a routerLink="/tenant/audit-logs" routerLinkActive="active" class="menu-item submenu-item">
+              <span>📋 Journaux d'audit</span>
+            </a>
           </div>
         </div>
 
         <!-- Shop Admin Group -->
-        <div class="menu-group" *ngxPermissionsOnly="['ROLE_SHOP_ADMIN', 'ROLE_STOCK_MANAGER', 'ROLE_superadmin']">
+        <div class="menu-group" *ngxPermissionsOnly="['ROLE_SHOP_ADMIN', 'ROLE_STOCK_MANAGER', 'ROLE_superadmin', 'ROLE_SUPERADMIN']">
           <div class="menu-item group-header" (click)="toggleShopAdmin = !toggleShopAdmin" [class.active-group]="toggleShopAdmin">
             <i class="icon">🏪</i>
             <span>Gestion Boutique</span>
@@ -63,13 +66,13 @@ import { LayoutService } from '../layout.service';
             <a routerLink="/shop-admin/stock-movement" routerLinkActive="active" class="menu-item submenu-item">
               <span>Mouvements de Stock</span>
             </a>
-            <a routerLink="/tenant/users" routerLinkActive="active" class="menu-item submenu-item" *ngxPermissionsOnly="['ROLE_SHOP_ADMIN', 'ROLE_superadmin']">
+            <a routerLink="/tenant/users" routerLinkActive="active" class="menu-item submenu-item" *ngxPermissionsOnly="['ROLE_SHOP_ADMIN', 'ROLE_superadmin', 'ROLE_SUPERADMIN']">
               <span>Utilisateurs</span>
             </a>
           </div>
         </div>
 
-        <a routerLink="/tenants" routerLinkActive="active" class="menu-item" *ngxPermissionsOnly="['ROLE_superadmin']">
+        <a routerLink="/tenants" routerLinkActive="active" class="menu-item" *ngxPermissionsOnly="['ROLE_superadmin', 'ROLE_SUPERADMIN']">
           <i class="icon">👥</i>
           <span>Tenants</span>
         </a>

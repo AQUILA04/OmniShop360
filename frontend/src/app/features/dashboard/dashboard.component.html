@@ -1,0 +1,83 @@
+<div class="dashboard">
+    <!-- Header -->
+    <div class="dashboard__header">
+        <div class="dashboard__header-text">
+            <h1 class="dashboard__title">Tableau de bord</h1>
+            <p class="dashboard__subtitle">Vue d'ensemble des performances commerciales</p>
+        </div>
+        <div class="dashboard__actions">
+            <button mat-stroked-button (click)="exportReport('PDF')" [disabled]="isExporting">
+                <mat-icon>picture_as_pdf</mat-icon> Export PDF
+            </button>
+            <button mat-stroked-button (click)="exportReport('EXCEL')" [disabled]="isExporting">
+                <mat-icon>table_chart</mat-icon> Export Excel
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <mat-card class="dashboard__filters">
+        <div class="filters-row">
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Date début</mat-label>
+                <input matInput type="date" [(ngModel)]="fromDate" (change)="onFilterChange()">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Date fin</mat-label>
+                <input matInput type="date" [(ngModel)]="toDate" (change)="onFilterChange()">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field" *ngIf="isTenantAdmin">
+                <mat-label>Boutique</mat-label>
+                <mat-select [(ngModel)]="selectedShopId" (selectionChange)="onFilterChange()">
+                    <mat-option [value]="''">Toutes les boutiques</mat-option>
+                    <mat-option *ngFor="let shop of shops" [value]="shop.id">
+                        {{ shop.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <button mat-flat-button color="primary" class="filter-btn" (click)="loadDashboard()">
+                <mat-icon>refresh</mat-icon> Actualiser
+            </button>
+        </div>
+    </mat-card>
+
+    <!-- Loading Spinner -->
+    <div class="dashboard__loading" *ngIf="isLoading">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Chargement des données...</p>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="dashboard__kpis" *ngIf="!isLoading && summary">
+        <app-kpi-card title="Chiffre d'affaires" [value]="summary.totalRevenue" icon="payments" color="#6366f1"
+            [isCurrency]="true" [subtitle]="periodLabel">
+        </app-kpi-card>
+
+        <app-kpi-card title="Transactions" [value]="summary.transactionCount" icon="receipt_long" color="#0ea5e9"
+            [subtitle]="periodLabel">
+        </app-kpi-card>
+
+        <app-kpi-card title="Panier moyen" [value]="summary.averageBasket" icon="shopping_cart" color="#10b981"
+            [isCurrency]="true" [subtitle]="periodLabel">
+        </app-kpi-card>
+    </div>
+
+    <!-- Charts -->
+    <div class="dashboard__charts" *ngIf="!isLoading && summary">
+        <app-sales-chart [salesEvolution]="summary.salesEvolution">
+        </app-sales-chart>
+
+        <app-top-products-chart [topProducts]="summary.topProducts">
+        </app-top-products-chart>
+    </div>
+
+    <!-- Empty State -->
+    <div class="dashboard__empty" *ngIf="!isLoading && !summary">
+        <mat-icon class="empty-icon">analytics</mat-icon>
+        <h2>Aucune donnée disponible</h2>
+        <p>Effectuez des ventes pour voir vos statistiques apparaître ici.</p>
+    </div>
+</div>

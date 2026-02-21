@@ -135,6 +135,17 @@ const routes: Routes = [
         }
     },
     {
+        path: 'audit-logs',
+        loadComponent: () => import('./components/audit-log-list/audit-log-list.component').then(m => m.AuditLogListComponent),
+        canActivate: [NgxPermissionsGuard],
+        data: {
+            permissions: {
+                only: ['ROLE_superadmin', 'ROLE_TENANT_ADMIN'],
+                redirectTo: '/dashboard'
+            }
+        }
+    },
+    {
         path: '',
         redirectTo: 'shops',
         pathMatch: 'full'

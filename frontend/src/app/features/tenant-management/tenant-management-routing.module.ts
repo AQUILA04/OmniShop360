@@ -12,7 +12,7 @@ const routes: Routes = [
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {
-        only: ['ROLE_superadmin'],
+        only: ['ROLE_superadmin', 'ROLE_SUPERADMIN'],
         redirectTo: '/dashboard'
       }
     }
@@ -23,7 +23,7 @@ const routes: Routes = [
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {
-        only: ['ROLE_superadmin'],
+        only: ['ROLE_superadmin', 'ROLE_SUPERADMIN'],
         redirectTo: '/dashboard'
       }
     }
@@ -34,7 +34,7 @@ const routes: Routes = [
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {
-        only: ['ROLE_superadmin'],
+        only: ['ROLE_superadmin', 'ROLE_SUPERADMIN'],
         redirectTo: '/dashboard'
       }
     }
@@ -45,7 +45,7 @@ const routes: Routes = [
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {
-        only: ['ROLE_superadmin'],
+        only: ['ROLE_superadmin', 'ROLE_SUPERADMIN'],
         redirectTo: '/dashboard'
       }
     }

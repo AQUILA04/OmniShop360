@@ -1,7 +1,14 @@
 package com.omnishop360.backend.web.controller;
 
 import com.omnishop360.backend.domain.service.ShopService;
-import com.omnishop360.backend.web.dto.*;
+import com.omnishop360.backend.web.dto.AdminUserResponse;
+import com.omnishop360.backend.web.dto.CreateCashierRequest;
+import com.omnishop360.backend.web.dto.CreateShopAdminRequest;
+import com.omnishop360.backend.web.dto.CreateStockManagerRequest;
+import com.omnishop360.backend.web.dto.CreateShopRequest;
+import com.omnishop360.backend.web.dto.PageResponse;
+import com.omnishop360.backend.web.dto.ShopResponse;
+import com.omnishop360.backend.web.dto.UpdateShopRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -71,6 +78,23 @@ public class ShopController {
             @PathVariable UUID shopId) {
         log.debug("Fetching shop: {}", shopId);
         ShopResponse response = shopService.getShopById(shopId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{shopId}")
+    @PreAuthorize("hasRole('tenant_admin')")
+    @Operation(summary = "Modifier une boutique", description = "Met à jour les informations d'une boutique")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Boutique modifiée avec succès"),
+            @ApiResponse(responseCode = "400", description = "Données invalides"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes"),
+            @ApiResponse(responseCode = "404", description = "Boutique non trouvée")
+    })
+    public ResponseEntity<ShopResponse> updateShop(
+            @Parameter(description = "UUID de la boutique") @PathVariable UUID shopId,
+            @Valid @RequestBody UpdateShopRequest request) {
+        log.info("Updating shop: {}", shopId);
+        ShopResponse response = shopService.updateShop(shopId, request);
         return ResponseEntity.ok(response);
     }
 

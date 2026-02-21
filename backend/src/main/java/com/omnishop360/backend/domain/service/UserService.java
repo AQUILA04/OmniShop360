@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,12 +37,8 @@ public class UserService {
     public PageResponse<UserResponse> getUsers(UserSearchDto searchDto, Pageable pageable) {
         log.debug("Fetching users with search: {}", searchDto);
 
-        Specification<User> spec = UserSpecification.from(searchDto);
-
-        if (!SecurityUtils.isSuperAdmin()) {
-            UUID tenantId = userContextService.getCurrentUserTenantId();
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("tenant").get("id"), tenantId));
-        }
+        UserSearchDto scopedDto = buildScopedSearchDto(searchDto);
+        Specification<User> spec = UserSpecification.from(scopedDto);
 
         Page<User> users = userRepository.findAll(spec, pageable);
         Page<UserResponse> responsePage = users.map(user -> {
@@ -54,5 +51,31 @@ public class UserService {
         });
 
         return PageResponse.from(responsePage);
+    }
+
+    private UserSearchDto buildScopedSearchDto(UserSearchDto searchDto) {
+        if (SecurityUtils.isSuperAdmin()) {
+            return searchDto;
+        }
+        if (SecurityUtils.isShopAdmin()) {
+            Optional<UUID> shopId = userContextService.getCurrentUserShopId();
+            if (shopId.isPresent()) {
+                return UserSearchDto.builder()
+                        .keyword(searchDto.keyword())
+                        .email(searchDto.email())
+                        .active(searchDto.active())
+                        .tenantId(null)
+                        .shopId(shopId.get())
+                        .build();
+            }
+        }
+        UUID tenantId = userContextService.getCurrentUserTenantId();
+        return UserSearchDto.builder()
+                .keyword(searchDto.keyword())
+                .email(searchDto.email())
+                .active(searchDto.active())
+                .tenantId(tenantId)
+                .shopId(searchDto.shopId())
+                .build();
     }
 }

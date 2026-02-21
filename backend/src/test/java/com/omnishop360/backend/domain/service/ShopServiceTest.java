@@ -7,7 +7,12 @@ import com.omnishop360.backend.domain.repository.ShopRepository;
 import com.omnishop360.backend.domain.repository.TenantRepository;
 import com.omnishop360.backend.domain.repository.UserRepository;
 import com.omnishop360.backend.infrastructure.adapter.KeycloakAdapter;
-import com.omnishop360.backend.web.dto.*;
+import com.omnishop360.backend.web.dto.CreateCashierRequest;
+import com.omnishop360.backend.web.dto.CreateShopAdminRequest;
+import com.omnishop360.backend.web.dto.CreateStockManagerRequest;
+import com.omnishop360.backend.web.dto.CreateShopRequest;
+import com.omnishop360.backend.web.dto.ShopResponse;
+import com.omnishop360.backend.web.dto.UpdateShopRequest;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -169,6 +174,35 @@ class ShopServiceTest {
         when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
 
         assertThrows(EntityNotFoundException.class, () -> shopService.getShopById(shopId));
+    }
+
+    @Test
+    @DisplayName("Should update shop successfully")
+    void shouldUpdateShopSuccessfully() {
+        UpdateShopRequest request = new UpdateShopRequest(
+                "Updated Shop", "456 New Street", "New City", "99999", "New Country", "999", "new@shop.com");
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(shopRepository.findByIdAndDeletedFalse(shop.getId())).thenReturn(Optional.of(shop));
+        when(shopRepository.save(any(Shop.class))).thenReturn(shop);
+        when(userRepository.countByShopId(shop.getId())).thenReturn(1L);
+
+        ShopResponse response = shopService.updateShop(shop.getId(), request);
+
+        assertNotNull(response);
+        verify(shopRepository).save(any(Shop.class));
+    }
+
+    @Test
+    @DisplayName("Should throw when update shop not found")
+    void shouldThrowWhenUpdateShopNotFound() {
+        UpdateShopRequest request = new UpdateShopRequest(
+                "A", "Address 5", null, null, null, null, null);
+        UUID shopId = UUID.randomUUID();
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> shopService.updateShop(shopId, request));
+        verify(shopRepository, never()).save(any(Shop.class));
     }
 
     @Test

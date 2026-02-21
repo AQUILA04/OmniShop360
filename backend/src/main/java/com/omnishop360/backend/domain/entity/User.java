@@ -3,13 +3,17 @@ package com.omnishop360.backend.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 @Entity
+@Audited
 @Table(name = "users")
 @Getter
 @Setter
 public class User extends BaseEntity {
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id", nullable = false, updatable = false)
     private Tenant tenant;
@@ -29,6 +33,7 @@ public class User extends BaseEntity {
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     private Shop shop;

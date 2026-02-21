@@ -13,6 +13,7 @@ import com.omnishop360.backend.web.dto.CreateStockManagerRequest;
 import com.omnishop360.backend.web.dto.CreateShopRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.ShopResponse;
+import com.omnishop360.backend.web.dto.UpdateShopRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +61,36 @@ public class ShopService {
         shop = shopRepository.save(shop);
         log.info("Shop created successfully: {}", shop.getId());
         return ShopResponse.from(shop);
+    }
+
+    @Transactional
+    public ShopResponse updateShop(UUID shopId, UpdateShopRequest request) {
+        UUID tenantId = userContextService.getCurrentUserTenantId();
+        log.info("Updating shop: {} for tenant: {}", shopId, tenantId);
+
+        Shop shop = shopRepository.findByIdAndDeletedFalse(shopId)
+                .orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + shopId));
+
+        if (!shop.getTenant().getId().equals(tenantId)) {
+            throw new EntityNotFoundException("Shop not found with id: " + shopId);
+        }
+
+        shop.setName(request.getName());
+        shop.setAddress(request.getAddress());
+        shop.setCity(request.getCity());
+        shop.setPostalCode(request.getPostalCode());
+        shop.setCountry(request.getCountry());
+        shop.setPhone(request.getPhone());
+        shop.setEmail(request.getEmail());
+
+        shop = shopRepository.save(shop);
+        log.info("Shop updated successfully: {}", shop.getId());
+        long userCount = userRepository.countByShopId(shop.getId());
+        ShopResponse response = ShopResponse.from(shop);
+        if (response != null) {
+            response.setUserCount((int) userCount);
+        }
+        return response;
     }
 
     @Transactional(readOnly = true)

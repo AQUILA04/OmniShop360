@@ -23,6 +23,7 @@ public class AuditLogService {
     private static final String ENTITY_STOCK = "Stock";
     private static final String ENTITY_SALE = "Sale";
     private static final String ENTITY_PRODUCT = "Product";
+    private static final String ENTITY_USER = "User";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -57,6 +58,9 @@ public class AuditLogService {
         }
         if (ENTITY_PRODUCT.equalsIgnoreCase(entityType) || entityType == null) {
             unions.add("SELECT r.id, r.revtstmp, r.user_id, 'Product' AS entity_type, a.id AS entity_id, a.revtype FROM revision_info r JOIN products_aud a ON a.rev = r.id WHERE " + where);
+        }
+        if (ENTITY_USER.equalsIgnoreCase(entityType) || entityType == null) {
+            unions.add("SELECT r.id, r.revtstmp, r.user_id, 'User' AS entity_type, a.id AS entity_id, a.revtype FROM revision_info r JOIN users_aud a ON a.rev = r.id WHERE " + where);
         }
         if (unions.isEmpty()) {
             return emptyPage(pageable);

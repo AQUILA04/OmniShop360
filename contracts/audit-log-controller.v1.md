@@ -1,8 +1,8 @@
 # Contrat API - Audit Log Controller
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Date de création:** 2025-02-21  
-**Dernière modification:** 2025-02-21  
+**Dernière modification:** 2026-02-21  
 **Responsable Backend:** À définir  
 **Responsable Frontend:** À définir  
 
@@ -13,6 +13,7 @@
 | Version | Date | Auteur | Modifications |
 |:---|:---|:---|:---|
 | 1.0.0 | 2025-02-21 | AI Developer | Création initiale (US-019) |
+| 1.1.0 | 2026-02-21 | AI Developer | Ajout de l'entité User aux types audités (GET /audit-logs, entityType) |
 
 ---
 
@@ -43,7 +44,7 @@ Authorization: Bearer <JWT_TOKEN>
 
 **Rôle requis:** `superadmin` ou `tenant_admin`
 
-**Description:** Retourne la liste paginée des modifications auditées (Stock, Sale, Product). Tenant Admin ne voit que les révisions de son tenant. Super Admin peut filtrer par tenant.
+**Description:** Retourne la liste paginée des modifications auditées (Stock, Sale, Product, User). Tenant Admin ne voit que les révisions de son tenant. Super Admin peut filtrer par tenant.
 
 #### Request
 
@@ -59,7 +60,7 @@ Authorization: Bearer <JWT_TOKEN>
 - `fromDate` (optional): Date de début (yyyy-MM-dd)
 - `toDate` (optional): Date de fin (yyyy-MM-dd)
 - `userId` (optional): Filtrer par utilisateur (Keycloak sub)
-- `entityType` (optional): Filtrer par type d'entité — `Stock`, `Sale`, `Product`
+- `entityType` (optional): Filtrer par type d'entité — `Stock`, `Sale`, `Product`, `User`
 - `tenantId` (optional): Filtrer par tenant (superadmin uniquement)
 
 **Exemple:**
@@ -94,7 +95,7 @@ GET /audit-logs?tenantId=<UUID>&page=0&size=20
 
 **actionType:** `CREATE`, `UPDATE`, `DELETE`
 
-**entityType:** `Stock`, `Sale`, `Product`
+**entityType:** `Stock`, `Sale`, `Product`, `User`
 
 **Error (403 Forbidden):** Rôle insuffisant (superadmin ou tenant_admin requis).
 
@@ -110,7 +111,7 @@ GET /audit-logs?tenantId=<UUID>&page=0&size=20
 | `timestamp` | DateTime (ISO 8601) | Date/heure de la modification |
 | `userId` | String | Identifiant utilisateur (Keycloak sub) |
 | `actionType` | String | CREATE, UPDATE, DELETE |
-| `entityType` | String | Stock, Sale, Product |
+| `entityType` | String | Stock, Sale, Product, User |
 | `entityId` | UUID | ID de l'entité modifiée |
 
 ---

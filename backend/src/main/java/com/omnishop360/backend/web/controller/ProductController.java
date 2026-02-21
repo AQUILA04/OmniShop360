@@ -4,6 +4,7 @@ import com.omnishop360.backend.domain.service.ProductService;
 import com.omnishop360.backend.web.dto.CreateProductRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.ProductResponse;
+import com.omnishop360.backend.web.dto.UpdateProductRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -87,6 +88,23 @@ public class ProductController {
             @PathVariable UUID productId) {
         log.debug("Fetching product: {}", productId);
         ProductResponse response = productService.getProductById(productId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{productId}")
+    @PreAuthorize("hasRole('tenant_admin')")
+    @Operation(summary = "Modifier un produit", description = "Met à jour les informations d'un produit du catalogue")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produit modifié avec succès"),
+            @ApiResponse(responseCode = "400", description = "Données invalides"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes"),
+            @ApiResponse(responseCode = "404", description = "Produit non trouvé")
+    })
+    public ResponseEntity<ProductResponse> updateProduct(
+            @Parameter(description = "UUID du produit") @PathVariable UUID productId,
+            @Valid @RequestBody UpdateProductRequest request) {
+        log.info("Updating product: {}", productId);
+        ProductResponse response = productService.updateProduct(productId, request);
         return ResponseEntity.ok(response);
     }
 }

@@ -11,6 +11,7 @@ import com.omnishop360.backend.web.dto.CreateProductRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
 import com.omnishop360.backend.web.dto.ProductResponse;
 import com.omnishop360.backend.web.dto.ProductVariantRequest;
+import com.omnishop360.backend.web.dto.UpdateProductRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +88,51 @@ public class ProductService {
 
         product = productRepository.save(product);
         log.info("Product created successfully: {}", product.getId());
+        return ProductResponse.from(product);
+    }
+
+    @Transactional
+    public ProductResponse updateProduct(UUID productId, UpdateProductRequest request) {
+        UUID tenantId = userContextService.getCurrentUserTenantId();
+        log.info("Updating product: {} for tenant: {}", productId, tenantId);
+
+        Product product = productRepository.findByIdAndDeletedFalse(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + productId));
+
+        if (!product.getTenant().getId().equals(tenantId)) {
+            throw new EntityNotFoundException("Product not found with id: " + productId);
+        }
+
+        if (!product.getSku().equals(request.getSku())
+                && productRepository.existsByTenantIdAndSkuAndDeletedFalse(tenantId, request.getSku())) {
+            throw new IllegalArgumentException("Product with SKU already exists: " + request.getSku());
+        }
+
+        product.setName(request.getName());
+        product.setSku(request.getSku());
+        product.setDescription(request.getDescription());
+        product.setBarcode(request.getBarcode());
+        product.setUnit(request.getUnit() != null ? request.getUnit() : "UNIT");
+        product.setCostPrice(request.getCostPrice() != null ? request.getCostPrice() : java.math.BigDecimal.ZERO);
+        product.setSellingPrice(request.getSellingPrice());
+        product.setTaxRate(request.getTaxRate() != null ? request.getTaxRate() : java.math.BigDecimal.ZERO);
+        if (request.getActive() != null) {
+            product.setActive(request.getActive());
+        }
+
+        if (request.getCategoryId() != null) {
+            Category category = categoryRepository.findByIdAndDeletedFalse(request.getCategoryId())
+                    .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + request.getCategoryId()));
+            if (!category.getTenant().getId().equals(tenantId)) {
+                throw new EntityNotFoundException("Category not found with id: " + request.getCategoryId());
+            }
+            product.setCategory(category);
+        } else {
+            product.setCategory(null);
+        }
+
+        product = productRepository.save(product);
+        log.info("Product updated successfully: {}", product.getId());
         return ProductResponse.from(product);
     }
 

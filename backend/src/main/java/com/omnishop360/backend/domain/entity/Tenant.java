@@ -41,7 +41,7 @@ public class Tenant {
     private String pricingPolicy = "GLOBAL_ENFORCED";
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 50, insertable = false, updatable = false)
+    @Column(name = "status", length = 50, insertable = false)
     private TenantStatus status;
 
     @CreationTimestamp

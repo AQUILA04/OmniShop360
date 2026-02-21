@@ -45,6 +45,10 @@ public class SecurityUtils {
         return hasRole("tenant_admin");
     }
 
+    public static boolean isShopAdmin() {
+        return hasRole("shop_admin");
+    }
+
     public static boolean isSuperAdmin() {
         return hasRole("superadmin");
     }

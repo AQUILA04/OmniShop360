@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -185,6 +186,44 @@ class CategoryControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_tenant_admin", username = "keycloak-admin-id")
+    @DisplayName("PUT /v1/categories/{id} should update category and return 200")
+    void shouldUpdateCategoryAndReturn200() throws Exception {
+        String requestBody = """
+                {
+                  "name": "Updated Category",
+                  "code": "UPD-CAT",
+                  "description": "Updated Description"
+                }
+                """;
+
+        mockMvc.perform(put("/v1/categories/" + category.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated Category"))
+                .andExpect(jsonPath("$.code").value("UPD-CAT"))
+                .andExpect(jsonPath("$.description").value("Updated Description"));
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_tenant_admin", username = "keycloak-admin-id")
+    @DisplayName("PUT /v1/categories/{id} should return 404 for non-existent category")
+    void shouldReturn404WhenUpdateNonExistentCategory() throws Exception {
+        String requestBody = """
+                {
+                  "name": "Valid Name",
+                  "code": "CODE1"
+                }
+                """;
+
+        mockMvc.perform(put("/v1/categories/00000000-0000-0000-0000-000000000000")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNotFound());
     }
 }
 

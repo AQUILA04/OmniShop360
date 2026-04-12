@@ -10,6 +10,9 @@ import java.util.List;
 
 public class UserSpecification {
 
+    private UserSpecification() {
+    }
+
     public static Specification<User> from(UserSearchDto dto) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

@@ -35,4 +35,6 @@ public class UpdateShopRequest {
     @Email(message = "Email must be a valid email address")
     @Size(max = 255, message = "Email must not exceed 255 characters")
     private String email;
+
+    private Boolean allowSaleWithoutStock;
 }

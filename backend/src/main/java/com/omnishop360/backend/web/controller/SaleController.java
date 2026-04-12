@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @RestController
@@ -60,8 +61,19 @@ public class SaleController {
     public ResponseEntity<PageResponse<StockResponse>> getProductsForSale(
             Pageable pageable,
             @Parameter(description = "Recherche par nom ou SKU")
-            @RequestParam(required = false) String search) {
-        StockSearchDto searchDto = StockSearchDto.builder().keyword(search).build();
+            @RequestParam(required = false) String search,
+            @Parameter(description = "Filtrer par code produit")
+            @RequestParam(required = false) String code,
+            @Parameter(description = "Filtrer par nom produit")
+            @RequestParam(required = false) String name,
+            @Parameter(description = "Filtrer par catégorie")
+            @RequestParam(required = false) UUID categoryId) {
+        StockSearchDto searchDto = StockSearchDto.builder()
+                .keyword(search)
+                .productCode(code)
+                .productName(name)
+                .categoryId(categoryId)
+                .build();
         PageResponse<StockResponse> response = stockService.getInventory(searchDto, pageable);
         return ResponseEntity.ok(response);
     }
@@ -120,5 +132,31 @@ public class SaleController {
         log.debug("Fetching sale: {}", saleId);
         SaleResponse response = saleService.getSaleById(saleId);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{saleId}/receipt")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Récupérer les données d'impression", description = "Retourne les données de reçu A4 ou thermique")
+    public ResponseEntity<ReceiptResponse> getReceipt(
+            @PathVariable UUID saleId,
+            @RequestParam(defaultValue = "THERMAL") ReceiptFormat format) {
+        return ResponseEntity.ok(saleService.getReceipt(saleId, format));
+    }
+
+    @GetMapping("/promotions/validate")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Valider un code promotionnel")
+    public ResponseEntity<PromotionValidationResponse> validatePromotion(
+            @RequestParam String code,
+            @RequestParam BigDecimal subtotal) {
+        return ResponseEntity.ok(saleService.validatePromotion(code, subtotal));
+    }
+
+    @PostMapping("/promotions")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @Operation(summary = "Créer un code promotionnel")
+    public ResponseEntity<PromotionCodeResponse> createPromotionCode(
+            @Valid @RequestBody CreatePromotionCodeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(saleService.createPromotionCode(request));
     }
 }

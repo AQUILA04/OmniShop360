@@ -41,17 +41,11 @@ public class Shop extends BaseEntity {
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 
-    @Column(name = "allow_sale_without_stock", nullable = false)
-    private Boolean allowSaleWithoutStock = false;
-
     @PrePersist
     protected void onCreate() {
         super.onCreate();
         if (this.active == null) {
             this.active = true;
-        }
-        if (this.allowSaleWithoutStock == null) {
-            this.allowSaleWithoutStock = false;
         }
     }
 }

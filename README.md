@@ -96,48 +96,6 @@ Votre environnement est maintenant prêt ! Vous pouvez accéder aux différentes
 
 Pour développer sur un projet spécifique sans utiliser Docker, référez-vous aux fichiers `README.md` de chaque sous-dossier (`backend/`, `frontend/`, `pos/`).
 
-## Nouveautés Sprint E (POS Backend)
-
-Les fonctionnalités POS avancées suivantes sont désormais disponibles côté backend :
-
-- **E1 - Gestion de caisse**
-  - Ouverture et clôture de caisse avec suivi du fond, du montant attendu, du montant saisi et du reliquat.
-  - Génération du code d'avoir via endpoint dédié (découplée de la clôture).
-- **E2 - Vente flexible**
-  - Filtrage enrichi des produits POS (`code`, `name`, `categoryId`).
-  - Gestion du client par défaut "Client Divers".
-  - Politique boutique configurable pour autoriser la vente sans stock.
-- **E3 - Prix et promotions**
-  - Support des niveaux de prix au checkout.
-  - Validation et application de codes promotionnels.
-  - Création de codes promotionnels via endpoint sécurisé.
-- **E4 - Multi-paiement et impression**
-  - Paiement fractionné (espèce, carte, mobile, voucher) sur une même vente.
-  - Données d'impression du reçu avec format `THERMAL` ou `A4`.
-
-### Endpoints clés ajoutés/étendus
-
-- `POST /api/v1/cash-register-sessions/open`
-- `POST /api/v1/cash-register-sessions/close`
-- `GET /api/v1/cash-register-sessions`
-- `POST /api/v1/cash-register-sessions/remainder-vouchers`
-- `POST /api/v1/customers/walk-in`
-- `GET /api/v1/sales/promotions/validate`
-- `POST /api/v1/sales/promotions`
-- `GET /api/v1/sales/{saleId}/receipt`
-- `POST /api/v1/sales/checkout` (étendu pour promo, voucher et multi-paiement)
-- `GET /api/v1/sales/products` (filtres enrichis)
-
-### Contrats API concernés
-
-- `contracts/cash-register-session-controller.v1.md`
-- `contracts/customer-controller.v1.1.md`
-- `contracts/sale-controller.v1.2.md`
-- `contracts/sale-controller.v1.3.md`
-- `contracts/sale-controller.v1.4.md`
-- `contracts/sale-controller.v1.5.md`
-- `contracts/cash-register-session-controller.v1.1.md`
-
 ## Structure des Dossiers
 
 ```

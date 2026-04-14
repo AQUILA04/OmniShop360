@@ -180,7 +180,7 @@ class ShopServiceTest {
     @DisplayName("Should update shop successfully")
     void shouldUpdateShopSuccessfully() {
         UpdateShopRequest request = new UpdateShopRequest(
-                "Updated Shop", "456 New Street", "New City", "99999", "New Country", "999", "new@shop.com", null);
+                "Updated Shop", "456 New Street", "New City", "99999", "New Country", "999", "new@shop.com");
         when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
         when(shopRepository.findByIdAndDeletedFalse(shop.getId())).thenReturn(Optional.of(shop));
         when(shopRepository.save(any(Shop.class))).thenReturn(shop);
@@ -196,7 +196,7 @@ class ShopServiceTest {
     @DisplayName("Should throw when update shop not found")
     void shouldThrowWhenUpdateShopNotFound() {
         UpdateShopRequest request = new UpdateShopRequest(
-                "A", "Address 5", null, null, null, null, null, null);
+                "A", "Address 5", null, null, null, null, null);
         UUID shopId = UUID.randomUUID();
         when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
         when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.empty());
@@ -236,8 +236,8 @@ class ShopServiceTest {
 
         assertNotNull(result);
         assertEquals(admin.getEmail(), result.getEmail());
-        verify(keycloakAdapter).createUser("john.doe@test.com", "John", "Doe", "shop_admin");
-        verify(keycloakAdapter).setUserAttribute(keycloakId, "shop_id", shopId.toString());
+        verify(keycloakAdapter).createUser(eq("john.doe@test.com"), eq("John"), eq("Doe"), eq("shop_admin"));
+        verify(keycloakAdapter).setUserAttribute(eq(keycloakId), eq("shop_id"), eq(shopId.toString()));
         verify(userRepository).save(any(User.class));
     }
 
@@ -287,8 +287,8 @@ class ShopServiceTest {
 
         assertNotNull(result);
         assertEquals(cashier.getEmail(), result.getEmail());
-        verify(keycloakAdapter).createUser("marie.martin@test.com", "Marie", "Martin", "cashier");
-        verify(keycloakAdapter).setUserAttribute(keycloakId, "shop_id", shopId.toString());
+        verify(keycloakAdapter).createUser(eq("marie.martin@test.com"), eq("Marie"), eq("Martin"), eq("cashier"));
+        verify(keycloakAdapter).setUserAttribute(eq(keycloakId), eq("shop_id"), eq(shopId.toString()));
         verify(userRepository).save(any(User.class));
     }
 
@@ -323,7 +323,7 @@ class ShopServiceTest {
 
         assertNotNull(result);
         assertEquals(cashier.getEmail(), result.getEmail());
-        verify(keycloakAdapter).createUser("marie.martin@test.com", "Marie", "Martin", "cashier");
+        verify(keycloakAdapter).createUser(eq("marie.martin@test.com"), eq("Marie"), eq("Martin"), eq("cashier"));
     }
 
     @Test
@@ -389,8 +389,8 @@ class ShopServiceTest {
 
         assertNotNull(result);
         assertEquals(stockManager.getEmail(), result.getEmail());
-        verify(keycloakAdapter).createUser("pierre.leroy@test.com", "Pierre", "Leroy", "stock_manager");
-        verify(keycloakAdapter).setUserAttribute(keycloakId, "shop_id", shopId.toString());
+        verify(keycloakAdapter).createUser(eq("pierre.leroy@test.com"), eq("Pierre"), eq("Leroy"), eq("stock_manager"));
+        verify(keycloakAdapter).setUserAttribute(eq(keycloakId), eq("shop_id"), eq(shopId.toString()));
         verify(userRepository).save(any(User.class));
     }
 
@@ -425,7 +425,7 @@ class ShopServiceTest {
 
         assertNotNull(result);
         assertEquals(stockManager.getEmail(), result.getEmail());
-        verify(keycloakAdapter).createUser("pierre.leroy@test.com", "Pierre", "Leroy", "stock_manager");
+        verify(keycloakAdapter).createUser(eq("pierre.leroy@test.com"), eq("Pierre"), eq("Leroy"), eq("stock_manager"));
     }
 
     @Test

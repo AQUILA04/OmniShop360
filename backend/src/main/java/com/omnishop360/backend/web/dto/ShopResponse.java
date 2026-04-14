@@ -25,7 +25,6 @@ public class ShopResponse {
     private String postalCode;
     private String country;
     private Boolean active;
-    private Boolean allowSaleWithoutStock;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Integer userCount;
@@ -45,7 +44,6 @@ public class ShopResponse {
                 .postalCode(shop.getPostalCode())
                 .country(shop.getCountry())
                 .active(shop.getActive())
-                .allowSaleWithoutStock(shop.getAllowSaleWithoutStock())
                 .createdAt(shop.getCreatedAt())
                 .updatedAt(shop.getUpdatedAt())
                 .build();

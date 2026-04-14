@@ -57,24 +57,8 @@ public class Sale {
     @Column(name = "discount_amount", precision = 19, scale = 4)
     private BigDecimal discountAmount = BigDecimal.ZERO;
 
-    @Column(name = "promo_code", length = 100)
-    private String promoCode;
-
-    @Column(name = "promo_discount_amount", precision = 19, scale = 4)
-    private BigDecimal promoDiscountAmount = BigDecimal.ZERO;
-
-    @Column(name = "voucher_code", length = 100)
-    private String voucherCode;
-
-    @Column(name = "voucher_amount", precision = 19, scale = 4)
-    private BigDecimal voucherAmount = BigDecimal.ZERO;
-
     @Column(name = "total_amount", nullable = false, precision = 19, scale = 4)
     private BigDecimal totalAmount;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cash_register_session_id")
-    private CashRegisterSession cashRegisterSession;
 
     @Column(name = "payment_method", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
@@ -111,10 +95,6 @@ public class Sale {
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SaleItem> items = new ArrayList<>();
 
-    @NotAudited
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<SalePayment> payments = new ArrayList<>();
-
     @PrePersist
     protected void onCreate() {
         if (this.createdAt == null) {
@@ -128,12 +108,6 @@ public class Sale {
         }
         if (this.discountAmount == null) {
             this.discountAmount = BigDecimal.ZERO;
-        }
-        if (this.promoDiscountAmount == null) {
-            this.promoDiscountAmount = BigDecimal.ZERO;
-        }
-        if (this.voucherAmount == null) {
-            this.voucherAmount = BigDecimal.ZERO;
         }
         if (this.paymentStatus == null) {
             this.paymentStatus = PaymentStatus.PAID;

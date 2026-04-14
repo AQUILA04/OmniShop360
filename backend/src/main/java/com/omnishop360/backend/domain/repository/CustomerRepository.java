@@ -18,7 +18,4 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID>, JpaSp
 
     @Query("SELECT c FROM Customer c WHERE c.tenant.id = :tenantId AND c.deleted = false")
     java.util.List<Customer> findByTenantIdAndDeletedFalse(@Param("tenantId") UUID tenantId);
-
-    @Query("SELECT c FROM Customer c WHERE c.tenant.id = :tenantId AND c.deleted = false AND LOWER(COALESCE(c.firstName, '')) = 'client' AND LOWER(COALESCE(c.lastName, '')) = 'divers'")
-    Optional<Customer> findWalkInCustomer(@Param("tenantId") UUID tenantId);
 }

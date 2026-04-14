@@ -49,15 +49,6 @@ public class Product extends BaseEntity {
     @Column(name = "selling_price", nullable = false, precision = 19, scale = 4)
     private BigDecimal sellingPrice;
 
-    @Column(name = "price_level_1", precision = 19, scale = 4)
-    private BigDecimal priceLevel1;
-
-    @Column(name = "price_level_2", precision = 19, scale = 4)
-    private BigDecimal priceLevel2;
-
-    @Column(name = "price_level_3", precision = 19, scale = 4)
-    private BigDecimal priceLevel3;
-
     @Column(name = "tax_rate", nullable = false, precision = 5, scale = 2)
     private BigDecimal taxRate = BigDecimal.ZERO;
 
@@ -68,7 +59,6 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductVariant> variants = new ArrayList<>();
 
-    @Override
     @PrePersist
     protected void onCreate() {
         super.onCreate();

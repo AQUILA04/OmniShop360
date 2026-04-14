@@ -4,11 +4,7 @@ import com.omnishop360.backend.domain.entity.Sale;
 import com.omnishop360.backend.domain.service.SaleService;
 import com.omnishop360.backend.domain.service.StockService;
 import com.omnishop360.backend.web.dto.CheckoutRequest;
-import com.omnishop360.backend.web.dto.CreatePromotionCodeRequest;
 import com.omnishop360.backend.web.dto.PageResponse;
-import com.omnishop360.backend.web.dto.PromotionCodeResponse;
-import com.omnishop360.backend.web.dto.ReceiptFormat;
-import com.omnishop360.backend.web.dto.ReceiptResponse;
 import com.omnishop360.backend.web.dto.SaleResponse;
 import com.omnishop360.backend.web.dto.StockResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -219,7 +214,7 @@ class SaleControllerTest {
         when(stockService.getInventory(any(), any())).thenReturn(pageResponse);
 
         ResponseEntity<PageResponse<StockResponse>> response = saleController.getProductsForSale(
-                PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "product.name")), "test", null, null, null);
+                PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "product.name")), "test");
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -244,59 +239,10 @@ class SaleControllerTest {
         when(stockService.getInventory(any(), any())).thenReturn(pageResponse);
 
         ResponseEntity<PageResponse<StockResponse>> response = saleController.getProductsForSale(
-                PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "product.name")), null, null, null, null);
+                PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "product.name")), null);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(stockService).getInventory(any(), any());
-    }
-
-    @Test
-    @DisplayName("Should get receipt successfully")
-    void shouldGetReceiptSuccessfully() {
-        ReceiptResponse receiptResponse = ReceiptResponse.builder()
-                .format(ReceiptFormat.THERMAL)
-                .sale(saleResponse)
-                .build();
-        when(saleService.getReceipt(saleId, ReceiptFormat.THERMAL)).thenReturn(receiptResponse);
-
-        ResponseEntity<ReceiptResponse> response = saleController.getReceipt(saleId, ReceiptFormat.THERMAL);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(ReceiptFormat.THERMAL, response.getBody().format());
-        verify(saleService).getReceipt(saleId, ReceiptFormat.THERMAL);
-    }
-
-    @Test
-    @DisplayName("Should create promotion code successfully")
-    void shouldCreatePromotionCodeSuccessfully() {
-        CreatePromotionCodeRequest request = new CreatePromotionCodeRequest(
-                "PROMO1000",
-                com.omnishop360.backend.domain.entity.PromotionCode.DiscountType.FIXED,
-                new BigDecimal("1000"),
-                new BigDecimal("1000"),
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(3),
-                false,
-                true,
-                null
-        );
-        PromotionCodeResponse promotionCodeResponse = PromotionCodeResponse.builder()
-                .id(UUID.randomUUID())
-                .code("PROMO1000")
-                .discountType(com.omnishop360.backend.domain.entity.PromotionCode.DiscountType.FIXED)
-                .discountValue(new BigDecimal("1000"))
-                .active(true)
-                .build();
-        when(saleService.createPromotionCode(any())).thenReturn(promotionCodeResponse);
-
-        ResponseEntity<PromotionCodeResponse> response = saleController.createPromotionCode(request);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("PROMO1000", response.getBody().code());
-        verify(saleService).createPromotionCode(any());
     }
 }

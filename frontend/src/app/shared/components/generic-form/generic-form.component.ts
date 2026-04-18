@@ -1,6 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { FormSectionConfig, FormFieldConfig } from '../../abstractions/form-config.model';
+import { NgSelectModule } from '@ng-select/ng-select';
+
+// Ajoutez NgSelectModule dans vos imports
 export { FormFieldConfig };
 
 @Component({
@@ -90,5 +93,23 @@ export class GenericFormComponent implements OnInit, OnChanges {
     }
 
     return 'Invalid field';
+  }
+
+  isRequired(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    if (!control) return false;
+
+    if (control.validator) {
+      const validator = control.validator({} as FormControl);
+      if (validator && validator['required']) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isFieldInvalid(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 }

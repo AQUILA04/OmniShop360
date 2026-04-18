@@ -115,4 +115,12 @@ export class ProductFormComponent extends BaseFormComponent<Product> {
         }
         return null;
     }
+
+  getMarginClass(): string {
+    const margin = this.marginPercentage;
+    if (margin === null) return 'margin-neutral';
+    if (margin >= 30) return 'margin-good';
+    if (margin >= 15) return 'margin-warning';
+    return 'margin-bad';
+  }
 }

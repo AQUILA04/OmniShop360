@@ -1,15 +1,14 @@
 <div class="page-container">
 
-  <!-- Header Section -->
   <div class="page-header">
     <div class="header-content">
       <h1>{{ pageTitle }}</h1>
-      <p class="subtitle" *ngIf="resultsLength > 0">{{ resultsLength }} entries found</p>
+      <p class="subtitle" *ngIf="resultsLength > 0">{{ resultsLength }} éléments trouvés</p>
     </div>
 
-    <button *ngIf="showCreateButton" mat-flat-button color="primary" class="create-btn" (click)="emitAction('create', $any({}))">
-      <mat-icon>add</mat-icon>
-      <span>Create New</span>
+    <button *ngIf="showCreateButton" class="btn btn-primary" (click)="emitAction('create', $any({}))">
+      <mat-icon style="font-size: 20px; width: 20px; height: 20px;">add</mat-icon>
+      <span>Nouveau</span>
     </button>
   </div>
 

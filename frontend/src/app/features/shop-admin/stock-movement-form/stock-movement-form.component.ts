@@ -23,9 +23,10 @@ export class StockMovementFormComponent extends BaseFormComponent<StockMovementR
           key: 'productId',
           label: 'Produit',
           type: 'select',
-          options: [], // Sera rempli dynamiquement
+          options: [],
           validators: [Validators.required],
-          icon: 'inventory_2'
+          icon: 'inventory_2',
+          cssClass: 'full-width'
         },
         {
           key: 'quantity',
@@ -33,21 +34,24 @@ export class StockMovementFormComponent extends BaseFormComponent<StockMovementR
           type: 'number',
           placeholder: 'Entrez la quantité',
           validators: [Validators.required, Validators.min(0.01)],
-          icon: 'numbers'
+          icon: 'numbers',
+          cssClass: 'half-width' // <-- Affiche sur 50%
         },
         {
           key: 'unitCost',
           label: 'Prix Unitaire (€)',
           type: 'number',
           placeholder: 'Prix d\'achat unitaire',
-          icon: 'euro_symbol'
+          icon: 'euro_symbol',
+          cssClass: 'half-width' // <-- Affiche sur 50%
         },
         {
           key: 'notes',
           label: 'Notes',
           type: 'textarea',
-          placeholder: 'Informations complémentaires',
-          icon: 'note'
+          placeholder: 'Informations complémentaires...',
+          icon: 'notes',
+          cssClass: 'full-width'
         }
       ]
     }

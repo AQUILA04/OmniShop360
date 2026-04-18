@@ -1,104 +1,91 @@
-<div [class.page-centered-container]="mode === 'page'" [class.w-full]="mode === 'page'">
+<div [class.page-centered-container]="mode === 'page'" [class.w-full]="mode === 'card'">
 
-  <!-- Page Header (Only in 'page' mode) -->
-  <div *ngIf="mode === 'page'" class="form-header">
-    <h1 class="text-3xl font-bold text-gray-800" style="margin: 0;">{{ title }}</h1>
-    <div class="flex gap-2" style="display: flex; gap: 10px; align-items: center;">
+  <div *ngIf="mode === 'page'" class="premium-page-header">
+    <h1>{{ title }}</h1>
+    <div class="header-actions">
       <ng-content select="[header-actions]"></ng-content>
-      <button *ngIf="showBackButton" mat-stroked-button color="accent" (click)="onCancel()"
-        class="!text-gray-600 !border-gray-300">
-        <mat-icon>arrow_back</mat-icon>
-        Retour
+      <button *ngIf="showBackButton" type="button" class="btn-secondary" (click)="onCancel()">
+        <mat-icon>arrow_back</mat-icon> Retour
       </button>
     </div>
   </div>
 
-  <mat-card class="form-card">
-    <!-- Card Header (Only in 'card' mode) -->
-    <mat-card-header *ngIf="mode === 'card'">
-      <mat-card-title>{{ title }}</mat-card-title>
-      <mat-card-subtitle>{{ subtitle }}</mat-card-subtitle>
-    </mat-card-header>
+  <div class="premium-form-card">
+    <div class="card-header" *ngIf="mode === 'card' && title">
+      <h2>{{ title }}</h2>
+      <p *ngIf="subtitle">{{ subtitle }}</p>
+    </div>
 
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <ng-container *ngFor="let section of config">
-          <h3 *ngIf="section.title" class="section-title">{{ section.title }}</h3>
-          <div class="form-row">
-            <ng-container *ngFor="let field of section.fields">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <ng-container *ngFor="let section of config">
+        <h3 *ngIf="section.title" class="section-title">{{ section.title }}</h3>
 
-              <!-- Slide Toggle (Boolean) - Renders outside mat-form-field -->
-              <div *ngIf="field.type === 'slide-toggle'" [ngClass]="field.cssClass || 'full-width'"
-                class="slide-toggle-container mb-4">
-                <mat-slide-toggle [formControlName]="field.key" color="primary">
-                  {{ field.label }}
-                </mat-slide-toggle>
-                <mat-hint *ngIf="field.hint">{{ field.hint }}</mat-hint>
+        <div class="form-grid">
+          <ng-container *ngFor="let field of section.fields">
+
+            <div class="field-container" [ngClass]="field.cssClass || 'full-width'">
+              <label class="premium-label" [for]="field.key">
+                {{ field.label }}
+                <span *ngIf="isRequired(field.key)" class="required-asterisk">*</span>
+              </label>
+
+              <div class="input-wrapper">
+                <mat-icon *ngIf="field.icon" class="input-icon">{{ field.icon }}</mat-icon>
+
+                <ng-container [ngSwitch]="field.type">
+                  <input *ngSwitchCase="'text'" type="text" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <input *ngSwitchCase="'number'" type="number" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <input *ngSwitchCase="'email'" type="email" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <input *ngSwitchCase="'password'" type="password" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <input *ngSwitchCase="'date'" type="date" [id]="field.key" [formControlName]="field.key" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <ng-select *ngSwitchCase="'select'"
+                             [id]="field.key"
+                             [formControlName]="field.key"
+                             [items]="field.options || []"
+                             bindLabel="label"
+                             bindValue="value"
+                             [placeholder]="field.placeholder || 'Rechercher une option...'"
+                             class="premium-ng-select"
+                             [class.has-icon]="field.icon"
+                             [class.is-invalid]="isFieldInvalid(field.key)"
+                             [searchable]="true"
+                             [clearable]="true">
+                  </ng-select>
+
+                  <textarea *ngSwitchCase="'textarea'" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-textarea" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)" rows="3"></textarea>
+
+                  <div *ngSwitchCase="'slide-toggle'" class="slide-toggle-wrapper">
+                    <mat-slide-toggle [id]="field.key" [formControlName]="field.key" color="primary"></mat-slide-toggle>
+                  </div>
+                </ng-container>
               </div>
 
-              <!-- Standard Fields inside mat-form-field -->
-              <mat-form-field *ngIf="field.type !== 'slide-toggle'" appearance="outline"
-                [ngClass]="field.cssClass || 'full-width'" [ngSwitch]="field.type">
-                <mat-label>{{ field.label }}</mat-label>
+              <div class="error-message" *ngIf="isFieldInvalid(field.key)">
+                <mat-icon>error_outline</mat-icon> {{ getErrorMessage(field.key) }}
+              </div>
+              <div class="hint-message" *ngIf="field.hint && !isFieldInvalid(field.key)">{{ field.hint }}</div>
+            </div>
 
-                <!-- Optional Prefix Icon -->
-                <mat-icon matPrefix *ngIf="field.icon" class="mr-2 text-gray-400">{{ field.icon }}</mat-icon>
+          </ng-container>
+        </div>
+      </ng-container>
 
-                <!-- Input Text, Email, Number, Password -->
-                <input *ngSwitchCase="'text'" matInput [formControlName]="field.key"
-                  [placeholder]="field.placeholder || ''">
-                <input *ngSwitchCase="'email'" matInput [formControlName]="field.key"
-                  [placeholder]="field.placeholder || ''" type="email">
-                <input *ngSwitchCase="'number'" matInput [formControlName]="field.key"
-                  [placeholder]="field.placeholder || ''" type="number">
-                <input *ngSwitchCase="'password'" matInput [formControlName]="field.key"
-                  [placeholder]="field.placeholder || ''" type="password">
+      <div *ngIf="showFooter" class="form-actions" [ngClass]="actionsAlignment">
+        <button type="button" [disabled]="isLoading" (click)="onCancel()" *ngIf="cancelLabel" class="btn-secondary">
+          {{ cancelLabel }}
+        </button>
 
-                <!-- Textarea -->
-                <textarea *ngSwitchCase="'textarea'" matInput [formControlName]="field.key"
-                  [placeholder]="field.placeholder || ''"></textarea>
-
-                <!-- Select -->
-                <mat-select *ngSwitchCase="'select'" [formControlName]="field.key">
-                  <mat-option *ngFor="let opt of field.options" [value]="opt.value">
-                    {{ opt.label }}
-                  </mat-option>
-                </mat-select>
-
-                <!-- Date -->
-                <input *ngSwitchCase="'date'" matInput [matDatepicker]="picker" [formControlName]="field.key"
-                  [placeholder]="field.placeholder || ''">
-                <mat-datepicker-toggle *ngSwitchSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-
-                <mat-hint *ngIf="field.hint">{{ field.hint }}</mat-hint>
-                <mat-error *ngIf="form.get(field.key)?.invalid">{{ getErrorMessage(field.key) }}</mat-error>
-              </mat-form-field>
-
-            </ng-container>
-          </div>
-        </ng-container>
-      </form>
-    </mat-card-content>
-
-    <!-- Actions Footer -->
-    <div *ngIf="showFooter" class="form-actions" [class.space-between]="actionsAlignment === 'space-between'"
-      [class.justify-end]="actionsAlignment === 'end'">
-      <button mat-stroked-button color="warn" type="button" [disabled]="isLoading" (click)="onCancel()"
-        *ngIf="cancelLabel">
-        {{ cancelLabel }}
-      </button>
-
-      <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || isLoading" (click)="onSubmit()">
-        <span class="flex items-center" *ngIf="!isLoading">
-          <mat-icon class="mr-2">save</mat-icon>
+        <button type="submit" [disabled]="form.invalid || isLoading" class="btn-primary">
+          <mat-icon *ngIf="!isLoading">save</mat-icon>
+          <mat-spinner diameter="20" *ngIf="isLoading" color="accent"></mat-spinner>
           {{ submitLabel }}
-        </span>
-        <span class="flex items-center" *ngIf="isLoading">
-          <mat-spinner diameter="20" class="mr-2"></mat-spinner>
-          Enregistrement...
-        </span>
-      </button>
-    </div>
-  </mat-card>
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

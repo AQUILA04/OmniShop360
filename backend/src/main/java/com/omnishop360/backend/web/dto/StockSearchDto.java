@@ -10,6 +10,9 @@ public record StockSearchDto(
         UUID productId,
         UUID variantId,
         String keyword,
+        String productCode,
+        String productName,
+        UUID categoryId,
         Boolean lowStock
 ) {
 }

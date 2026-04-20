@@ -4,6 +4,7 @@ import com.omnishop360.backend.domain.entity.*;
 import com.omnishop360.backend.domain.repository.*;
 import com.omnishop360.backend.infrastructure.config.SecurityUtils;
 import com.omnishop360.backend.web.dto.CheckoutRequest;
+import com.omnishop360.backend.web.dto.ReceiptFormat;
 import com.omnishop360.backend.web.dto.SaleResponse;
 import com.omnishop360.backend.web.dto.SaleSearchDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,6 +60,21 @@ class SaleServiceTest {
     private StockService stockService;
 
     @Mock
+    private SalePaymentRepository salePaymentRepository;
+
+    @Mock
+    private CashRegisterSessionService cashRegisterSessionService;
+
+    @Mock
+    private CustomerService customerService;
+
+    @Mock
+    private PromotionService promotionService;
+
+    @Mock
+    private VoucherCodeService voucherCodeService;
+
+    @Mock
     private UserContextService userContextService;
 
     @InjectMocks
@@ -72,6 +87,8 @@ class SaleServiceTest {
     private Shop shop;
     private Product product;
     private Sale sale;
+    private CashRegisterSession openSession;
+    private Customer walkInCustomer;
     private CheckoutRequest checkoutRequest;
 
     @BeforeEach
@@ -88,6 +105,7 @@ class SaleServiceTest {
         shop.setId(shopId);
         shop.setTenant(tenant);
         shop.setName("Test Shop");
+        shop.setAllowSaleWithoutStock(false);
 
         product = new Product();
         product.setId(productId);
@@ -111,7 +129,20 @@ class SaleServiceTest {
         sale.setPaymentMethod(Sale.PaymentMethod.CASH);
         sale.setPaymentStatus(Sale.PaymentStatus.PAID);
         sale.setStatus(Sale.SaleStatus.COMPLETED);
-        sale.setItems(new ArrayList<>());
+        sale.setItems(new java.util.ArrayList<>());
+        sale.setPayments(new java.util.ArrayList<>());
+
+        openSession = new CashRegisterSession();
+        openSession.setId(UUID.randomUUID());
+        openSession.setTenant(tenant);
+        openSession.setShop(shop);
+        openSession.setStatus(CashRegisterSession.Status.OPEN);
+
+        walkInCustomer = new Customer();
+        walkInCustomer.setId(UUID.randomUUID());
+        walkInCustomer.setTenant(tenant);
+        walkInCustomer.setFirstName("Client");
+        walkInCustomer.setLastName("Divers");
 
         CheckoutRequest.CheckoutItem item = CheckoutRequest.CheckoutItem.builder()
                 .productId(productId)
@@ -132,8 +163,11 @@ class SaleServiceTest {
         when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
         when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(tenant));
         when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(cashRegisterSessionService.getOpenSessionOrThrow(tenantId, shopId)).thenReturn(openSession);
+        when(customerService.getOrCreateWalkInCustomer(tenantId)).thenReturn(walkInCustomer);
         when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.of(product));
-        doNothing().when(stockService).removeStock(any(), any(), any(), any());
+        doNothing().when(stockService).removeStock(any(), any(), any(), any(), anyBoolean());
+        when(salePaymentRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
         
         when(saleRepository.save(any(Sale.class))).thenAnswer(invocation -> {
             Sale savedSale = invocation.getArgument(0);
@@ -158,8 +192,47 @@ class SaleServiceTest {
             assertEquals(Sale.SaleStatus.COMPLETED, response.status());
             assertNotNull(response.items());
             assertEquals(1, response.items().size());
-            verify(saleRepository).save(any(Sale.class));
-            verify(stockService).removeStock(eq(productId), isNull(), eq(shopId), eq(new BigDecimal("2.0")));
+            assertNotNull(response.cashRegisterSessionId());
+            assertNotNull(response.payments());
+            verify(saleRepository, atLeastOnce()).save(any(Sale.class));
+            verify(stockService).removeStock(eq(productId), isNull(), eq(shopId), eq(new BigDecimal("2.0")), eq(false));
+        }
+    }
+
+    @Test
+    @DisplayName("Should checkout successfully when paid total is greater than invoice total")
+    void shouldCheckoutSuccessfullyWhenPaidTotalIsGreaterThanInvoiceTotal() {
+        CheckoutRequest request = CheckoutRequest.builder()
+                .items(checkoutRequest.items())
+                .payments(List.of(CheckoutRequest.PaymentItem.builder()
+                        .method(CheckoutRequest.SalePaymentMethod.CASH)
+                        .amount(new BigDecimal("130.00"))
+                        .build()))
+                .discountAmount(BigDecimal.ZERO)
+                .build();
+
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
+        when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(tenant));
+        when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(cashRegisterSessionService.getOpenSessionOrThrow(tenantId, shopId)).thenReturn(openSession);
+        when(customerService.getOrCreateWalkInCustomer(tenantId)).thenReturn(walkInCustomer);
+        when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.of(product));
+        doNothing().when(stockService).removeStock(any(), any(), any(), any(), anyBoolean());
+        when(salePaymentRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(saleRepository.save(any(Sale.class))).thenAnswer(invocation -> {
+            Sale savedSale = invocation.getArgument(0);
+            if (savedSale.getId() == null) {
+                savedSale.setId(UUID.randomUUID());
+            }
+            return savedSale;
+        });
+
+        try (MockedStatic<SecurityUtils> mockedSecurity = mockStatic(SecurityUtils.class)) {
+            mockedSecurity.when(SecurityUtils::getCurrentUserKeycloakId).thenReturn(Optional.of("user-id"));
+            SaleResponse response = saleService.checkout(request);
+            assertNotNull(response);
+            assertEquals(0, new BigDecimal("120.00").compareTo(response.totalAmount()));
         }
     }
 
@@ -179,6 +252,8 @@ class SaleServiceTest {
         when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
         when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(tenant));
         when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(cashRegisterSessionService.getOpenSessionOrThrow(tenantId, shopId)).thenReturn(openSession);
+        when(customerService.getOrCreateWalkInCustomer(tenantId)).thenReturn(walkInCustomer);
         when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> saleService.checkout(checkoutRequest));
@@ -193,6 +268,8 @@ class SaleServiceTest {
         when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
         when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(tenant));
         when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(cashRegisterSessionService.getOpenSessionOrThrow(tenantId, shopId)).thenReturn(openSession);
+        when(customerService.getOrCreateWalkInCustomer(tenantId)).thenReturn(walkInCustomer);
         when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.of(product));
 
         assertThrows(IllegalArgumentException.class, () -> saleService.checkout(checkoutRequest));
@@ -222,6 +299,7 @@ class SaleServiceTest {
         UUID saleId = sale.getId();
 
         when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
         when(saleRepository.findById(saleId)).thenReturn(Optional.of(sale));
 
         SaleResponse response = saleService.getSaleById(saleId);
@@ -236,6 +314,7 @@ class SaleServiceTest {
         UUID saleId = UUID.randomUUID();
 
         when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
         when(saleRepository.findById(saleId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> saleService.getSaleById(saleId));
@@ -265,10 +344,12 @@ class SaleServiceTest {
         when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
         when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(tenant));
         when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(cashRegisterSessionService.getOpenSessionOrThrow(tenantId, shopId)).thenReturn(openSession);
         when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.of(product));
         when(customerRepository.findByIdAndTenantIdAndDeletedFalse(customerId, tenantId))
                 .thenReturn(Optional.of(customer));
-        doNothing().when(stockService).removeStock(any(), any(), any(), any());
+        doNothing().when(stockService).removeStock(any(), any(), any(), any(), anyBoolean());
+        when(salePaymentRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
         
         when(saleRepository.save(any(Sale.class))).thenAnswer(invocation -> {
             Sale savedSale = invocation.getArgument(0);
@@ -285,7 +366,7 @@ class SaleServiceTest {
 
             assertNotNull(response);
             assertEquals(customerId, response.customerId());
-            verify(saleRepository).save(any(Sale.class));
+            verify(saleRepository, atLeastOnce()).save(any(Sale.class));
         }
     }
 
@@ -319,9 +400,12 @@ class SaleServiceTest {
         when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
         when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(tenant));
         when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(cashRegisterSessionService.getOpenSessionOrThrow(tenantId, shopId)).thenReturn(openSession);
+        when(customerService.getOrCreateWalkInCustomer(tenantId)).thenReturn(walkInCustomer);
         when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.of(product));
         when(productVariantRepository.findByIdAndDeletedFalse(variantId)).thenReturn(Optional.of(variant));
-        doNothing().when(stockService).removeStock(any(), any(), any(), any());
+        doNothing().when(stockService).removeStock(any(), any(), any(), any(), anyBoolean());
+        when(salePaymentRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
         
         when(saleRepository.save(any(Sale.class))).thenAnswer(invocation -> {
             Sale savedSale = invocation.getArgument(0);
@@ -337,7 +421,7 @@ class SaleServiceTest {
             SaleResponse response = saleService.checkout(requestWithVariant);
 
             assertNotNull(response);
-            verify(stockService).removeStock(eq(productId), eq(variantId), eq(shopId), eq(new BigDecimal("2.0")));
+            verify(stockService).removeStock(productId, variantId, shopId, new BigDecimal("2.0"), false);
         }
     }
 
@@ -360,6 +444,8 @@ class SaleServiceTest {
         when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
         when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(tenant));
         when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(cashRegisterSessionService.getOpenSessionOrThrow(tenantId, shopId)).thenReturn(openSession);
+        when(customerService.getOrCreateWalkInCustomer(tenantId)).thenReturn(walkInCustomer);
         when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.of(product));
         when(productVariantRepository.findByIdAndDeletedFalse(variantId)).thenReturn(Optional.empty());
 
@@ -391,6 +477,8 @@ class SaleServiceTest {
         when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
         when(tenantRepository.findByIdAndDeletedFalse(tenantId)).thenReturn(Optional.of(tenant));
         when(shopRepository.findByIdAndDeletedFalse(shopId)).thenReturn(Optional.of(shop));
+        when(cashRegisterSessionService.getOpenSessionOrThrow(tenantId, shopId)).thenReturn(openSession);
+        when(customerService.getOrCreateWalkInCustomer(tenantId)).thenReturn(walkInCustomer);
         when(productRepository.findByIdAndDeletedFalse(productId)).thenReturn(Optional.of(product));
         when(productVariantRepository.findByIdAndDeletedFalse(variantId)).thenReturn(Optional.of(variant));
 
@@ -434,5 +522,20 @@ class SaleServiceTest {
         when(userContextService.getCurrentUserShopId()).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class, () -> saleService.getSales(searchDto, pageable));
+    }
+
+    @Test
+    @DisplayName("Should return receipt response")
+    void shouldReturnReceiptResponse() {
+        UUID saleId = sale.getId();
+        when(userContextService.getCurrentUserTenantId()).thenReturn(tenantId);
+        when(userContextService.getCurrentUserShopId()).thenReturn(Optional.of(shopId));
+        when(saleRepository.findById(saleId)).thenReturn(Optional.of(sale));
+
+        var receipt = saleService.getReceipt(saleId, ReceiptFormat.A4);
+
+        assertNotNull(receipt);
+        assertEquals(ReceiptFormat.A4, receipt.format());
+        assertNotNull(receipt.sale());
     }
 }

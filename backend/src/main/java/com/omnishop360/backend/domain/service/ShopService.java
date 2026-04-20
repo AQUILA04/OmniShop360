@@ -29,6 +29,9 @@ import java.util.UUID;
 @Slf4j
 public class ShopService {
 
+    private static final String SHOP_NOT_FOUND_WITH_ID = "Shop not found with id: ";
+    private static final String SHOP_ID_ATTRIBUTE = "shop_id";
+
     private final ShopRepository shopRepository;
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
@@ -55,6 +58,7 @@ public class ShopService {
         shop.setCountry(request.getCountry());
         shop.setPhone(request.getPhone());
         shop.setEmail(request.getEmail());
+        shop.setAllowSaleWithoutStock(Boolean.TRUE.equals(request.getAllowSaleWithoutStock()));
         shop.setActive(true);
         shop.setDeleted(false);
 
@@ -69,10 +73,10 @@ public class ShopService {
         log.info("Updating shop: {} for tenant: {}", shopId, tenantId);
 
         Shop shop = shopRepository.findByIdAndDeletedFalse(shopId)
-                .orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + shopId));
+                .orElseThrow(() -> new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + shopId));
 
         if (!shop.getTenant().getId().equals(tenantId)) {
-            throw new EntityNotFoundException("Shop not found with id: " + shopId);
+            throw new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + shopId);
         }
 
         shop.setName(request.getName());
@@ -82,6 +86,9 @@ public class ShopService {
         shop.setCountry(request.getCountry());
         shop.setPhone(request.getPhone());
         shop.setEmail(request.getEmail());
+        if (request.getAllowSaleWithoutStock() != null) {
+            shop.setAllowSaleWithoutStock(request.getAllowSaleWithoutStock());
+        }
 
         shop = shopRepository.save(shop);
         log.info("Shop updated successfully: {}", shop.getId());
@@ -123,10 +130,10 @@ public class ShopService {
         log.debug("Fetching shop: {} for tenant: {}", shopId, tenantId);
 
         Shop shop = shopRepository.findByIdAndDeletedFalse(shopId)
-                .orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + shopId));
+                .orElseThrow(() -> new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + shopId));
 
         if (!shop.getTenant().getId().equals(tenantId)) {
-            throw new EntityNotFoundException("Shop not found with id: " + shopId);
+            throw new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + shopId);
         }
 
         long userCount = userRepository.countByShopId(shop.getId());
@@ -143,10 +150,10 @@ public class ShopService {
         log.info("Creating shop admin: {} for shop: {}", request.getEmail(), request.getShopId());
 
         Shop shop = shopRepository.findByIdAndDeletedFalse(request.getShopId())
-                .orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + request.getShopId()));
+                .orElseThrow(() -> new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + request.getShopId()));
 
         if (!shop.getTenant().getId().equals(tenantId)) {
-            throw new EntityNotFoundException("Shop not found with id: " + request.getShopId());
+            throw new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + request.getShopId());
         }
 
         if (userRepository.existsByEmailAndDeletedFalse(request.getEmail())) {
@@ -160,7 +167,7 @@ public class ShopService {
                 "shop_admin"
         );
 
-        keycloakAdapter.setUserAttribute(keycloakId, "shop_id", shop.getId().toString());
+        keycloakAdapter.setUserAttribute(keycloakId, SHOP_ID_ATTRIBUTE, shop.getId().toString());
 
         User admin = new User();
         admin.setTenant(shop.getTenant());
@@ -183,10 +190,10 @@ public class ShopService {
         log.info("Creating cashier: {} for shop: {}", request.getEmail(), shopId);
 
         Shop shop = shopRepository.findByIdAndDeletedFalse(shopId)
-                .orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + shopId));
+                .orElseThrow(() -> new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + shopId));
 
         if (!shop.getTenant().getId().equals(tenantId)) {
-            throw new EntityNotFoundException("Shop not found with id: " + shopId);
+            throw new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + shopId);
         }
 
         var currentUserShopId = userContextService.getCurrentUserShopId();
@@ -205,7 +212,7 @@ public class ShopService {
                 "cashier"
         );
 
-        keycloakAdapter.setUserAttribute(keycloakId, "shop_id", shop.getId().toString());
+        keycloakAdapter.setUserAttribute(keycloakId, SHOP_ID_ATTRIBUTE, shop.getId().toString());
 
         User cashier = new User();
         cashier.setTenant(shop.getTenant());
@@ -228,10 +235,10 @@ public class ShopService {
         log.info("Creating stock manager: {} for shop: {}", request.getEmail(), shopId);
 
         Shop shop = shopRepository.findByIdAndDeletedFalse(shopId)
-                .orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + shopId));
+                .orElseThrow(() -> new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + shopId));
 
         if (!shop.getTenant().getId().equals(tenantId)) {
-            throw new EntityNotFoundException("Shop not found with id: " + shopId);
+            throw new EntityNotFoundException(SHOP_NOT_FOUND_WITH_ID + shopId);
         }
 
         var currentUserShopId = userContextService.getCurrentUserShopId();
@@ -250,7 +257,7 @@ public class ShopService {
                 "stock_manager"
         );
 
-        keycloakAdapter.setUserAttribute(keycloakId, "shop_id", shop.getId().toString());
+        keycloakAdapter.setUserAttribute(keycloakId, SHOP_ID_ATTRIBUTE, shop.getId().toString());
 
         User stockManager = new User();
         stockManager.setTenant(shop.getTenant());

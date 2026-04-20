@@ -26,6 +26,8 @@ import java.util.UUID;
 @Slf4j
 public class CustomerService {
 
+    private static final String CUSTOMER_NOT_FOUND_WITH_ID = "Customer not found with id: ";
+
     private final CustomerRepository customerRepository;
     private final TenantRepository tenantRepository;
     private final UserContextService userContextService;
@@ -63,7 +65,7 @@ public class CustomerService {
         log.info("Updating customer: {} for tenant: {}", customerId, tenantId);
 
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedFalse(customerId, tenantId)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new EntityNotFoundException(CUSTOMER_NOT_FOUND_WITH_ID + customerId));
 
         if (request.getFirstName() != null) {
             customer.setFirstName(request.getFirstName());
@@ -104,7 +106,7 @@ public class CustomerService {
         log.info("Deleting customer: {} for tenant: {}", customerId, tenantId);
 
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedFalse(customerId, tenantId)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new EntityNotFoundException(CUSTOMER_NOT_FOUND_WITH_ID + customerId));
 
         customer.setDeleted(true);
         customerRepository.save(customer);
@@ -131,8 +133,36 @@ public class CustomerService {
         log.debug("Fetching customer: {} for tenant: {}", customerId, tenantId);
 
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedFalse(customerId, tenantId)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new EntityNotFoundException(CUSTOMER_NOT_FOUND_WITH_ID + customerId));
 
         return CustomerResponse.from(customer);
+    }
+
+    @Transactional
+    public Customer getOrCreateWalkInCustomer(UUID tenantId) {
+        return doGetOrCreateWalkInCustomer(tenantId);
+    }
+
+    private Customer doGetOrCreateWalkInCustomer(UUID tenantId) {
+        Customer existing = customerRepository.findWalkInCustomer(tenantId).orElse(null);
+        if (existing != null) {
+            return existing;
+        }
+        Tenant tenant = tenantRepository.findByIdAndDeletedFalse(tenantId)
+                .orElseThrow(() -> new EntityNotFoundException("Tenant not found with id: " + tenantId));
+        Customer customer = new Customer();
+        customer.setTenant(tenant);
+        customer.setFirstName("Client");
+        customer.setLastName("Divers");
+        customer.setActive(true);
+        customer.setDeleted(false);
+        customer.setLoyaltyPoints(0);
+        return customerRepository.save(customer);
+    }
+
+    @Transactional
+    public CustomerResponse getOrCreateWalkInCustomer() {
+        UUID tenantId = userContextService.getCurrentUserTenantId();
+        return CustomerResponse.from(doGetOrCreateWalkInCustomer(tenantId));
     }
 }

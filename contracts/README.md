@@ -128,6 +128,8 @@ Avant de merger :
 
 | Date | Modification |
 |:---|:---|
+| 2026-04-11 | Ajustement Sprint E : `cash-register-session-controller.v1.1.md` (reliquat manuel), `sale-controller.v1.5.md` (création code promo dédiée). |
+| 2026-04-11 | Sprint E (E1-E4) : nouveaux contrats `cash-register-session-controller.v1.md`, `customer-controller.v1.1.md`, `sale-controller.v1.2.md`, `sale-controller.v1.3.md`, `sale-controller.v1.4.md`. |
 | 2026-02-21 | Audit-log v1.1.0 : entité User ajoutée aux types audités. User-controller v2.1.0 : GET /users par rôle (superadmin / tenant_admin / shop_admin). Liste des contrats : category v1.1, product v1.1, shop v1.3, audit-log v1.1.0, user v2.1.0. |
 | 2025-12-09 | Mise à jour liste des contrats et statuts. |
 
@@ -150,7 +152,14 @@ Avant de merger :
 | `stock-controller.v1.md` | 1.1.0 | Gestion des Stocks et Inventaires (rôle stock_manager) | 🟢 Actif |
 | `sale-controller.v1.md` | 1.0.0 | Gestion des Ventes et Transactions POS | 🟢 Actif |
 | `sale-controller.v1.1.md` | 1.1.0 | Ventes – Recherche produits pour la vente (avec stock) | 🟢 Actif |
+| `sale-controller.v1.2.md` | 1.2.0 | Ventes – Filtrage POS enrichi, client divers par défaut, option vente sans stock | 🟢 Actif |
+| `sale-controller.v1.3.md` | 1.3.0 | Ventes – Niveaux de prix et promotions | 🟢 Actif |
+| `sale-controller.v1.4.md` | 1.4.0 | Ventes – Multi-paiement, avoir (voucher), impression A4/thermique | 🟢 Actif |
+| `sale-controller.v1.5.md` | 1.5.0 | Ventes – Création de code promo dédiée | 🟢 Actif |
 | `customer-controller.v1.md` | 1.0.0 | Gestion des Clients | 🟢 Actif |
+| `customer-controller.v1.1.md` | 1.1.0 | Clients – Endpoint client divers (`POST /customers/walk-in`) | 🟢 Actif |
+| `cash-register-session-controller.v1.md` | 1.0.0 | Sessions de caisse – Ouverture, clôture, reliquat | 🟢 Actif |
+| `cash-register-session-controller.v1.1.md` | 1.1.0 | Sessions de caisse – Reliquat généré via endpoint dédié | 🟢 Actif |
 | `user-controller.v1.md` | 1.0.0 | Gestion des Utilisateurs | 🟢 Actif |
 | `user-controller.v2.md` | 2.1.0 | Utilisateurs – champ `role` ; GET /users selon rôle (superadmin / tenant_admin / shop_admin) | 🟢 Actif |
 | `analytics-controller.v1.md` | 1.0.0 | Tableaux de bord et export PDF/Excel (US-015, US-016, US-017) | 🟢 Actif |

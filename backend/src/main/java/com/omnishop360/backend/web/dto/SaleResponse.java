@@ -21,12 +21,18 @@ public record SaleResponse(
         BigDecimal subtotal,
         BigDecimal taxAmount,
         BigDecimal discountAmount,
+        BigDecimal promoDiscountAmount,
+        String promoCode,
+        BigDecimal voucherAmount,
+        String voucherCode,
         BigDecimal totalAmount,
         Sale.PaymentMethod paymentMethod,
         Sale.PaymentStatus paymentStatus,
         Sale.SaleStatus status,
         String notes,
         LocalDateTime createdAt,
+        UUID cashRegisterSessionId,
+        List<SalePaymentResponse> payments,
         List<SaleItemResponse> items
 ) {
     public static SaleResponse from(Sale sale) {
@@ -46,12 +52,20 @@ public record SaleResponse(
                 .subtotal(sale.getSubtotal())
                 .taxAmount(sale.getTaxAmount())
                 .discountAmount(sale.getDiscountAmount())
+                .promoDiscountAmount(sale.getPromoDiscountAmount())
+                .promoCode(sale.getPromoCode())
+                .voucherAmount(sale.getVoucherAmount())
+                .voucherCode(sale.getVoucherCode())
                 .totalAmount(sale.getTotalAmount())
                 .paymentMethod(sale.getPaymentMethod())
                 .paymentStatus(sale.getPaymentStatus())
                 .status(sale.getStatus())
                 .notes(sale.getNotes())
                 .createdAt(sale.getCreatedAt())
+                .cashRegisterSessionId(sale.getCashRegisterSession() != null ? sale.getCashRegisterSession().getId() : null)
+                .payments(sale.getPayments().stream()
+                        .map(SalePaymentResponse::from)
+                        .toList())
                 .items(sale.getItems().stream()
                         .map(SaleItemResponse::from)
                         .toList())

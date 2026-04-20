@@ -120,4 +120,11 @@ public class CustomerController {
         CustomerResponse response = customerService.getCustomerById(customerId);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/walk-in")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Récupérer ou créer le client divers")
+    public ResponseEntity<CustomerResponse> getOrCreateWalkInCustomer() {
+        return ResponseEntity.ok(customerService.getOrCreateWalkInCustomer());
+    }
 }

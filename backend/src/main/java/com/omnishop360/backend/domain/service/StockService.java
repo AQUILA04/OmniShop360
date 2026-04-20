@@ -93,6 +93,15 @@ public class StockService {
 
     @Transactional
     public void removeStock(UUID productId, UUID variantId, UUID shopId, BigDecimal quantity) {
+        doRemoveStock(productId, variantId, shopId, quantity, false);
+    }
+
+    @Transactional
+    public void removeStock(UUID productId, UUID variantId, UUID shopId, BigDecimal quantity, boolean allowSaleWithoutStock) {
+        doRemoveStock(productId, variantId, shopId, quantity, allowSaleWithoutStock);
+    }
+
+    private void doRemoveStock(UUID productId, UUID variantId, UUID shopId, BigDecimal quantity, boolean allowSaleWithoutStock) {
         UUID tenantId = userContextService.getCurrentUserTenantId();
 
         log.info("Removing stock: productId={}, variantId={}, quantity={} for shop={}", 
@@ -113,10 +122,16 @@ public class StockService {
                     .orElseThrow(() -> new EntityNotFoundException("Product variant not found with id: " + variantId));
         }
 
-        Stock stock = findStock(tenantId, shopId, productId, variantId)
-                .orElseThrow(() -> new EntityNotFoundException("Stock not found for product: " + productId));
+        Stock stock = findStock(tenantId, shopId, productId, variantId).orElse(null);
 
-        if (stock.getAvailableQuantity().compareTo(quantity) < 0) {
+        if (stock == null) {
+            if (!allowSaleWithoutStock) {
+                throw new EntityNotFoundException("Stock not found for product: " + productId);
+            }
+            stock = findOrCreateStock(tenant, shop, product, variant);
+        }
+
+        if (!allowSaleWithoutStock && stock.getAvailableQuantity().compareTo(quantity) < 0) {
             throw new IllegalArgumentException("Insufficient stock. Available: " + stock.getAvailableQuantity() + ", Requested: " + quantity);
         }
 
@@ -149,6 +164,9 @@ public class StockService {
                 .productId(searchDto != null ? searchDto.productId() : null)
                 .variantId(searchDto != null ? searchDto.variantId() : null)
                 .keyword(searchDto != null ? searchDto.keyword() : null)
+                .productCode(searchDto != null ? searchDto.productCode() : null)
+                .productName(searchDto != null ? searchDto.productName() : null)
+                .categoryId(searchDto != null ? searchDto.categoryId() : null)
                 .lowStock(searchDto != null ? searchDto.lowStock() : null)
                 .build();
 

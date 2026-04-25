@@ -1,183 +1,274 @@
-// Variables (could be moved to a global variables file)
-$primary-color: #3f51b5;
-$bg-color: #f8fafc;
-$card-bg: #ffffff;
-$text-primary: #1e293b;
-$text-secondary: #64748b;
-$border-color: #e2e8f0;
-$hover-bg: #f1f5f9;
+// Using Global Design Tokens
+$primary-color: var(--color-primary);
+$bg-color: var(--color-background);
+$text-primary: var(--color-text-primary);
+$text-secondary: var(--color-text-secondary);
 
 .page-container {
-  padding: 2rem;
+  padding: var(--space-6);
   max-width: 1400px;
   margin: 0 auto;
-  background-color: $bg-color;
-  min-height: 100%;
+  min-height: 100vh;
 }
 
-// Header
+/* =========================================
+   Header & Controls
+   ========================================= */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-6);
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-4);
 
   .header-content {
     h1 {
-      font-size: 1.875rem;
-      font-weight: 700;
-      color: $text-primary;
+      font-size: var(--font-size-h1);
+      font-weight: var(--font-weight-semibold);
+      color: #1E3A8A; /* Premium Deep Blue */
       margin: 0;
-      line-height: 1.2;
+      letter-spacing: var(--letter-spacing-tight);
     }
-
     .subtitle {
       color: $text-secondary;
-      margin: 0.5rem 0 0;
-      font-size: 0.875rem;
-    }
-  }
-
-  .create-btn {
-    border-radius: 8px;
-    padding: 0.5rem 1.5rem;
-    height: 48px;
-    font-weight: 600;
-    box-shadow: 0 4px 6px -1px rgba(63, 81, 181, 0.2), 0 2px 4px -1px rgba(63, 81, 181, 0.1);
-
-    mat-icon {
-      margin-right: 8px;
+      margin: var(--space-1) 0 0;
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-medium);
     }
   }
 }
 
-// Controls Bar
 .controls-bar {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 
   .search-container {
-    background: $card-bg;
-    border: 1px solid $border-color;
-    border-radius: 12px;
-    padding: 0.75rem 1rem;
+    background-color: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-4);
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 400px;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    max-width: 350px;
+    transition: all var(--transition-base);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 
     &:focus-within {
       border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+      box-shadow: 0 0 0 3px rgba(0, 92, 173, 0.15);
     }
 
     .search-icon {
-      color: $text-secondary;
-      margin-right: 0.75rem;
+      color: #94A3B8;
+      margin-right: var(--space-2);
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
     }
 
     input {
       border: none;
       outline: none;
       width: 100%;
-      font-size: 0.95rem;
-      color: $text-primary;
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-medium);
+      color: #0F172A;
       background: transparent;
 
       &::placeholder {
-        color: #94a3b8;
+        color: #94A3B8;
       }
     }
   }
 }
 
-// Table Card
+/* =========================================
+   Table Card (Premium Look)
+   ========================================= */
 .table-card {
-  background: $card-bg;
-  border-radius: 16px;
-  border: 1px solid $border-color;
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); /* Ombre douce et large */
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
   position: relative;
   min-height: 400px;
 
   .loading-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
+    inset: 0;
+    background: rgba(255, 255, 255, 0.6);
     z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(2px);
-  }
-
-  .table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  table {
-    width: 100%;
-    min-width: 800px; // Ensure table doesn't squish too much on small screens
-
-    th.mat-header-cell {
-      background-color: #f8fafc;
-      color: $text-secondary;
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid $border-color;
-      white-space: nowrap;
-
-      &:first-of-type {
-        padding-left: 2rem;
-      }
-    }
-
-    td.mat-cell {
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid $border-color;
-      color: $text-primary;
-      font-size: 0.9rem;
-      white-space: nowrap;
-
-      &:first-of-type {
-        padding-left: 2rem;
-      }
-    }
-
-    tr.data-row {
-      transition: background-color 0.2s ease;
-
-      &:hover {
-        background-color: $hover-bg;
-      }
-
-      &:last-child td {
-        border-bottom: none;
-      }
-    }
+    backdrop-filter: blur(4px);
   }
 }
 
-// Status Pills
-.status-pill {
+/* =========================================
+   Angular Material Table Overrides
+   ========================================= */
+::ng-deep {
+  .mat-mdc-table {
+    background: transparent !important;
+    width: 100%;
+  }
+
+  /* En-têtes de colonnes */
+  .mat-mdc-header-row {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+  }
+
+  .mat-mdc-header-cell {
+    color: #64748B !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 16px 24px !important;
+    border-bottom: none !important;
+  }
+
+  /* Lignes de données */
+  .mat-mdc-row {
+    transition: background-color 0.2s ease !important;
+    border-bottom: 1px solid #F8FAFC !important;
+
+    &:hover {
+      background-color: #F8FAFC !important;
+    }
+    &:last-child {
+      border-bottom: none !important;
+    }
+  }
+
+  .mat-mdc-cell {
+    padding: 20px 24px !important;
+    font-size: 14px !important;
+    color: #334155 !important;
+    font-weight: 500 !important;
+    border-bottom: none !important;
+  }
+
+  /* =========================================
+     Pagination Overrides (Fix & Premium Styling)
+     ========================================= */
+  .mat-mdc-paginator {
+    background-color: #ffffff !important;
+    border-top: 1px solid #F1F5F9 !important;
+    color: #64748B !important;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    .mat-mdc-paginator-container {
+      padding: 12px 24px !important;
+      justify-content: space-between !important;
+    }
+
+    /* Nettoyage des textes "Items per page" et "1-1 of 1" */
+    .mat-mdc-paginator-page-size-label,
+    .mat-mdc-paginator-range-label {
+      color: #64748B !important;
+      font-weight: 500 !important;
+      margin: 0 !important;
+    }
+
+    .mat-mdc-paginator-range-label {
+      font-weight: 600 !important;
+      color: #0F172A !important;
+    }
+
+    /* Fix du Select Box (Rendre cliquable et design) */
+    .mat-mdc-paginator-page-size-select {
+      margin: 0 16px !important;
+      width: 80px !important;
+
+      /* Masquer la bordure défectueuse de Material */
+      .mdc-notched-outline {
+        display: none !important;
+      }
+
+      /* Recréer une boîte Premium cliquable */
+      .mat-mdc-text-field-wrapper {
+        background-color: #F8FAFC !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 8px !important;
+        padding: 0 12px !important;
+        height: 36px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+
+        &:hover {
+          background-color: #F1F5F9 !important;
+          border-color: #CBD5E1 !important;
+        }
+      }
+
+      .mat-mdc-form-field-flex {
+        height: 100% !important;
+        align-items: center !important;
+      }
+
+      .mat-mdc-form-field-infix {
+        padding: 0 !important;
+        border: none !important;
+        width: auto !important;
+        min-width: 40px !important;
+      }
+
+      .mat-mdc-select-value {
+        color: #0F172A !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+      }
+
+      .mat-mdc-select-arrow {
+        color: #64748B !important;
+      }
+    }
+  }
+
+  /* Style global du menu déroulant (quand il est ouvert) */
+  .mat-mdc-select-panel {
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid #E2E8F0 !important;
+    background: #ffffff !important;
+    margin-top: 4px !important;
+
+    .mat-mdc-option {
+      color: #334155 !important;
+      font-weight: 500 !important;
+      font-size: 14px !important;
+      min-height: 40px !important;
+
+      &:hover {
+        background-color: #F8FAFC !important;
+      }
+      &.mdc-list-item--selected {
+        background-color: #F0FDF4 !important;
+        color: #16A34A !important;
+        font-weight: 600 !important;
+      }
+    }
+  }
+
+/* =========================================
+   Badges & Text Utilities
+   ========================================= */
+.status-pill, .badge-premium {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.75rem;
+  padding: 4px 12px;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: 600;
   text-transform: capitalize;
+  letter-spacing: 0.02em;
 
   .dot {
     width: 6px;
@@ -186,159 +277,103 @@ $hover-bg: #f1f5f9;
     margin-right: 6px;
     background-color: currentColor;
   }
-
-  &.active {
-    background-color: #dcfce7;
-    color: #166534;
-  }
-
-  &.suspended {
-    background-color: #fee2e2;
-    color: #991b1b;
-  }
-
-  &.deleted {
-    background-color: #f1f5f9;
-    color: #475569;
-  }
 }
 
-// Text Utilities
-.text-primary {
-  font-weight: 500;
-  color: $text-primary;
+/* Premium Badge Colors */
+.badge-danger {
+  background-color: #FEF2F2;
+  color: #DC2626;
+}
+.badge-success {
+  background-color: #F0FDF4;
+  color: #16A34A;
+}
+.badge-warning {
+  background-color: #FFF7ED;
+  color: #EA580C;
 }
 
-.text-secondary {
-  color: $text-secondary;
-}
-
-// Actions
-.actions-cell {
-  width: 60px;
-  text-align: right;
-  padding-right: 1rem !important;
-}
-
-.action-btn {
-  color: $text-secondary;
-
-  &:hover {
-    color: $primary-color;
-    background-color: rgba(63, 81, 181, 0.05);
-  }
-}
-
-// Empty States
-.empty-search {
-  padding: 3rem;
-  text-align: center;
-  color: $text-secondary;
-
-  mat-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-  }
-}
-
+/* =========================================
+   Empty State
+   ========================================= */
 .empty-state {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
+  min-height: 300px;
 
   .empty-content {
     text-align: center;
-    max-width: 320px;
-
     .icon-circle {
       width: 64px;
       height: 64px;
-      background-color: #eff6ff;
+      background-color: #F1F5F9;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 1.5rem;
+      margin: 0 auto 16px;
+      color: #94A3B8;
 
-      mat-icon {
-        color: $primary-color;
-        font-size: 32px;
-        width: 32px;
-        height: 32px;
-      }
+      mat-icon { font-size: 32px; width: 32px; height: 32px; }
     }
-
-    h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: $text-primary;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      color: $text-secondary;
-      margin-bottom: 1.5rem;
-      line-height: 1.5;
-    }
-
-    button {
-      border-radius: 8px;
-      padding: 0 2rem;
-    }
+    h3 { font-size: 18px; font-weight: 700; color: #0F172A; margin-bottom: 8px; }
+    p { color: #64748B; margin-bottom: 24px; font-size: 14px; }
   }
 }
-
-// Utilities
-.hidden {
-  display: none !important;
 }
+/* generic-list.component.scss */
 
-// Menu Customization (Global override might be needed for mat-menu panel class)
+// Menu Customization (Premium Floating Menu)
 ::ng-deep .custom-menu {
+  background-color: #ffffff !important; /* Crucial : force le fond blanc */
   border-radius: 12px !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
   min-width: 180px !important;
+  border: 1px solid #E2E8F0 !important;
+  padding: 4px !important;
 
   .mat-mdc-menu-item {
-    min-height: 40px;
+    min-height: 40px !important;
+    border-radius: 8px !important;
+    color: #334155 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    margin-bottom: 2px !important;
+    transition: background-color 0.1s ease;
 
-    mat-icon {
-      margin-right: 12px;
-      color: $text-secondary;
+    &:hover {
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
     }
 
+    mat-icon {
+      margin-right: 12px !important;
+      color: #64748B !important;
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    /* Style spécifique pour le bouton Supprimer */
     &.delete-item {
-      color: #ef4444;
+      color: #DC2626 !important;
+      margin-top: 4px !important;
 
       mat-icon {
-        color: #ef4444;
+        color: #DC2626 !important;
+      }
+
+      &:hover {
+        background-color: #FEF2F2 !important;
       }
     }
   }
-}
 
-// Mobile Responsive Styles
-@media (max-width: 768px) {
-  .page-container {
-    padding: 1rem;
-  }
-
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
-
-    .create-btn {
-      width: 100%;
-    }
-  }
-
-  .controls-bar {
-    .search-container {
-      max-width: 100%;
-    }
+  /* Ligne de séparation dans le menu */
+  .mat-divider {
+    border-top-color: #F1F5F9 !important;
+    margin: 4px 0 !important;
   }
 }

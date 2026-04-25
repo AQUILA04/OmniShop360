@@ -32,6 +32,7 @@ import { filter } from 'rxjs/operators';
       height: 100vh;
       overflow: hidden;
       position: relative;
+      background-color: var(--color-background);
     }
 
     .sidebar-wrapper {
@@ -47,26 +48,27 @@ import { filter } from 'rxjs/operators';
       flex: 1;
       display: flex;
       flex-direction: column;
-      background-color: #F1F5F9; /* Light gray background for content area */
       overflow: hidden;
-      width: 100%;
+      min-width: 0;
     }
 
     .content-wrapper {
       flex: 1;
       overflow-y: auto;
-      padding: 1.5rem;
+      padding: var(--space-6);
+      background-color: var(--color-background);
     }
 
     /* Mobile Responsive Styles */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .sidebar-wrapper {
         position: fixed;
         top: 0;
         left: 0;
         height: 100%;
+        width: var(--sidebar-width);
         transform: translateX(-100%);
-        transition: transform 0.3s ease-in-out;
+        transition: transform var(--transition-slow);
       }
 
       .sidebar-wrapper.open {
@@ -77,15 +79,23 @@ import { filter } from 'rxjs/operators';
         display: block;
         position: fixed;
         top: 0;
-        left: 250px; /* Width of sidebar */
+        left: var(--sidebar-width);
         right: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(25, 27, 38, 0.4);
+        backdrop-filter: blur(4px);
         width: 100vw;
+        z-index: -1;
       }
 
       .content-wrapper {
-        padding: 1rem;
+        padding: var(--space-4);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .content-wrapper {
+        padding: var(--space-3);
       }
     }
   `]
@@ -95,7 +105,6 @@ export class MainLayoutComponent implements OnInit {
   private router = inject(Router);
 
   ngOnInit() {
-    // Close sidebar on route change (mobile)
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {

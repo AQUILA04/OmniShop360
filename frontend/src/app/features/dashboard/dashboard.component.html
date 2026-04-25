@@ -1,83 +1,112 @@
 <div class="dashboard">
-    <!-- Header -->
-    <div class="dashboard__header">
-        <div class="dashboard__header-text">
-            <h1 class="dashboard__title">Tableau de bord</h1>
-            <p class="dashboard__subtitle">Vue d'ensemble des performances commerciales</p>
-        </div>
-        <div class="dashboard__actions">
-            <button mat-stroked-button (click)="exportReport('PDF')" [disabled]="isExporting">
-                <mat-icon>picture_as_pdf</mat-icon> Export PDF
-            </button>
-            <button mat-stroked-button (click)="exportReport('EXCEL')" [disabled]="isExporting">
-                <mat-icon>table_chart</mat-icon> Export Excel
-            </button>
-        </div>
+  <div class="dashboard-header">
+    <div class="dashboard-header-text">
+      <h1 class="dashboard-title">Tableau de bord</h1>
+      <p class="dashboard-subtitle">Vue d'ensemble de votre boutique</p>
+    </div>
+    <div class="dashboard-actions">
+      <button class="btn btn-secondary" (click)="exportReport('PDF')" [disabled]="isExporting">
+        Export Report
+      </button>
+      <button class="btn btn-primary" (click)="loadDashboard()">
+        Refresh Stats
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-row">
+      <div class="filter-field">
+        <label class="filter-label">Date début</label>
+        <input type="date" [(ngModel)]="fromDate" (change)="onFilterChange()" class="filter-input">
+      </div>
+
+      <div class="filter-field">
+        <label class="filter-label">Date fin</label>
+        <input type="date" [(ngModel)]="toDate" (change)="onFilterChange()" class="filter-input">
+      </div>
+
+      <div class="filter-field" *ngIf="isTenantAdmin">
+        <label class="filter-label">Boutique</label>
+        <select [(ngModel)]="selectedShopId" (change)="loadDashboard()" class="filter-select">
+          <option value="">Toutes les boutiques</option>
+          <option *ngFor="let shop of shops" [value]="shop.id">
+            {{ shop.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-loading" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Chargement des données...</p>
+  </div>
+
+  <div class="kpi-grid" *ngIf="!isLoading && summary">
+    <app-kpi-card
+      title="CHIFFRE D'AFFAIRES"
+      [value]="summary.totalRevenue"
+      color="primary"
+      [isCurrency]="true"
+      subtitle="Revenu journalier actualisé"
+      trend="+12%"
+      [trendValue]="12">
+      <svg slot="icon" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+        <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
+        <path d="M3 10H21M3 14H21" stroke="currentColor" stroke-width="2" stroke-dasharray="2 4"/>
+      </svg>
+    </app-kpi-card>
+
+    <app-kpi-card
+      title="TRANSACTIONS"
+      [value]="summary.transactionCount"
+      color="primary"
+      subtitle="Nombre de ventes totales"
+      trend="Stable"
+      [trendValue]="0">
+      <svg slot="icon" viewBox="0 0 24 24" fill="none">
+        <rect x="5" y="4" width="14" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+        <path d="M9 8H15M9 12H15M9 16H11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </app-kpi-card>
+
+    <app-kpi-card
+      title="PANIER MOYEN"
+      [value]="summary.averageBasket"
+      color="warning"
+      [isCurrency]="true"
+      subtitle="Valeur par ticket client"
+      trend="+5.2%"
+      [trendValue]="5.2">
+      <svg slot="icon" viewBox="0 0 24 24" fill="none">
+        <path d="M3 3H5L6 14C6.11111 14.8889 6.88889 15.5 7.88889 15.5H18.1111C19.1111 15.5 19.8889 14.8889 20 14L21 6H5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="9" cy="20" r="1.5" fill="currentColor"/>
+        <circle cx="17" cy="20" r="1.5" fill="currentColor"/>
+      </svg>
+    </app-kpi-card>
+
+    <app-kpi-card
+      title="STOCK LOW"
+      value="Alertes Stock"
+      color="error"
+      subtitle="Produits nécessitant réapprovisionnement"
+      trend="8 Alerts"
+      [trendValue]="-1">
+      <svg slot="icon" viewBox="0 0 24 24" fill="none">
+        <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </app-kpi-card>
+  </div>
+
+  <div class="charts-grid" *ngIf="!isLoading && summary">
+    <div class="chart-card" style="padding:0; border: none; box-shadow: none; background: transparent;">
+      <app-sales-chart [salesEvolution]="summary.salesEvolution"></app-sales-chart>
     </div>
 
-    <!-- Filters -->
-    <mat-card class="dashboard__filters">
-        <div class="filters-row">
-            <mat-form-field appearance="outline" class="filter-field">
-                <mat-label>Date début</mat-label>
-                <input matInput type="date" [(ngModel)]="fromDate" (change)="onFilterChange()">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="filter-field">
-                <mat-label>Date fin</mat-label>
-                <input matInput type="date" [(ngModel)]="toDate" (change)="onFilterChange()">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="filter-field" *ngIf="isTenantAdmin">
-                <mat-label>Boutique</mat-label>
-                <mat-select [(ngModel)]="selectedShopId" (selectionChange)="onFilterChange()">
-                    <mat-option [value]="''">Toutes les boutiques</mat-option>
-                    <mat-option *ngFor="let shop of shops" [value]="shop.id">
-                        {{ shop.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <button mat-flat-button color="primary" class="filter-btn" (click)="loadDashboard()">
-                <mat-icon>refresh</mat-icon> Actualiser
-            </button>
-        </div>
-    </mat-card>
-
-    <!-- Loading Spinner -->
-    <div class="dashboard__loading" *ngIf="isLoading">
-        <mat-spinner diameter="48"></mat-spinner>
-        <p>Chargement des données...</p>
+    <div class="chart-card" style="padding:0; border: none; box-shadow: none; background: transparent;">
+      <app-top-products-chart [topProducts]="summary.topProducts"></app-top-products-chart>
     </div>
-
-    <!-- KPI Cards -->
-    <div class="dashboard__kpis" *ngIf="!isLoading && summary">
-        <app-kpi-card title="Chiffre d'affaires" [value]="summary.totalRevenue" icon="payments" color="#6366f1"
-            [isCurrency]="true" [subtitle]="periodLabel">
-        </app-kpi-card>
-
-        <app-kpi-card title="Transactions" [value]="summary.transactionCount" icon="receipt_long" color="#0ea5e9"
-            [subtitle]="periodLabel">
-        </app-kpi-card>
-
-        <app-kpi-card title="Panier moyen" [value]="summary.averageBasket" icon="shopping_cart" color="#10b981"
-            [isCurrency]="true" [subtitle]="periodLabel">
-        </app-kpi-card>
-    </div>
-
-    <!-- Charts -->
-    <div class="dashboard__charts" *ngIf="!isLoading && summary">
-        <app-sales-chart [salesEvolution]="summary.salesEvolution">
-        </app-sales-chart>
-
-        <app-top-products-chart [topProducts]="summary.topProducts">
-        </app-top-products-chart>
-    </div>
-
-    <!-- Empty State -->
-    <div class="dashboard__empty" *ngIf="!isLoading && !summary">
-        <mat-icon class="empty-icon">analytics</mat-icon>
-        <h2>Aucune donnée disponible</h2>
-        <p>Effectuez des ventes pour voir vos statistiques apparaître ici.</p>
-    </div>
+  </div>
 </div>

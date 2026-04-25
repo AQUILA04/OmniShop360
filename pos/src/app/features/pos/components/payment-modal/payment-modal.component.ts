@@ -1,411 +1,391 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CheckoutRequest } from '../../../../core/models/sale.model';
+import { FormsModule } from '@angular/forms';
 import { CartItem } from '../../../../core/services/cart.service';
 
 @Component({
     selector: 'app-payment-modal',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
     template: `
-    <div class="modal-overlay" *ngIf="isOpen" (click)="close()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        
-        <div class="modal-split-layout">
-            <!-- LEFT COLUMN: Order Summary -->
-            <div class="modal-sidebar">
-                <div class="sidebar-header">
-                    <span class="icon">🧾</span>
-                    <span class="order-id">COMMANDE #{{ orderId }}</span>
-                </div>
+    <div class="payment-modal" *ngIf="isOpen">
+      <div class="payment-modal-content">
+        <!-- Header -->
+        <div class="payment-header">
+          <h2 class="payment-title">Mode de paiement</h2>
+          <button class="close-btn" (click)="close()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
 
-                <div class="order-items-list">
-                    <div class="order-item" *ngFor="let item of cartItems">
-                        <span class="item-name">{{ item.productName }}</span>
-                        <span class="item-price">{{ (item.price * item.quantity) | currency:'EUR' }}</span>
-                    </div>
-                    <!-- Tax Row (if needed separately) -->
-                    <div class="order-item text-secondary margin-top-sm">
-                        <span>Taxe (20%)</span>
-                        <span>{{ tax | currency:'EUR' }}</span>
-                    </div>
-                </div>
+        <!-- Amount Display -->
+        <div class="amount-display">
+          <span class="amount-label">Montant à payer</span>
+          <span class="amount-value">{{ total | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
 
-                <div class="order-total-section">
-                    <span class="label">Total à payer</span>
-                    <span class="amount">{{ total | currency:'EUR' }}</span>
-                </div>
-                
-                <div class="sidebar-actions">
-                     <button class="btn-text">⑂ Partager le paiement</button>
-                     <button class="btn-text">🏷️ Ajouter une remise</button>
-                </div>
-            </div>
+        <!-- Numpad -->
+        <div class="numpad-section">
+          <div class="numpad-display">
+            <span class="currency">€</span>
+            <input type="text" [(ngModel)]="enteredAmount" class="numpad-input" readonly>
+          </div>
+          <div class="numpad-grid">
+            <button class="numpad-btn" *ngFor="let num of numpadNumbers" (click)="appendDigit(num)">{{ num }}</button>
+            <button class="numpad-btn numpad-btn-clear" (click)="clearAmount()">C</button>
+            <button class="numpad-btn" (click)="appendDigit('0')">0</button>
+            <button class="numpad-btn numpad-btn-backspace" (click)="backspace()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M21 4H8L1 12L8 20H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 14L14 10M14 14L18 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
 
-            <!-- RIGHT COLUMN: Payment Methods -->
-            <div class="modal-main">
-                <div class="main-header">
-                    <div class="header-text">
-                        <h2>Sélectionner le mode de paiement</h2>
-                        <p class="subtitle">Choisissez comment le client souhaite payer.</p>
-                    </div>
-                    <button class="close-btn" (click)="close()">×</button>
-                </div>
+        <!-- Payment Methods -->
+        <div class="payment-methods-section">
+          <span class="section-label">Méthode de paiement</span>
+          <div class="payment-methods-grid">
+            <button 
+              *ngFor="let method of paymentMethods" 
+              class="payment-method-btn"
+              [class.payment-method-selected]="selectedMethod === method.id"
+              (click)="selectMethod(method.id)"
+            >
+              <span class="payment-method-icon" [innerHTML]="method.icon"></span>
+              <span class="payment-method-name">{{ method.name }}</span>
+            </button>
+          </div>
+        </div>
 
-                <div class="payment-grid">
-                    <div 
-                        class="payment-card" 
-                        [class.active]="selectedMethod === 'CARD'"
-                        (click)="selectMethod('CARD')"
-                    >
-                        <div class="card-icon blue-bg">
-                            <!-- Credit Card SVG -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M21 4H3C1.89543 4 1 4.89543 1 6V18C1 19.1046 1.89543 20 3 20H21C22.1046 20 23 19.1046 23 18V6C23 4.89543 22.1046 4 21 4Z" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M1 10H23" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <span class="method-name">Carte Bancaire</span>
-                        <span class="method-desc">Visa, MC, Amex</span>
-                        <span class="badge-default" *ngIf="selectedMethod === 'CARD'">DÉFAUT</span>
-                    </div>
+        <!-- Cash Display (when cash selected) -->
+        <div class="cash-display" *ngIf="selectedMethod === 'CASH' && parseFloat(enteredAmount) > total">
+          <span class="cash-label">Monnaie à rendre</span>
+          <span class="cash-value">{{ getChange() | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
 
-                    <div 
-                        class="payment-card" 
-                        [class.active]="selectedMethod === 'CASH'"
-                        (click)="selectMethod('CASH')"
-                    >
-                         <div class="card-icon gray-bg">
-                            <!-- Cash SVG -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 1V23" stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3688 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <span class="method-name">Espèces</span>
-                        <span class="method-desc">Montant exact ou rendu</span>
-                    </div>
-
-                    <div 
-                        class="payment-card" 
-                        [class.active]="selectedMethod === 'MOBILE'"
-                        (click)="selectMethod('MOBILE')"
-                    >
-                         <div class="card-icon gray-bg">
-                            <!-- Mobile SVG -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 12H12.01" stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M7 21H17C18.1046 21 19 20.1046 19 19V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21Z" stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <span class="method-name">Mobile Money</span>
-                        <span class="method-desc">Orange, MTN, Wave</span>
-                    </div>
-                     <div class="payment-card disabled">
-                         <div class="card-icon gray-bg">
-                            <!-- Gift SVG -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20 12V22H4V12" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M22 7H2V12H22V7Z" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 22V7" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 7H7.5C6.83696 7 6.20107 6.73661 5.73223 6.26777C5.26339 5.79893 5 5.16304 5 4.5C5 3.83696 5.26339 3.20107 5.73223 2.73223C6.20107 2.26339 6.83696 2 7.5 2C11 2 12 7 12 7Z" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 7H16.5C17.163 7 17.7989 6.73661 18.2678 6.26777C18.7366 5.79893 19 5.16304 19 4.5C19 3.83696 18.7366 3.20107 18.2678 2.73223C17.7989 2.26339 17.163 2 16.5 2C13 2 12 7 12 7Z" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <span class="method-name text-muted">Carte Cadeau</span>
-                        <span class="method-desc text-muted">Bientôt disponible</span>
-                    </div>
-                </div>
-
-                <div class="modal-footer layout-row">
-                    <button class="btn-text-danger" (click)="close()">✖ Annuler</button>
-                    <div class="footer-right">
-                        <button class="btn btn-secondary" (click)="close()">Mettre en attente</button>
-                        <button class="btn btn-primary-dark" (click)="confirm()">Confirmer le Paiement</button>
-                    </div>
-                </div>
-            </div>
+        <!-- Actions -->
+        <div class="payment-actions">
+          <button class="btn-cancel" (click)="close()">Annuler</button>
+          <button 
+            class="btn-confirm" 
+            (click)="confirm()"
+            [disabled]="!canConfirm()"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="currentColor" stroke-width="2"/>
+              <path d="M22 4L12 14.01l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Valider {{ total | currency:'EUR':'symbol':'1.2-2' }}
+          </button>
         </div>
       </div>
     </div>
   `,
     styles: [`
-    .modal-overlay {
+    .payment-modal {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(31, 41, 55, 0.7); /* Darker overlay */
-      z-index: 1000;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(25, 27, 38, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(4px);
+      z-index: var(--z-modal-backdrop);
+      padding: var(--space-4);
     }
 
-    .modal-content {
-      background-color: white;
-      border-radius: var(--radius-lg);
-      width: 900px;
-      max-width: 95%;
-      height: 600px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      overflow: hidden;
-      animation: zoomIn 0.2s ease-out;
+    .payment-modal-content {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlideUp 0.3s ease-out;
     }
 
-    @keyframes zoomIn {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    
-    .modal-split-layout {
-        display: flex;
-        height: 100%;
-    }
-
-    /* SIDEBAR (LEFT) */
-    .modal-sidebar {
-        width: 35%;
-        background-color: #F8FAFC; /* Very light gray/blue */
-        padding: 32px;
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid var(--color-border);
-    }
-    
-    .sidebar-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 32px;
-        color: var(--color-text-secondary);
-        font-weight: 600;
-        font-size: 12px;
-        letter-spacing: 1px;
-    }
-    
-    .order-items-list {
-        flex: 1;
-        overflow-y: auto;
+    @keyframes modalSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .order-item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 12px;
-        font-size: 14px;
-        color: var(--color-text-primary);
-    }
-    
-    .text-secondary {
-        color: var(--color-text-secondary);
-    }
-    
-    .margin-top-sm {
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 1px dashed var(--color-border);
+    .payment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4);
+      border-bottom: none;
     }
 
-    .order-total-section {
-        margin-top: auto;
-        padding-top: 32px;
-    }
-    
-    .label {
-        display: block;
-        font-size: 14px;
-        color: var(--color-text-secondary);
-        margin-bottom: 4px;
-    }
-    
-    .amount {
-        font-size: 42px;
-        font-weight: 800;
-        color: #2563EB; /* Bright Blue */
-        letter-spacing: -1px;
+    .payment-title {
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      margin: 0;
     }
 
-    .sidebar-actions {
-        display: flex;
-        gap: 16px;
-        margin-top: 24px;
-    }
-    
-    .btn-text {
-        background: none;
-        border: none;
-        color: #2563EB;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        padding: 0;
-    }
-
-    /* MAIN CONTENT (RIGHT) */
-    .modal-main {
-        width: 65%;
-        padding: 32px 48px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .main-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 40px;
-    }
-    
-    .header-text h2 {
-        font-size: 20px;
-        font-weight: 700;
-        color: #111827;
-        margin: 0 0 4px 0;
-    }
-    
-    .subtitle {
-        color: var(--color-text-secondary);
-        font-size: 14px;
-        margin: 0;
-    }
-    
     .close-btn {
-        background: none;
-        border: none;
-        font-size: 24px;
-        color: var(--color-text-secondary);
-        cursor: pointer;
-        padding: 4px;
-        line-height: 1;
-    }
-    
-    .payment-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-        margin-bottom: auto;
-    }
-    
-    .payment-card {
-        border: 2px solid var(--color-border);
-        border-radius: var(--radius-lg);
-        padding: 24px;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        position: relative;
-    }
-    
-    .payment-card:hover {
-        border-color: #BFDBFE;
-    }
-    
-    .payment-card.active {
-        border-color: #2563EB;
-        background-color: #EFF6FF; /* Very light blue */
-    }
-    
-    .card-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 16px;
-    }
-    
-    .blue-bg { background-color: #DBEAFE; }
-    .gray-bg { background-color: #F3F4F6; }
-    
-    .method-name {
-        font-weight: 700;
-        font-size: 16px;
-        color: #111827;
-        margin-bottom: 4px;
-    }
-    
-    .method-desc {
-        font-size: 12px;
-        color: var(--color-text-secondary);
-    }
-    
-    .badge-default {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        background-color: #2563EB;
-        color: white;
-        font-size: 10px;
-        font-weight: 700;
-        padding: 2px 6px;
-        border-radius: 4px;
-    }
-    
-    .disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-    
-    .text-muted {
-        color: #9CA3AF;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
     }
 
-    .modal-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 32px;
-        border-top: 1px solid var(--color-border);
+    .close-btn:hover {
+      background-color: var(--color-surface-container-low);
+      color: var(--color-text-primary);
     }
-    
-    .btn-text-danger {
-        background: none;
-        border: none;
-        color: #EF4444;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+
+    .amount-display {
+      text-align: center;
+      padding: var(--space-6) var(--space-4);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%);
+      color: var(--color-text-on-primary);
     }
-    
-    .footer-right {
-        display: flex;
-        gap: 12px;
+
+    .amount-label {
+      display: block;
+      font-size: var(--font-size-small);
+      opacity: 0.9;
+      margin-bottom: var(--space-1);
     }
-    
-    .btn-secondary {
-        background: #F3F4F6;
-        color: #374151;
-        border: none;
-        padding: 10px 20px;
-        border-radius: var(--radius-md);
-        font-weight: 600;
-        cursor: pointer;
+
+    .amount-value {
+      font-size: var(--font-size-display);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-tight);
     }
-    
-    .btn-primary-dark {
-        background: #111827; /* Near black */
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        border-radius: var(--radius-md);
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+    .numpad-section {
+      padding: var(--space-4);
     }
-    
-    .btn-primary-dark:hover {
-        background: black;
+
+    .numpad-display {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: var(--space-4);
+      background-color: var(--color-surface-container-low);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-4);
     }
-    
+
+    .currency {
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      margin-right: var(--space-2);
+    }
+
+    .numpad-input {
+      font-size: var(--font-size-display);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      text-align: right;
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+    }
+
+    .numpad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+    }
+
+    .numpad-btn {
+      height: var(--touch-target-min);
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      background-color: var(--color-surface-container-low);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .numpad-btn:hover {
+      background-color: var(--color-primary-light);
+    }
+
+    .numpad-btn:active {
+      transform: scale(0.95);
+    }
+
+    .numpad-btn-clear {
+      background-color: var(--color-error-light);
+      color: var(--color-error);
+    }
+
+    .numpad-btn-backspace {
+      background-color: var(--color-surface-container-low);
+      color: var(--color-text-secondary);
+    }
+
+    .payment-methods-section {
+      padding: var(--space-4);
+      padding-top: 0;
+    }
+
+    .section-label {
+      display: block;
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-3);
+    }
+
+    .payment-methods-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+    }
+
+    .payment-method-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      min-height: var(--touch-target-min);
+      padding: var(--space-4);
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
+      background-color: var(--color-surface-container-low);
+      border: 2px solid transparent;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .payment-method-btn:hover {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary-light);
+    }
+
+    .payment-method-selected {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary-light);
+    }
+
+    .payment-method-icon {
+      font-size: 24px;
+    }
+
+    .payment-method-name {
+      font-size: var(--font-size-caption);
+    }
+
+    .cash-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-4);
+      margin: 0 var(--space-4);
+      background-color: var(--color-success-light);
+      border-radius: var(--radius-lg);
+    }
+
+    .cash-label {
+      font-size: var(--font-size-small);
+      color: var(--color-success);
+    }
+
+    .cash-value {
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-success);
+    }
+
+    .payment-actions {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-4);
+    }
+
+    .btn-cancel {
+      flex: 1;
+      min-height: var(--touch-target-min);
+      padding: var(--space-4);
+      font-size: var(--font-size-body);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      background-color: var(--color-surface-container-low);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .btn-cancel:hover {
+      background-color: var(--color-error-light);
+      color: var(--color-error);
+    }
+
+    .btn-confirm {
+      flex: 2;
+      min-height: var(--touch-target-min);
+      padding: var(--space-4);
+      font-size: var(--font-size-body);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-on-primary);
+      background: linear-gradient(135deg, var(--color-success) 0%, #45a87a 100%);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+    }
+
+    .btn-confirm:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(81, 188, 143, 0.4);
+    }
+
+    .btn-confirm:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 640px) {
+      .payment-modal-content {
+        max-height: 95vh;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-width: 100%;
+      }
+    }
   `]
 })
 export class PaymentModalComponent {
@@ -414,15 +394,78 @@ export class PaymentModalComponent {
     @Input() subtotal = 0;
     @Input() tax = 0;
     @Input() cartItems: CartItem[] = [];
-    @Input() orderId = Math.floor(Math.random() * 10000); // Random Order ID for display
 
     @Output() closeEvent = new EventEmitter<void>();
-    @Output() checkoutEvent = new EventEmitter<string>();
+    @Output() checkoutEvent = new EventEmitter<any>();
 
-    selectedMethod = 'CARD';
+    selectedMethod = 'CASH';
+    enteredAmount = '0';
+
+    numpadNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    paymentMethods = [
+      { 
+        id: 'CASH', 
+        name: 'Espèces',
+        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 1V23M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3688 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+      },
+      { 
+        id: 'CARD', 
+        name: 'Carte',
+        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="1" y="4" width="22" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M1 10H23" stroke="currentColor" stroke-width="2"/></svg>'
+      },
+      { 
+        id: 'MOBILE', 
+        name: 'Mobile',
+        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="2"/><path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+      },
+      { 
+        id: 'MULTI', 
+        name: 'Multi-paiements',
+        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      }
+    ];
 
     selectMethod(method: string) {
         this.selectedMethod = method;
+        if (method === 'CARD' || method === 'MOBILE') {
+            this.enteredAmount = this.total.toFixed(2);
+        }
+    }
+
+    appendDigit(digit: string) {
+        if (this.enteredAmount === '0') {
+            this.enteredAmount = digit;
+        } else {
+            this.enteredAmount += digit;
+        }
+    }
+
+    clearAmount() {
+        this.enteredAmount = '0';
+    }
+
+    backspace() {
+        if (this.enteredAmount.length > 1) {
+            this.enteredAmount = this.enteredAmount.slice(0, -1);
+        } else {
+            this.enteredAmount = '0';
+        }
+    }
+
+    parseFloat(value: string): number {
+        return parseFloat(value) || 0;
+    }
+
+    getChange(): number {
+        return this.parseFloat(this.enteredAmount) - this.total;
+    }
+
+    canConfirm(): boolean {
+        if (this.selectedMethod === 'CASH') {
+            return this.parseFloat(this.enteredAmount) >= this.total;
+        }
+        return true;
     }
 
     close() {
@@ -430,6 +473,11 @@ export class PaymentModalComponent {
     }
 
     confirm() {
-        this.checkoutEvent.emit(this.selectedMethod);
+        const payment = {
+            method: this.selectedMethod,
+            amount: this.parseFloat(this.enteredAmount),
+            total: this.total
+        };
+        this.checkoutEvent.emit(payment);
     }
 }

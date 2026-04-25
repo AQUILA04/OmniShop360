@@ -29,6 +29,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 // Components
 import { GenericListComponent } from './components/generic-list/generic-list.component';
 import { GenericFormComponent } from './components/generic-form/generic-form.component';
+import { UiButtonComponent } from './components/ui-button/ui-button.component';
+import { UiCardComponent } from './components/ui-card/ui-card.component';
+import { UiInputComponent } from './components/ui-input/ui-input.component';
+import { UiKpiCardComponent } from './components/ui-kpi-card/ui-kpi-card.component';
+import { UiActionChipComponent } from './components/ui-action-chip/ui-action-chip.component';
+import { MobileCardListComponent } from './components/mobile-card-list/mobile-card-list.component';
+import {NgSelectModule} from "@ng-select/ng-select";
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -55,26 +62,39 @@ const MATERIAL_MODULES = [
   MatSlideToggleModule
 ];
 
-const COMPONENTS = [
+const DECLARATIONS = [
   GenericListComponent,
   GenericFormComponent
 ];
 
+const STANDALONE_COMPONENTS = [
+  UiButtonComponent,
+  UiCardComponent,
+  UiInputComponent,
+  UiKpiCardComponent,
+  UiActionChipComponent,
+  MobileCardListComponent
+];
+
 @NgModule({
   declarations: [
-    ...COMPONENTS
+    ...DECLARATIONS
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ...MATERIAL_MODULES
+    NgSelectModule,
+    ...MATERIAL_MODULES,
+    ...STANDALONE_COMPONENTS
   ],
   exports: [
     CommonModule,
     ReactiveFormsModule,
     NgxPermissionsModule,
+    NgSelectModule,
     ...MATERIAL_MODULES,
-    ...COMPONENTS
+    ...DECLARATIONS,
+    ...STANDALONE_COMPONENTS
   ]
 })
 export class SharedModule { }

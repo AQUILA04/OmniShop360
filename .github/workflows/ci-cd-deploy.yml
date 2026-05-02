@@ -109,13 +109,7 @@ jobs:
         run: |
           mkdir -p deploy/compose
           
-          # Export variables for envsubst
-          export BACKEND_IMAGE="${{ needs.resolve-images.outputs.backend_image }}"
-          export FRONTEND_IMAGE="${{ needs.resolve-images.outputs.frontend_image }}"
-          export POS_IMAGE="${{ needs.resolve-images.outputs.pos_image }}"
-          export KEYCLOAK_IMAGE="${{ needs.resolve-images.outputs.keycloak_image }}"
-          
-          cat > deploy/compose/docker-compose.yml << 'COMPOSE_EOF'
+          cat > deploy/compose/docker-compose.yml << EOF
           version: '3.8'
 
           services:
@@ -125,7 +119,7 @@ jobs:
               environment:
                 POSTGRES_DB: omnishop360
                 POSTGRES_USER: omnishop360
-                POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+                POSTGRES_PASSWORD: \${POSTGRES_PASSWORD}
               volumes:
                 - postgres_data:/var/lib/postgresql/data
               networks:
@@ -143,16 +137,16 @@ jobs:
               restart: unless-stopped
 
             keycloak:
-              image: ${KEYCLOAK_IMAGE}
+              image: ${{ needs.resolve-images.outputs.keycloak_image }}
               container_name: omnishop360-keycloak
               environment:
                 KC_BOOTSTRAP_ADMIN_USERNAME: admin
-                KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+                KC_BOOTSTRAP_ADMIN_PASSWORD: \${KEYCLOAK_ADMIN_PASSWORD}
                 KC_DB: postgres
                 KC_DB_URL: jdbc:postgresql://postgres:5432/omnishop360
                 KC_DB_USERNAME: omnishop360
-                KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
-                KC_HOSTNAME: ${KEYCLOAK_HOSTNAME:-localhost}
+                KC_DB_PASSWORD: \${POSTGRES_PASSWORD}
+                KC_HOSTNAME: \${KEYCLOAK_HOSTNAME:-localhost}
                 KC_HTTP_ENABLED: "true"
                 KC_PROXY: edge
               volumes:
@@ -164,7 +158,7 @@ jobs:
               restart: unless-stopped
 
             backend:
-              image: ${BACKEND_IMAGE}
+              image: ${{ needs.resolve-images.outputs.backend_image }}
               container_name: omnishop360-backend
               environment:
                 SPRING_PROFILES_ACTIVE: prod
@@ -172,11 +166,11 @@ jobs:
                 DB_PORT: 5432
                 DB_NAME: omnishop360
                 DB_USERNAME: omnishop360
-                DB_PASSWORD: ${POSTGRES_PASSWORD}
+                DB_PASSWORD: \${POSTGRES_PASSWORD}
                 REDIS_HOST: redis
                 REDIS_PORT: 6379
                 KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080
-                KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+                KEYCLOAK_CLIENT_SECRET: \${KEYCLOAK_CLIENT_SECRET}
               networks:
                 - omnishop360-network
               depends_on:
@@ -186,14 +180,14 @@ jobs:
               restart: unless-stopped
 
             frontend:
-              image: ${FRONTEND_IMAGE}
+              image: ${{ needs.resolve-images.outputs.frontend_image }}
               container_name: omnishop360-frontend
               networks:
                 - omnishop360-network
               restart: unless-stopped
 
             pos:
-              image: ${POS_IMAGE}
+              image: ${{ needs.resolve-images.outputs.pos_image }}
               container_name: omnishop360-pos
               networks:
                 - omnishop360-network
@@ -227,11 +221,7 @@ jobs:
           networks:
             omnishop360-network:
               driver: bridge
-          COMPOSE_EOF
-          
-          # Remplacer les variables avec envsubst
-          envsubst < deploy/compose/docker-compose.yml > deploy/compose/docker-compose.yml.tmp
-          mv deploy/compose/docker-compose.yml.tmp deploy/compose/docker-compose.yml
+          EOF
           
       - name: Prepare .env file
         run: |

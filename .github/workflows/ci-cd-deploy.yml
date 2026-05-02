@@ -108,7 +108,14 @@ jobs:
       - name: Prepare docker-compose.yml with resolved images
         run: |
           mkdir -p deploy/compose
-          cat > deploy/compose/docker-compose.yml << 'EOF'
+          
+          # Export variables for envsubst
+          export BACKEND_IMAGE="${{ needs.resolve-images.outputs.backend_image }}"
+          export FRONTEND_IMAGE="${{ needs.resolve-images.outputs.frontend_image }}"
+          export POS_IMAGE="${{ needs.resolve-images.outputs.pos_image }}"
+          export KEYCLOAK_IMAGE="${{ needs.resolve-images.outputs.keycloak_image }}"
+          
+          cat > deploy/compose/docker-compose.yml << 'COMPOSE_EOF'
           version: '3.8'
 
           services:
@@ -220,14 +227,12 @@ jobs:
           networks:
             omnishop360-network:
               driver: bridge
-          EOF
-
-          # Replace image placeholders with actual resolved images
-          sed -i "s|\${BACKEND_IMAGE}|${{ needs.resolve-images.outputs.backend_image }}|g" deploy/compose/docker-compose.yml
-          sed -i "s|\${FRONTEND_IMAGE}|${{ needs.resolve-images.outputs.frontend_image }}|g" deploy/compose/docker-compose.yml
-          sed -i "s|\${POS_IMAGE}|${{ needs.resolve-images.outputs.pos_image }}|g" deploy/compose/docker-compose.yml
-          sed -i "s|\${KEYCLOAK_IMAGE}|${{ needs.resolve-images.outputs.keycloak_image }}|g" deploy/compose/docker-compose.yml
-
+          COMPOSE_EOF
+          
+          # Remplacer les variables avec envsubst
+          envsubst < deploy/compose/docker-compose.yml > deploy/compose/docker-compose.yml.tmp
+          mv deploy/compose/docker-compose.yml.tmp deploy/compose/docker-compose.yml
+          
       - name: Prepare .env file
         run: |
           mkdir -p deploy/compose

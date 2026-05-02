@@ -174,10 +174,8 @@ jobs:
       - name: Prepare temp .env (contains secrets)
         run: |
           mkdir -p .github/temp_env
-          cat > .github/temp_env/.env <<EOF
-POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-KEYCLOAK_CLIENT_SECRET=${{ needs.infra.outputs.KEYCLOAK_CLIENT_SECRET }}
-EOF
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" > .github/temp_env/.env
+          echo "KEYCLOAK_CLIENT_SECRET=${{ needs.infra.outputs.KEYCLOAK_CLIENT_SECRET }}" >> .github/temp_env/.env
 
       - name: Copy .env to server
         uses: appleboy/scp-action@v0.1.4

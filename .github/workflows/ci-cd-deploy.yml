@@ -1,80 +1,100 @@
-name: CI/CD - Build & Deploy to Hetzner VPS
+name: CI/CD - Deploy to Hetzner VPS
 
 permissions:
   contents: read
-  packages: write
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Image tag to deploy (commit SHA or "latest")'
+        required: false
+        default: 'latest'
 
 env:
   REGISTRY: ghcr.io
   GHCR_OWNER: aquila04
-  IMAGE_PREFIX: ghcr.io/aquila04/omnishop
   REPO_NAME: omnishop360
 
 jobs:
-  build-and-push:
+  # ---------------------------------------------------------------------------
+  # Resolve the image tag to deploy
+  # ---------------------------------------------------------------------------
+  resolve-images:
     runs-on: ubuntu-latest
+    outputs:
+      backend_image: ${{ steps.resolve.outputs.backend_image }}
+      frontend_image: ${{ steps.resolve.outputs.frontend_image }}
+      pos_image: ${{ steps.resolve.outputs.pos_image }}
+      keycloak_image: ${{ steps.resolve.outputs.keycloak_image }}
+      deploy_tag: ${{ steps.resolve.outputs.deploy_tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      # Login GHCR - exactement comme dans cd.yml (commande docker login directe)
-      - name: Login to GHCR
+      - name: Resolve images to deploy
+        id: resolve
+        env:
+          GHCR_TOKEN: ${{ secrets.OMNISHOP_GHCR_TOKEN }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
         run: |
-          echo "${{ secrets.OMNISHOP_GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+          set -euo pipefail
+          REGISTRY="${{ env.REGISTRY }}"
+          OWNER="${{ env.GHCR_OWNER }}"
+          REPO="${{ env.REPO_NAME }}"
 
-      - name: Build & push backend
-        uses: docker/build-push-action@v4
-        with:
-          context: ./backend
-          file: ./backend/Dockerfile
-          push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}-backend:latest
-            ${{ env.IMAGE_PREFIX }}-backend:${{ github.sha }}
+          # Login to GHCR to check image existence
+          echo "$GHCR_TOKEN" | docker login "$REGISTRY" -u "$GHCR_USERNAME" --password-stdin
 
-      - name: Build & push frontend
-        uses: docker/build-push-action@v4
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}-frontend:latest
-            ${{ env.IMAGE_PREFIX }}-frontend:${{ github.sha }}
+          # Determine which tag to use
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.tag }}" ]; then
+            TAG="${{ github.event.inputs.tag }}"
+          else
+            TAG="${{ github.sha }}"
+          fi
+          echo "deploy_tag=$TAG" >> "$GITHUB_OUTPUT"
 
-      - name: Build & push pos
-        uses: docker/build-push-action@v4
-        with:
-          context: ./pos
-          file: ./pos/Dockerfile
-          push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}-pos:latest
-            ${{ env.IMAGE_PREFIX }}-pos:${{ github.sha }}
+          # Function to check if an image exists
+          check_image() {
+            local component="$1"
+            local image="$REGISTRY/$OWNER/$REPO/$component:$TAG"
+            if docker manifest inspect "$image" > /dev/null 2>&1; then
+              echo "$image"
+              return 0
+            else
+              # Fallback to latest if specific tag not found
+              local fallback_image="$REGISTRY/$OWNER/$REPO/$component:latest"
+              echo "WARNING: $image not found, using $fallback_image" >&2
+              echo "$fallback_image"
+              return 0
+            fi
+          }
 
-      - name: Build & push keycloak
-        uses: docker/build-push-action@v4
-        with:
-          context: ./keycloak
-          file: ./keycloak/Dockerfile
-          push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}-keycloak:latest
-            ${{ env.IMAGE_PREFIX }}-keycloak:${{ github.sha }}
+          BACKEND_IMAGE=$(check_image "backend")
+          FRONTEND_IMAGE=$(check_image "frontend")
+          POS_IMAGE=$(check_image "pos")
+          KEYCLOAK_IMAGE=$(check_image "keycloak")
 
+          echo "Backend image:   $BACKEND_IMAGE"
+          echo "Frontend image:  $FRONTEND_IMAGE"
+          echo "POS image:       $POS_IMAGE"
+          echo "Keycloak image:  $KEYCLOAK_IMAGE"
+
+          echo "backend_image=$BACKEND_IMAGE" >> "$GITHUB_OUTPUT"
+          echo "frontend_image=$FRONTEND_IMAGE" >> "$GITHUB_OUTPUT"
+          echo "pos_image=$POS_IMAGE" >> "$GITHUB_OUTPUT"
+          echo "keycloak_image=$KEYCLOAK_IMAGE" >> "$GITHUB_OUTPUT"
+
+  # ---------------------------------------------------------------------------
+  # Deploy to Hetzner VPS
+  # ---------------------------------------------------------------------------
   deploy:
-    needs: [build-and-push]
+    needs: [resolve-images]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -85,27 +105,138 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
 
-      - name: Prepare prod docker-compose (replace owner & tag)
+      - name: Prepare docker-compose.yml with resolved images
         run: |
           mkdir -p /tmp/compose
-          sed "s|__GHCR_OWNER__|${{ github.repository_owner }}|g; s|__TAG__|${{ github.sha }}|g" deploy/docker-compose.prod.yml > /tmp/compose/docker-compose.yml
+          cat > /tmp/compose/docker-compose.yml << 'EOF'
+          version: '3.8'
 
-      - name: Prepare temp .env (contains secrets)
+          services:
+            postgres:
+              image: postgres:16-alpine
+              container_name: omnishop360-postgres
+              environment:
+                POSTGRES_DB: omnishop360
+                POSTGRES_USER: omnishop360
+                POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+              volumes:
+                - postgres_data:/var/lib/postgresql/data
+              networks:
+                - omnishop360-network
+              restart: unless-stopped
+
+            redis:
+              image: redis:7-alpine
+              container_name: omnishop360-redis
+              command: redis-server --appendonly yes
+              volumes:
+                - redis_data:/data
+              networks:
+                - omnishop360-network
+              restart: unless-stopped
+
+            keycloak:
+              image: ${KEYCLOAK_IMAGE}
+              container_name: omnishop360-keycloak
+              environment:
+                KC_BOOTSTRAP_ADMIN_USERNAME: admin
+                KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+                KC_DB: postgres
+                KC_DB_URL: jdbc:postgresql://postgres:5432/omnishop360
+                KC_DB_USERNAME: omnishop360
+                KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+                KC_HOSTNAME: ${KEYCLOAK_HOSTNAME:-localhost}
+                KC_HTTP_ENABLED: "true"
+                KC_PROXY: edge
+              volumes:
+                - keycloak_data:/opt/keycloak/data
+              networks:
+                - omnishop360-network
+              depends_on:
+                - postgres
+              restart: unless-stopped
+
+            backend:
+              image: ${BACKEND_IMAGE}
+              container_name: omnishop360-backend
+              environment:
+                SPRING_PROFILES_ACTIVE: prod
+                DB_HOST: postgres
+                DB_PORT: 5432
+                DB_NAME: omnishop360
+                DB_USERNAME: omnishop360
+                DB_PASSWORD: ${POSTGRES_PASSWORD}
+                REDIS_HOST: redis
+                REDIS_PORT: 6379
+                KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080
+                KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+              networks:
+                - omnishop360-network
+              depends_on:
+                - postgres
+                - redis
+                - keycloak
+              restart: unless-stopped
+
+            frontend:
+              image: ${FRONTEND_IMAGE}
+              container_name: omnishop360-frontend
+              networks:
+                - omnishop360-network
+              restart: unless-stopped
+
+            pos:
+              image: ${POS_IMAGE}
+              container_name: omnishop360-pos
+              networks:
+                - omnishop360-network
+              restart: unless-stopped
+
+            caddy:
+              image: caddy:2-alpine
+              container_name: omnishop360-caddy
+              ports:
+                - "80:80"
+                - "443:443"
+              volumes:
+                - ./Caddyfile:/etc/caddy/Caddyfile
+                - caddy_data:/data
+                - caddy_config:/config
+              networks:
+                - omnishop360-network
+              depends_on:
+                - frontend
+                - backend
+                - pos
+              restart: unless-stopped
+
+          volumes:
+            postgres_data:
+            redis_data:
+            keycloak_data:
+            caddy_data:
+            caddy_config:
+
+          networks:
+            omnishop360-network:
+              driver: bridge
+          EOF
+
+          # Replace image placeholders with actual resolved images
+          sed -i "s|\${BACKEND_IMAGE}|${{ needs.resolve-images.outputs.backend_image }}|g" /tmp/compose/docker-compose.yml
+          sed -i "s|\${FRONTEND_IMAGE}|${{ needs.resolve-images.outputs.frontend_image }}|g" /tmp/compose/docker-compose.yml
+          sed -i "s|\${POS_IMAGE}|${{ needs.resolve-images.outputs.pos_image }}|g" /tmp/compose/docker-compose.yml
+          sed -i "s|\${KEYCLOAK_IMAGE}|${{ needs.resolve-images.outputs.keycloak_image }}|g" /tmp/compose/docker-compose.yml
+
+      - name: Prepare .env file
         run: |
           mkdir -p /tmp/compose
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" > /tmp/compose/.env
-          echo "KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" >> /tmp/compose/.env
-
-      - name: Copy compose files to server
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_SSH_USER }}
-          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          port: 22
-          source: "/tmp/compose/docker-compose.yml,/tmp/compose/.env"
-          target: "/srv/omnishop360/compose"
-          strip_components: 2
+          cat > /tmp/compose/.env << EOF
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+          KEYCLOAK_HOSTNAME=${{ secrets.KEYCLOAK_HOSTNAME }}
+          KEYCLOAK_CLIENT_SECRET=${{ secrets.KEYCLOAK_CLIENT_SECRET }}
+          EOF
 
       - name: Copy Caddyfile to server
         uses: appleboy/scp-action@v0.1.4
@@ -118,18 +249,18 @@ jobs:
           target: "/srv/omnishop360/compose"
           strip_components: 1
 
-      - name: Copy keycloak-config (Terraform) to server
+      - name: Copy docker-compose and .env to server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_SSH_USER }}
           key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           port: 22
-          source: "keycloak-config"
-          target: "/srv/omnishop360"
-          strip_components: 0
+          source: "/tmp/compose/docker-compose.yml,/tmp/compose/.env"
+          target: "/srv/omnishop360/compose"
+          strip_components: 2
 
-      - name: "Remote deploy: pull images, start stack & configure Keycloak"
+      - name: Deploy on remote server
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -141,75 +272,31 @@ jobs:
             set -e
             cd /srv/omnishop360/compose
 
-            # Login to GHCR on remote server before pulling
+            # Login to GHCR to pull images
             echo "${{ secrets.OMNISHOP_GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
-            # 1. Pull images & start stack
-            docker compose pull || true
+            # Pull latest images
+            docker compose pull
+
+            # Restart services with new images
             docker compose up -d
-            docker image prune -f || true
 
-            # 2. Wait for Keycloak to be ready (max 3 minutes)
-            echo "Waiting for Keycloak to be ready..."
-            for i in $(seq 1 18); do
-              if curl -fsS http://localhost:8080/realms/master > /dev/null 2>&1; then
-                echo "Keycloak is ready."
-                break
-              fi
-              echo "  ... attempt $i/18, retrying in 10s"
-              sleep 10
-            done
+            # Clean up old images
+            docker image prune -f
 
-            # Verify Keycloak is actually up before running Terraform
-            if ! curl -fsS http://localhost:8080/realms/master > /dev/null 2>&1; then
-              echo "ERROR: Keycloak did not become ready in time. Aborting."
-              exit 1
-            fi
+            echo "Deployment completed with tag: ${{ needs.resolve-images.outputs.deploy_tag }}"
 
-            # 3. Run Terraform against local Keycloak
-            cd /srv/omnishop360/keycloak-config
-
-            # Install Terraform if not present
-            if ! command -v terraform &> /dev/null; then
-              echo "Installing Terraform..."
-              curl -fsSL https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip -o /tmp/terraform.zip
-              unzip -o /tmp/terraform.zip -d /usr/local/bin
-              chmod +x /usr/local/bin/terraform
-              rm /tmp/terraform.zip
-            fi
-
-            terraform init -input=false -upgrade
-
-            terraform apply -auto-approve -input=false \
-              -var="keycloak_url=http://localhost:8080" \
-              -var="keycloak_admin_username=admin" \
-              -var="keycloak_admin_password=$KEYCLOAK_ADMIN_PASSWORD" \
-              -var="superadmin_email=$SUPERADMIN_EMAIL" \
-              -var="superadmin_initial_password=$SUPERADMIN_PASSWORD"
-
-            # 4. Extract client secret and append to .env
-            CLIENT_SECRET=$(terraform output -raw backend_client_secret 2>/dev/null || true)
-            if [ -n "$CLIENT_SECRET" ]; then
-              echo "KEYCLOAK_CLIENT_SECRET=$CLIENT_SECRET" >> /srv/omnishop360/compose/.env
-              echo "Keycloak client secret written to .env"
-            fi
-
-            # 5. Restart backend to pick up new KEYCLOAK_CLIENT_SECRET
-            cd /srv/omnishop360/compose
-            docker compose restart backend || true
-        env:
-          KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
-          SUPERADMIN_EMAIL: ${{ secrets.SUPERADMIN_EMAIL }}
-          SUPERADMIN_PASSWORD: ${{ secrets.SUPERADMIN_INITIAL_PASSWORD }}
-
-      - name: Post-deploy healthcheck
+      - name: Healthcheck
         env:
           SERVER_IP: ${{ secrets.SERVER_IP }}
         run: |
-          for i in $(seq 1 12); do
+          for i in $(seq 1 15); do
             if curl -fsS http://$SERVER_IP:8081/api/actuator/health > /dev/null 2>&1; then
-              echo "Health OK"; exit 0
+              echo "Health check passed"
+              exit 0
             fi
-            echo "Waiting for health... ($i)"; sleep 10
+            echo "Waiting for backend to be ready... ($i/15)"
+            sleep 10
           done
-          echo "Health check failed"; exit 1
+          echo "Health check failed"
+          exit 1

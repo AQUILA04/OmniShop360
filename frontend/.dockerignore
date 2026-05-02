@@ -1,0 +1,24 @@
+# Node modules and pnpm store
+node_modules
+**/node_modules
+.pnpm-store
+node_modules/.pnpm
+
+# Build artifacts and output
+dist
+build
+coverage
+
+# Lockfiles, logs, envs, IDE files, VCS
+npm-debug.log*
+pnpm-debug.log*
+.env
+.env.local
+.git
+.gitignore
+.idea
+.vscode
+.DS_Store
+
+# OS and editor files
+Thumbs.db

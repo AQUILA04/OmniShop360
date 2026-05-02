@@ -4,34 +4,119 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/docs/architecture-tech.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/architecture-tech.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/prd.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/prd.md" afterDir="false" />
+    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="Refonte du frontend et du backoffice.">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/ci-cd-deploy.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/rollback.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/DEPLOYMENT_README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/bootstrap.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/docker-compose.prod.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/rollback_local.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.agent/rules/frontend-rules.md" beforeDir="false" afterPath="$PROJECT_DIR$/.agent/rules/frontend-rules.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/core/auth/auth.interceptor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/core/auth/auth.interceptor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/core/models/sale.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/core/models/sale.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/core/services/cart.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/core/services/cart.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/core/services/customer.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/core/services/customer.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/cart-panel/cart-panel.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/cart-panel/cart-panel.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/payment-modal/payment-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/payment-modal/payment-modal.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/product-grid/product-grid.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/product-grid/product-grid.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/receipt-preview-modal/receipt-preview-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/receipt-preview-modal/receipt-preview-modal.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/success-modal/success-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/success-modal/success-modal.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.ts" afterDir="false" />
     </list>
+    <list id="28103352-43e2-4852-97fd-59c1c37de819" name="configs" comment="configs" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/kahonsu/Documents/GitHub/OmniShop360" value="36FZsOtq7U21YNwq4yPvMAbslU7" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="edit-panel" value="GPT-5 mini" />
+      <entry key="chat-panel" value="GPT-5 mini" />
+      <entry key="agent-panel" value="GPT-5 mini" />
+    </selectedModels>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="1331" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="sprint4-Analytics-Controller-Audit-Log-Controller-User-Controller-2-Analytics-Export-Audit-Logs-Vault-1" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "AQUILA04"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AQUILA04&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/AQUILA04/OmniShop360.git",
-    "accountId": "59a33b3f-1fae-416a-8425-1944993bf67e"
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/refonte-ui-and-epic-E" />
+                    <option name="lastUsedInstant" value="1776501848" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/add-theme-and-keycloak-frontend" />
+                    <option name="lastUsedInstant" value="1765797880" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="develop" />
+                    <option name="lastUsedInstant" value="1765737459" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/AQUILA04/OmniShop360.git&quot;,
+    &quot;accountId&quot;: &quot;59a33b3f-1fae-416a-8425-1944993bf67e&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="36FZsOtq7U21YNwq4yPvMAbslU7" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="false" />
@@ -39,27 +124,160 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Docker.dev.keycloak: Compose Deployment.executor": "Run",
+    "Docker.dev: Compose Deployment (1).executor": "Run",
+    "Docker.dev: Compose Deployment.executor": "Run",
+    "JUnit.CustomerControllerTest.executor": "Debug",
+    "JUnit.CustomerSpecificationTest.executor": "Debug",
+    "JUnit.SaleControllerTest.executor": "Debug",
+    "JUnit.SaleSpecificationTest.executor": "Debug",
+    "JUnit.ShopServiceTest.executor": "Debug",
+    "JUnit.StockControllerTest.executor": "Debug",
+    "JUnit.StockControllerTest.shouldGetInventoryWithAllSearchParameters.executor": "Debug",
+    "JUnit.StockResponseTest.executor": "Debug",
+    "JUnit.StockResponseTest.shouldReturnNullWhenStockIsNull.executor": "Debug",
+    "JUnit.StockServiceTest.executor": "Debug",
+    "JUnit.StockServiceTest.shouldRemoveStockSuccessfully.executor": "Debug",
+    "JUnit.StockSpecificationTest.executor": "Debug",
+    "Maven.omnishop-backend [clean,install...].executor": "Run",
+    "Maven.omnishop-backend [clean,install].executor": "Run",
+    "Maven.omnishop-backend [flyway:repair...].executor": "Run",
+    "Maven.omnishop-backend [verify].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
+    "Spring Boot.OmniShop360BackendApplication.executor": "Debug",
+    "augment.onboarding.workspace.first.indexed.C:/code/OmniShop360": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/refonte-ui-and-epic-E",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360",
+    "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360/.opencode",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.tabs",
     "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\Users\\kahonsu\\Documents\\GitHub\\OmniShop360\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecapSpentCounter">
+    <option name="endsOfQuotaMs" value="1771354809890" />
+    <option name="spentUsd" value="0.017974751" />
+  </component>
+  <component name="RecapUselessUpdatesCounter">
+    <option name="suspendCountdown" value="0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\.opencode" />
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\.agent\skills\ui-ux" />
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\backend\src\main\resources" />
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\keycloak\themes\omnishop360\login\resources\img" />
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\frontend\src\environments" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\frontend\src\assets" />
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\frontend\src" />
+      <recent name="C:\Users\kahonsu\Documents\GitHub\OmniShop360\keycloak\themes\omnishop360\login\resources\img" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.OmniShop360BackendApplication">
+    <configuration name="OmniShop360BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="ACTIVE_PROFILES" value="local" />
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="omnishop-backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.omnishop360.backend.OmniShop360BackendApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.omnishop360.backend.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="dev: Compose Deployment (1)" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="deploy/dev/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="dev: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="postgres" />
+              <option value="maildev" />
+              <option value="keycloak" />
+              <option value="redis" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="deploy/dev/docker-compose.yml" />
+          <option name="upDetach" value="false" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="dev.keycloak: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="keycloak" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="deploy/dev/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Docker.dev.keycloak: Compose Deployment" />
+      <item itemvalue="Docker.dev: Compose Deployment (1)" />
+      <item itemvalue="Docker.dev: Compose Deployment" />
+      <item itemvalue="Spring Boot.OmniShop360BackendApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.OmniShop360BackendApplication" />
+        <item itemvalue="Docker.dev: Compose Deployment" />
+        <item itemvalue="Docker.dev.keycloak: Compose Deployment" />
+        <item itemvalue="Docker.dev: Compose Deployment (1)" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
-        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.32098.37" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.32098.37" />
       </set>
     </attachedChunks>
   </component>
@@ -71,11 +289,142 @@
       <option name="presentableId" value="Default" />
       <updated>1764604486409</updated>
       <workItem from="1764604487534" duration="3407000" />
+      <workItem from="1765639206897" duration="2398000" />
+      <workItem from="1765773942892" duration="783000" />
+      <workItem from="1765774747496" duration="11319000" />
+      <workItem from="1765823473320" duration="29000" />
+      <workItem from="1765823564220" duration="5661000" />
+      <workItem from="1766400379287" duration="9660000" />
+      <workItem from="1766432664871" duration="11166000" />
+      <workItem from="1766490720579" duration="643000" />
+      <workItem from="1766513512191" duration="3758000" />
+      <workItem from="1767454547403" duration="4504000" />
+      <workItem from="1767682524633" duration="7667000" />
+      <workItem from="1767764823177" duration="5384000" />
+      <workItem from="1768195976344" duration="1526000" />
+      <workItem from="1769424464523" duration="10604000" />
+      <workItem from="1770013131581" duration="4851000" />
+      <workItem from="1770885899747" duration="1796000" />
+      <workItem from="1770897166754" duration="13517000" />
+      <workItem from="1771081552328" duration="1357000" />
+      <workItem from="1772898629708" duration="481000" />
+      <workItem from="1772899149559" duration="3705000" />
+      <workItem from="1774803192164" duration="352000" />
+      <workItem from="1775315213462" duration="2305000" />
+      <workItem from="1776237673908" duration="210000" />
+      <workItem from="1776238200770" duration="69000" />
+      <workItem from="1776403269712" duration="2771000" />
+      <workItem from="1776407029574" duration="13620000" />
+      <workItem from="1776449330972" duration="563000" />
+      <workItem from="1776501720903" duration="3356000" />
+      <workItem from="1776670432905" duration="8361000" />
+      <workItem from="1777112142973" duration="1142000" />
+      <workItem from="1777133398901" duration="4477000" />
+      <workItem from="1777274380825" duration="5200000" />
+      <workItem from="1777288197876" duration="1636000" />
+      <workItem from="1777362613869" duration="1190000" />
     </task>
+    <task id="LOCAL-00001">
+      <option name="closed" value="true" />
+      <created>1765798417093</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1765798417093</updated>
+    </task>
+    <task id="LOCAL-00002" summary="frontend setup update">
+      <option name="closed" value="true" />
+      <created>1765798479073</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1765798479073</updated>
+    </task>
+    <task id="LOCAL-00003" summary="sprint1: complete tenant management, test with backend, setup Generic service and base component for DRY architecture. fix keycloak integration.">
+      <option name="closed" value="true" />
+      <created>1766471174172</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1766471174172</updated>
+    </task>
+    <task id="LOCAL-00004" summary="sprint1: update changelog">
+      <option name="closed" value="true" />
+      <created>1766472499383</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1766472499384</updated>
+    </task>
+    <task id="LOCAL-00005" summary="sprint2: gestion des boutiques et produits (front)">
+      <option name="closed" value="true" />
+      <created>1767682702904</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1767682702904</updated>
+    </task>
+    <task id="LOCAL-00006" summary="sprint3: impl sprint 3 part 1">
+      <option name="closed" value="true" />
+      <created>1770886090164</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1770886090164</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Audit Log Controller Category Controller Product Controller Shop Controller Tenant Controller User Controller (v2)">
+      <option name="closed" value="true" />
+      <created>1771696701932</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1771696701932</updated>
+    </task>
+    <task id="LOCAL-00013" summary="[Sprint 4]: prdV2">
+      <option name="closed" value="true" />
+      <created>1772900909419</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1772900909419</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Création des nouvelles epics">
+      <option name="closed" value="true" />
+      <created>1774803373442</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1774803373443</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Refonte du frontend et du backoffice.">
+      <option name="closed" value="true" />
+      <created>1776501900104</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1776501900104</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="OmniShop360: [SETUP] configurer un theme personnaliser pour le thème keycloak et intgrer le flow de connexion keycloak au frontend" />
+    <MESSAGE value="frontend setup update" />
+    <MESSAGE value="sprint1: complete tenant management, test with backend, setup Generic service and base component for DRY architecture. fix keycloak integration." />
+    <MESSAGE value="sprint1: update changelog" />
+    <MESSAGE value="sprint2: US-005 &amp; US-006 : Gestion des Boutiques" />
+    <MESSAGE value="sprint3: cashier-customer-sale-and-Stock-controller.v1" />
+    <MESSAGE value="sprint3: cashier-customer-sale-and-Stock-controller.v1 : fix tests" />
+    <MESSAGE value="sprint3: Sale Controller, Shop Controller, Stock Controller, User Controller" />
+    <MESSAGE value="sprint4-Analytics-Controller-Audit-Log-Controller-User-Controller-2-Analytics-Export-Audit-Logs-Vault-1" />
+    <MESSAGE value="Audit Log Controller Category Controller Product Controller Shop Controller Tenant Controller User Controller (v2)" />
+    <MESSAGE value="[Sprint 4]: prdV2" />
+    <MESSAGE value="Création des nouvelles epics" />
+    <MESSAGE value="Refonte du frontend et du backoffice." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refonte du frontend et du backoffice." />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

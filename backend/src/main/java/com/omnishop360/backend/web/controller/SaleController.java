@@ -1,0 +1,162 @@
+package com.omnishop360.backend.web.controller;
+
+import com.omnishop360.backend.domain.entity.Sale;
+import com.omnishop360.backend.domain.service.SaleService;
+import com.omnishop360.backend.domain.service.StockService;
+import com.omnishop360.backend.web.dto.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/v1/sales")
+@RequiredArgsConstructor
+@Slf4j
+@Tag(name = "Sales", description = "API pour la gestion des ventes et transactions")
+public class SaleController {
+
+    private final SaleService saleService;
+    private final StockService stockService;
+
+    @PostMapping("/checkout")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Finaliser une vente", 
+               description = "Valide un panier, crée la vente et décrémente le stock")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Vente finalisée avec succès"),
+            @ApiResponse(responseCode = "400", description = "Données invalides ou stock insuffisant"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes"),
+            @ApiResponse(responseCode = "404", description = "Produit ou boutique non trouvé")
+    })
+    public ResponseEntity<SaleResponse> checkout(
+            @Valid @RequestBody CheckoutRequest request) {
+        log.info("Processing checkout with {} items", request.items().size());
+        SaleResponse response = saleService.checkout(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/products")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Rechercher les produits pour la vente",
+               description = "Liste paginée des produits avec stock de la boutique (nom, SKU, prix, quantités)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste récupérée avec succès"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes")
+    })
+    public ResponseEntity<PageResponse<StockResponse>> getProductsForSale(
+            Pageable pageable,
+            @Parameter(description = "Recherche par nom ou SKU")
+            @RequestParam(required = false) String search,
+            @Parameter(description = "Filtrer par code produit")
+            @RequestParam(required = false) String code,
+            @Parameter(description = "Filtrer par nom produit")
+            @RequestParam(required = false) String name,
+            @Parameter(description = "Filtrer par catégorie")
+            @RequestParam(required = false) UUID categoryId) {
+        StockSearchDto searchDto = StockSearchDto.builder()
+                .keyword(search)
+                .productCode(code)
+                .productName(name)
+                .categoryId(categoryId)
+                .build();
+        PageResponse<StockResponse> response = stockService.getInventory(searchDto, pageable);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Lister les ventes", 
+               description = "Récupère la liste paginée des ventes de la boutique")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste des ventes récupérée avec succès"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes")
+    })
+    public ResponseEntity<PageResponse<SaleResponse>> getSales(
+            Pageable pageable,
+            @Parameter(description = "ID du client")
+            @RequestParam(required = false) UUID customerId,
+            @Parameter(description = "Recherche par numéro de vente, nom client, email, téléphone")
+            @RequestParam(required = false) String keyword,
+            @Parameter(description = "Méthode de paiement")
+            @RequestParam(required = false) Sale.PaymentMethod paymentMethod,
+            @Parameter(description = "Statut de paiement")
+            @RequestParam(required = false) Sale.PaymentStatus paymentStatus,
+            @Parameter(description = "Statut de la vente")
+            @RequestParam(required = false) Sale.SaleStatus status,
+            @Parameter(description = "Date de début (format: yyyy-MM-dd)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @Parameter(description = "Date de fin (format: yyyy-MM-dd)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+
+        SaleSearchDto searchDto = SaleSearchDto.builder()
+                .customerId(customerId)
+                .keyword(keyword)
+                .paymentMethod(paymentMethod)
+                .paymentStatus(paymentStatus)
+                .status(status)
+                .fromDate(fromDate)
+                .toDate(toDate)
+                .build();
+
+        PageResponse<SaleResponse> response = saleService.getSales(searchDto, pageable);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{saleId}")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Récupérer une vente par ID", 
+               description = "Récupère les détails d'une vente spécifique")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Vente récupérée avec succès"),
+            @ApiResponse(responseCode = "404", description = "Vente non trouvée"),
+            @ApiResponse(responseCode = "403", description = "Permissions insuffisantes")
+    })
+    public ResponseEntity<SaleResponse> getSaleById(
+            @Parameter(description = "UUID de la vente")
+            @PathVariable UUID saleId) {
+        log.debug("Fetching sale: {}", saleId);
+        SaleResponse response = saleService.getSaleById(saleId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{saleId}/receipt")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Récupérer les données d'impression", description = "Retourne les données de reçu A4 ou thermique")
+    public ResponseEntity<ReceiptResponse> getReceipt(
+            @PathVariable UUID saleId,
+            @RequestParam(defaultValue = "THERMAL") ReceiptFormat format) {
+        return ResponseEntity.ok(saleService.getReceipt(saleId, format));
+    }
+
+    @GetMapping("/promotions/validate")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin', 'cashier')")
+    @Operation(summary = "Valider un code promotionnel")
+    public ResponseEntity<PromotionValidationResponse> validatePromotion(
+            @RequestParam String code,
+            @RequestParam BigDecimal subtotal) {
+        return ResponseEntity.ok(saleService.validatePromotion(code, subtotal));
+    }
+
+    @PostMapping("/promotions")
+    @PreAuthorize("hasAnyRole('tenant_admin', 'shop_admin')")
+    @Operation(summary = "Créer un code promotionnel")
+    public ResponseEntity<PromotionCodeResponse> createPromotionCode(
+            @Valid @RequestBody CreatePromotionCodeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(saleService.createPromotionCode(request));
+    }
+}

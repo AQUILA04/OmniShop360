@@ -1,0 +1,4 @@
+<app-generic-form [title]="pageTitle" [config]="formConfig" [isLoading]="isSubmitting" [formGroup]="form"
+    [mode]="'page'" [showBackButton]="true" [showFooter]="true" [actionsAlignment]="'space-between'"
+    [submitLabel]="getSubmitLabel()" (formSubmit)="onSubmit()" (formCancel)="cancel()">
+</app-generic-form>

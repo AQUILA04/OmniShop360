@@ -1,0 +1,37 @@
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-6">Paramètres du Tenant</h1>
+
+    <div *ngIf="isLoading" class="flex justify-center p-8">
+        <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <form *ngIf="!isLoading" [formGroup]="form" (ngSubmit)="onSubmit()"
+        class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Politique de Prix</h2>
+            <p class="text-gray-600 mb-4 text-sm">Définissez comment les prix sont gérés dans vos boutiques.</p>
+
+            <mat-radio-group formControlName="pricePolicy" class="flex flex-col gap-2">
+                <mat-radio-button value="GLOBAL_ENFORCED">
+                    <span class="font-medium">Strictement Global</span>
+                    <p class="text-xs text-gray-500 ml-8">Les boutiques appliquent strictement le prix catalogue. Aucune
+                        modification locale autorisée.</p>
+                </mat-radio-button>
+
+                <mat-radio-button value="LOCAL_ALLOWED">
+                    <span class="font-medium">Flexible Localement</span>
+                    <p class="text-xs text-gray-500 ml-8">Les boutiques peuvent surcharger le prix de vente (ex: Soldes
+                        locaux).</p>
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <div class="flex items-center justify-end mt-6 border-t pt-4">
+            <button mat-flat-button color="primary" type="submit" [disabled]="isSaving">
+                <span *ngIf="!isSaving">Enregistrer les préférences</span>
+                <span *ngIf="isSaving">Sauvegarde...</span>
+            </button>
+        </div>
+    </form>
+</div>

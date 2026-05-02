@@ -1,0 +1,41 @@
+<div class="details-container">
+  <div class="header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>{{ pageTitle }}</h1>
+    <span class="spacer"></span>
+    <button mat-raised-button color="primary" (click)="edit()">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && item">
+    <mat-card *ngFor="let section of sections" class="details-card">
+      <mat-card-header *ngIf="section.title">
+        <mat-card-title>{{ section.title }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="details-grid">
+          <div *ngFor="let field of section.fields" class="field-item">
+            <div class="field-label">{{ field.label }}</div>
+            <div class="field-value" [ngSwitch]="field.type">
+              <span *ngSwitchCase="'status'" class="status-badge" [ngClass]="getFieldValue(field, item).toLowerCase()">
+                {{ getFieldValue(field, item) }}
+              </span>
+              <span *ngSwitchCase="'date'">{{ getFieldValue(field, item) | date: (field.format || 'shortDate') }}</span>
+              <span *ngSwitchCase="'datetime'">{{ getFieldValue(field, item) | date: (field.format || 'short') }}</span>
+              <span *ngSwitchCase="'currency'">{{ getFieldValue(field, item) | currency }}</span>
+              <span *ngSwitchDefault>{{ getFieldValue(field, item) }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<app-generic-form
+  [title]="isEditMode ? 'Edit Tenant' : 'Create New Tenant'"
+  [subtitle]="isEditMode ? 'Update the company information' : 'Fill in the company and administrator information'"
+  [submitLabel]="isEditMode ? 'Update Tenant' : 'Create Tenant'"
+  [config]="formConfig"
+  [isLoading]="isLoading"
+  [formGroup]="form"
+  (formSubmit)="onFormSubmit($event)"
+  (formCancel)="cancel()">
+</app-generic-form>

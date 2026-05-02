@@ -1,0 +1,168 @@
+<div class="page-centered-container">
+
+  <div class="premium-page-header">
+    <h1>{{ pageTitle }}</h1>
+    <div class="header-actions">
+      <button type="button" class="btn-secondary" (click)="cancel()">
+        <mat-icon>arrow_back</mat-icon> Retour
+      </button>
+    </div>
+  </div>
+
+  <div class="premium-form-card" style="padding-top: 16px;">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <mat-tab-group class="premium-tabs" animationDuration="0ms">
+
+        <mat-tab label="Général">
+          <div class="form-grid" style="margin-top: 32px;">
+
+            <div class="field-container full-width">
+              <label class="premium-label" for="name">Nom du Produit <span class="required-asterisk">*</span></label>
+              <div class="input-wrapper">
+                <mat-icon class="input-icon">inventory_2</mat-icon>
+                <input type="text" id="name" formControlName="name" placeholder="Ex: T-Shirt Premium" class="premium-input has-icon" [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched">
+              </div>
+            </div>
+
+            <div class="field-container half-width">
+              <label class="premium-label" for="sku">SKU (Code Unique) <span class="required-asterisk">*</span></label>
+              <div class="input-wrapper">
+                <mat-icon class="input-icon">qr_code</mat-icon>
+                <input type="text" id="sku" formControlName="sku" placeholder="Ex: TSH-001" class="premium-input has-icon" [class.is-invalid]="form.get('sku')?.invalid && form.get('sku')?.touched">
+              </div>
+            </div>
+
+            <div class="field-container half-width">
+              <label class="premium-label" for="categoryId">Catégorie <span class="required-asterisk">*</span></label>
+              <div class="input-wrapper">
+                <mat-icon class="input-icon z-10">category</mat-icon>
+                <ng-select id="categoryId" formControlName="categoryId"
+                           [items]="(categories$ | async) || []"
+                           bindLabel="name"
+                           bindValue="id"
+                           placeholder="Sélectionnez une catégorie"
+                           class="premium-ng-select has-icon"
+                           [class.is-invalid]="form.get('categoryId')?.invalid && form.get('categoryId')?.touched"
+                           [searchable]="true" [clearable]="true">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="field-container full-width">
+              <label class="premium-label" for="description">Description</label>
+              <div class="input-wrapper">
+                <mat-icon class="input-icon" style="top: 14px;">description</mat-icon>
+                <textarea id="description" formControlName="description" rows="4" placeholder="Description détaillée du produit..." class="premium-textarea has-icon"></textarea>
+              </div>
+            </div>
+
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Prix & Marge">
+          <div class="form-grid" style="margin-top: 32px;">
+
+            <div class="field-container half-width">
+              <label class="premium-label" for="sellingPrice">Prix de Vente (€) <span class="required-asterisk">*</span></label>
+              <div class="input-wrapper">
+                <mat-icon class="input-icon">euro</mat-icon>
+                <input type="number" id="sellingPrice" formControlName="sellingPrice" placeholder="0.00" class="premium-input has-icon" [class.is-invalid]="form.get('sellingPrice')?.invalid && form.get('sellingPrice')?.touched">
+              </div>
+            </div>
+
+            <div class="field-container half-width" *ngIf="canSeePurchasePrice">
+              <label class="premium-label" for="purchasePrice">Prix d'Achat (€) - Confidentiel</label>
+              <div class="input-wrapper">
+                <mat-icon class="input-icon" style="color: #ef4444;">lock</mat-icon>
+                <input type="number" id="purchasePrice" formControlName="purchasePrice" placeholder="0.00" class="premium-input has-icon">
+              </div>
+              <div class="hint-message">Visible uniquement pour les Tenant Admins</div>
+            </div>
+
+            <div class="full-width" *ngIf="marginPercentage !== null && canSeePurchasePrice">
+              <div class="margin-indicator" [ngClass]="getMarginClass()">
+                <div class="margin-info">
+                  <mat-icon>trending_up</mat-icon>
+                  <span>Marge Brute Estimée</span>
+                </div>
+                <div class="margin-value">
+                  {{ marginPercentage | number:'1.2-2' }} %
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Variantes">
+          <div class="variants-section" style="margin-top: 32px;">
+
+            <div class="slide-toggle-wrapper mb-6">
+              <mat-slide-toggle formControlName="hasVariants" color="primary">
+                Ce produit a des variantes (Taille, Couleur, etc.)
+              </mat-slide-toggle>
+            </div>
+
+            <div *ngIf="form.get('hasVariants')?.value" formArrayName="variants" class="variants-list">
+              <div *ngFor="let variant of variants.controls; let i=index" [formGroupName]="i" class="variant-card">
+
+                <div class="variant-grid">
+                  <div class="field-container">
+                    <label class="premium-label">SKU Variante <span class="required-asterisk">*</span></label>
+                    <div class="input-wrapper">
+                      <mat-icon class="input-icon">tag</mat-icon>
+                      <input type="text" formControlName="sku" placeholder="Ex: TSH-001-L" class="premium-input has-icon">
+                    </div>
+                  </div>
+
+                  <div class="field-container">
+                    <label class="premium-label">Taille</label>
+                    <div class="input-wrapper">
+                      <mat-icon class="input-icon">straighten</mat-icon>
+                      <input type="text" formControlName="size" placeholder="Ex: L" class="premium-input has-icon">
+                    </div>
+                  </div>
+
+                  <div class="field-container">
+                    <label class="premium-label">Couleur</label>
+                    <div class="input-wrapper">
+                      <mat-icon class="input-icon">palette</mat-icon>
+                      <input type="text" formControlName="color" placeholder="Ex: Bleu" class="premium-input has-icon">
+                    </div>
+                  </div>
+
+                  <div class="variant-actions">
+                    <button type="button" class="btn-icon-danger" (click)="removeVariant(i)">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+              <button type="button" class="btn-secondary add-variant-btn" (click)="addVariant()">
+                <mat-icon>add_circle</mat-icon> Ajouter une variante
+              </button>
+            </div>
+
+          </div>
+        </mat-tab>
+
+      </mat-tab-group>
+
+      <div class="form-actions space-between mt-8">
+        <button type="button" class="btn-secondary" (click)="cancel()" [disabled]="isSubmitting">
+          Annuler
+        </button>
+
+        <button type="submit" class="btn-primary" [disabled]="form.invalid || isSubmitting">
+          <mat-icon *ngIf="!isSubmitting">save</mat-icon>
+          <mat-spinner diameter="20" *ngIf="isSubmitting" color="accent" style="margin-right: 8px;"></mat-spinner>
+          {{ isSubmitting ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

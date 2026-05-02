@@ -4,12 +4,33 @@ Ce projet contient le backend de l'application OmniShop360, développé avec Spr
 
 ## Architecture
 
-Le backend est conçu selon une architecture hexagonale (Ports & Adapters) pour une meilleure séparation des préoccupations et une testabilité accrue.
+Le backend suit une architecture hexagonale (Ports & Adapters) avec les couches suivantes :
 
-- **`domain`**: Contient le cœur de métier de l'application (entités, services de domaine, repositories).
-- **`api`**: Contient les contrôleurs REST et la gestion des exceptions (le port d'entrée).
-- **`infrastructure`**: Contient les implémentations concrètes des interfaces du domaine (persistence, intégration Keycloak, etc.).
-- **`config`**: Contient la configuration de l'application (sécurité, cache, etc.).
+```
+src/main/java/com/omnishop360/backend/
+├── domain/          # Entités métier et logique métier
+│   ├── entity/      # Entités JPA
+│   ├── repository/  # Interfaces de repository
+│   └── service/     # Services métier
+├── application/     # Cas d'utilisation et DTOs
+│   ├── dto/         # Data Transfer Objects
+│   └── usecase/     # Cas d'utilisation
+├── infrastructure/  # Implémentations techniques
+│   ├── adapter/     # Adaptateurs externes (Keycloak, Email, etc.)
+│   ├── config/      # Configurations Spring
+│   └── persistence/ # Implémentations JPA
+└── web/             # Couche présentation (REST API)
+    ├── controller/  # Contrôleurs REST
+    ├── dto/         # DTOs spécifiques à l'API
+    └── exception/   # Gestion des exceptions
+```
+
+### Principes de l'architecture hexagonale
+
+- **Domain** : Cœur métier indépendant de toute technologie. Contient les entités, la logique métier et les interfaces de repository.
+- **Application** : Orchestre les cas d'utilisation en utilisant les services du domaine. Contient les DTOs et la logique d'application.
+- **Infrastructure** : Implémente les détails techniques (JPA, Keycloak, Email, etc.) et les configurations Spring.
+- **Web** : Couche de présentation qui expose l'API REST. Dépend de la couche application, pas du domaine directement.
 
 ## Fonctionnalités Clés
 
@@ -53,7 +74,8 @@ L'API sera accessible à l'adresse `http://localhost:8081/api`.
 
 - **Actuator** : `http://localhost:8081/api/actuator`
 - **Health Check** : `http://localhost:8081/api/actuator/health`
-- **Swagger/OpenAPI (à ajouter)** : `http://localhost:8081/api/swagger-ui.html`
+- **Swagger UI** : `http://localhost:8081/api/swagger-ui.html`
+- **OpenAPI JSON** : `http://localhost:8081/v3/api-docs`
 
 ## Migrations de Base de Données
 

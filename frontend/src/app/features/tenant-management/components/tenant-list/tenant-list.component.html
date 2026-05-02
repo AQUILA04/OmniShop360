@@ -1,0 +1,19 @@
+<app-generic-list
+  [pageTitle]="pageTitle"
+  [isLoading]="isLoading"
+  [data]="data"
+  [columnsConfig]="columnsConfig"
+  [resultsLength]="resultsLength"
+  [specificActionsTemplate]="specificActions"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  (searchChange)="onSearchChange($event)"
+  (action)="onAction($event)">
+</app-generic-list>
+
+<ng-template #specificActions let-tenant>
+  <button mat-menu-item (click)="toggleStatus(tenant)">
+    <mat-icon>{{tenant.status === 'ACTIVE' ? 'block' : 'check_circle'}}</mat-icon>
+    <span>{{tenant.status === 'ACTIVE' ? 'Suspend' : 'Activate'}}</span>
+  </button>
+</ng-template>

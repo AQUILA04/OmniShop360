@@ -1,0 +1,13 @@
+<app-generic-form
+  [title]="pageTitle"
+  mode="page"
+  [showBackButton]="true"
+  actionsAlignment="space-between"
+  [config]="formConfig"
+  [formGroup]="form"
+  [isLoading]="isSubmitting"
+  submitLabel="Enregistrer"
+  cancelLabel="Annuler"
+  (formSubmit)="onGenericFormSubmit($event)"
+  (formCancel)="cancel()">
+</app-generic-form>

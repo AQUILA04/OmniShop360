@@ -1,0 +1,16 @@
+
+<app-generic-list
+  [pageTitle]="pageTitle"
+  [isLoading]="isLoading"
+  [data]="data"
+  [columnsConfig]="columnsConfig"
+  [resultsLength]="resultsLength"
+  [showCreateButton]="false"
+  [showDetailsButton]="false"
+  [showEditButton]="false"
+  [showDeleteButton]="false"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  (searchChange)="onSearchChange($event)"
+  (action)="onAction($event)">
+</app-generic-list>

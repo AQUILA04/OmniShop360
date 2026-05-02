@@ -1,0 +1,91 @@
+<div [class.page-centered-container]="mode === 'page'" [class.w-full]="mode === 'card'">
+
+  <div *ngIf="mode === 'page'" class="premium-page-header">
+    <h1>{{ title }}</h1>
+    <div class="header-actions">
+      <ng-content select="[header-actions]"></ng-content>
+      <button *ngIf="showBackButton" type="button" class="btn-secondary" (click)="onCancel()">
+        <mat-icon>arrow_back</mat-icon> Retour
+      </button>
+    </div>
+  </div>
+
+  <div class="premium-form-card">
+    <div class="card-header" *ngIf="mode === 'card' && title">
+      <h2>{{ title }}</h2>
+      <p *ngIf="subtitle">{{ subtitle }}</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <ng-container *ngFor="let section of config">
+        <h3 *ngIf="section.title" class="section-title">{{ section.title }}</h3>
+
+        <div class="form-grid">
+          <ng-container *ngFor="let field of section.fields">
+
+            <div class="field-container" [ngClass]="field.cssClass || 'full-width'">
+              <label class="premium-label" [for]="field.key">
+                {{ field.label }}
+                <span *ngIf="isRequired(field.key)" class="required-asterisk">*</span>
+              </label>
+
+              <div class="input-wrapper">
+                <mat-icon *ngIf="field.icon" class="input-icon">{{ field.icon }}</mat-icon>
+
+                <ng-container [ngSwitch]="field.type">
+                  <input *ngSwitchCase="'text'" type="text" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <input *ngSwitchCase="'number'" type="number" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <input *ngSwitchCase="'email'" type="email" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <input *ngSwitchCase="'password'" type="password" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <input *ngSwitchCase="'date'" type="date" [id]="field.key" [formControlName]="field.key" class="premium-input" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)">
+
+                  <ng-select *ngSwitchCase="'select'"
+                             [id]="field.key"
+                             [formControlName]="field.key"
+                             [items]="field.options || []"
+                             bindLabel="label"
+                             bindValue="value"
+                             [placeholder]="field.placeholder || 'Rechercher une option...'"
+                             class="premium-ng-select"
+                             [class.has-icon]="field.icon"
+                             [class.is-invalid]="isFieldInvalid(field.key)"
+                             [searchable]="true"
+                             [clearable]="true">
+                  </ng-select>
+
+                  <textarea *ngSwitchCase="'textarea'" [id]="field.key" [formControlName]="field.key" [placeholder]="field.placeholder || ''" class="premium-textarea" [class.has-icon]="field.icon" [class.is-invalid]="isFieldInvalid(field.key)" rows="3"></textarea>
+
+                  <div *ngSwitchCase="'slide-toggle'" class="slide-toggle-wrapper">
+                    <mat-slide-toggle [id]="field.key" [formControlName]="field.key" color="primary"></mat-slide-toggle>
+                  </div>
+                </ng-container>
+              </div>
+
+              <div class="error-message" *ngIf="isFieldInvalid(field.key)">
+                <mat-icon>error_outline</mat-icon> {{ getErrorMessage(field.key) }}
+              </div>
+              <div class="hint-message" *ngIf="field.hint && !isFieldInvalid(field.key)">{{ field.hint }}</div>
+            </div>
+
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <div *ngIf="showFooter" class="form-actions" [ngClass]="actionsAlignment">
+        <button type="button" [disabled]="isLoading" (click)="onCancel()" *ngIf="cancelLabel" class="btn-secondary">
+          {{ cancelLabel }}
+        </button>
+
+        <button type="submit" [disabled]="form.invalid || isLoading" class="btn-primary">
+          <mat-icon *ngIf="!isLoading">save</mat-icon>
+          <mat-spinner diameter="20" *ngIf="isLoading" color="accent"></mat-spinner>
+          {{ submitLabel }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

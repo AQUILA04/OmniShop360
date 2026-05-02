@@ -1,0 +1,379 @@
+// Using Global Design Tokens
+$primary-color: var(--color-primary);
+$bg-color: var(--color-background);
+$text-primary: var(--color-text-primary);
+$text-secondary: var(--color-text-secondary);
+
+.page-container {
+  padding: var(--space-6);
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* =========================================
+   Header & Controls
+   ========================================= */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+  gap: var(--space-4);
+
+  .header-content {
+    h1 {
+      font-size: var(--font-size-h1);
+      font-weight: var(--font-weight-semibold);
+      color: #1E3A8A; /* Premium Deep Blue */
+      margin: 0;
+      letter-spacing: var(--letter-spacing-tight);
+    }
+    .subtitle {
+      color: $text-secondary;
+      margin: var(--space-1) 0 0;
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-medium);
+    }
+  }
+}
+
+.controls-bar {
+  margin-bottom: var(--space-6);
+
+  .search-container {
+    background-color: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 350px;
+    transition: all var(--transition-base);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+
+    &:focus-within {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(0, 92, 173, 0.15);
+    }
+
+    .search-icon {
+      color: #94A3B8;
+      margin-right: var(--space-2);
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-medium);
+      color: #0F172A;
+      background: transparent;
+
+      &::placeholder {
+        color: #94A3B8;
+      }
+    }
+  }
+}
+
+/* =========================================
+   Table Card (Premium Look)
+   ========================================= */
+.table-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); /* Ombre douce et large */
+  overflow: hidden;
+  position: relative;
+  min-height: 400px;
+
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.6);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+  }
+}
+
+/* =========================================
+   Angular Material Table Overrides
+   ========================================= */
+::ng-deep {
+  .mat-mdc-table {
+    background: transparent !important;
+    width: 100%;
+  }
+
+  /* En-têtes de colonnes */
+  .mat-mdc-header-row {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+  }
+
+  .mat-mdc-header-cell {
+    color: #64748B !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 16px 24px !important;
+    border-bottom: none !important;
+  }
+
+  /* Lignes de données */
+  .mat-mdc-row {
+    transition: background-color 0.2s ease !important;
+    border-bottom: 1px solid #F8FAFC !important;
+
+    &:hover {
+      background-color: #F8FAFC !important;
+    }
+    &:last-child {
+      border-bottom: none !important;
+    }
+  }
+
+  .mat-mdc-cell {
+    padding: 20px 24px !important;
+    font-size: 14px !important;
+    color: #334155 !important;
+    font-weight: 500 !important;
+    border-bottom: none !important;
+  }
+
+  /* =========================================
+     Pagination Overrides (Fix & Premium Styling)
+     ========================================= */
+  .mat-mdc-paginator {
+    background-color: #ffffff !important;
+    border-top: 1px solid #F1F5F9 !important;
+    color: #64748B !important;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    .mat-mdc-paginator-container {
+      padding: 12px 24px !important;
+      justify-content: space-between !important;
+    }
+
+    /* Nettoyage des textes "Items per page" et "1-1 of 1" */
+    .mat-mdc-paginator-page-size-label,
+    .mat-mdc-paginator-range-label {
+      color: #64748B !important;
+      font-weight: 500 !important;
+      margin: 0 !important;
+    }
+
+    .mat-mdc-paginator-range-label {
+      font-weight: 600 !important;
+      color: #0F172A !important;
+    }
+
+    /* Fix du Select Box (Rendre cliquable et design) */
+    .mat-mdc-paginator-page-size-select {
+      margin: 0 16px !important;
+      width: 80px !important;
+
+      /* Masquer la bordure défectueuse de Material */
+      .mdc-notched-outline {
+        display: none !important;
+      }
+
+      /* Recréer une boîte Premium cliquable */
+      .mat-mdc-text-field-wrapper {
+        background-color: #F8FAFC !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 8px !important;
+        padding: 0 12px !important;
+        height: 36px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+
+        &:hover {
+          background-color: #F1F5F9 !important;
+          border-color: #CBD5E1 !important;
+        }
+      }
+
+      .mat-mdc-form-field-flex {
+        height: 100% !important;
+        align-items: center !important;
+      }
+
+      .mat-mdc-form-field-infix {
+        padding: 0 !important;
+        border: none !important;
+        width: auto !important;
+        min-width: 40px !important;
+      }
+
+      .mat-mdc-select-value {
+        color: #0F172A !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+      }
+
+      .mat-mdc-select-arrow {
+        color: #64748B !important;
+      }
+    }
+  }
+
+  /* Style global du menu déroulant (quand il est ouvert) */
+  .mat-mdc-select-panel {
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid #E2E8F0 !important;
+    background: #ffffff !important;
+    margin-top: 4px !important;
+
+    .mat-mdc-option {
+      color: #334155 !important;
+      font-weight: 500 !important;
+      font-size: 14px !important;
+      min-height: 40px !important;
+
+      &:hover {
+        background-color: #F8FAFC !important;
+      }
+      &.mdc-list-item--selected {
+        background-color: #F0FDF4 !important;
+        color: #16A34A !important;
+        font-weight: 600 !important;
+      }
+    }
+  }
+
+/* =========================================
+   Badges & Text Utilities
+   ========================================= */
+.status-pill, .badge-premium {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    background-color: currentColor;
+  }
+}
+
+/* Premium Badge Colors */
+.badge-danger {
+  background-color: #FEF2F2;
+  color: #DC2626;
+}
+.badge-success {
+  background-color: #F0FDF4;
+  color: #16A34A;
+}
+.badge-warning {
+  background-color: #FFF7ED;
+  color: #EA580C;
+}
+
+/* =========================================
+   Empty State
+   ========================================= */
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+
+  .empty-content {
+    text-align: center;
+    .icon-circle {
+      width: 64px;
+      height: 64px;
+      background-color: #F1F5F9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      color: #94A3B8;
+
+      mat-icon { font-size: 32px; width: 32px; height: 32px; }
+    }
+    h3 { font-size: 18px; font-weight: 700; color: #0F172A; margin-bottom: 8px; }
+    p { color: #64748B; margin-bottom: 24px; font-size: 14px; }
+  }
+}
+}
+/* generic-list.component.scss */
+
+// Menu Customization (Premium Floating Menu)
+::ng-deep .custom-menu {
+  background-color: #ffffff !important; /* Crucial : force le fond blanc */
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+  min-width: 180px !important;
+  border: 1px solid #E2E8F0 !important;
+  padding: 4px !important;
+
+  .mat-mdc-menu-item {
+    min-height: 40px !important;
+    border-radius: 8px !important;
+    color: #334155 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    margin-bottom: 2px !important;
+    transition: background-color 0.1s ease;
+
+    &:hover {
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
+    }
+
+    mat-icon {
+      margin-right: 12px !important;
+      color: #64748B !important;
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    /* Style spécifique pour le bouton Supprimer */
+    &.delete-item {
+      color: #DC2626 !important;
+      margin-top: 4px !important;
+
+      mat-icon {
+        color: #DC2626 !important;
+      }
+
+      &:hover {
+        background-color: #FEF2F2 !important;
+      }
+    }
+  }
+
+  /* Ligne de séparation dans le menu */
+  .mat-divider {
+    border-top-color: #F1F5F9 !important;
+    margin: 4px 0 !important;
+  }
+}

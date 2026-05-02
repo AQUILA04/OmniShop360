@@ -14,7 +14,7 @@ set PROJECT_ROOT=%~dp0..\..
 
 REM Build Keycloak Image
 echo [1/4] Building Keycloak image...
-docker build -t omnishop360/keycloak:latest %PROJECT_ROOT%\keycloak
+docker build --no-cache -t omnishop360/keycloak:latest %PROJECT_ROOT%\keycloak
 if %ERRORLEVEL% NEQ 0 (
     echo ERROR: Failed to build Keycloak image
     exit /b 1

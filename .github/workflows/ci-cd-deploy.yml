@@ -8,7 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   GHCR_OWNER: AQUILA04
-  IMAGE_PREFIX: ${{ env.REGISTRY }}/${{ env.GHCR_OWNER }}/omnishop
+  IMAGE_PREFIX: ghcr.io/AQUILA04/omnishop
 
 jobs:
   infra:

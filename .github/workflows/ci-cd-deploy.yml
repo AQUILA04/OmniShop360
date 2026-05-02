@@ -12,7 +12,8 @@ on:
 env:
   REGISTRY: ghcr.io
   GHCR_OWNER: aquila04
-  IMAGE_PREFIX: ghcr.io/aquila04/omnishop360
+  IMAGE_PREFIX: ghcr.io/aquila04/omnishop360/omnishop
+  REPO_NAME: omnishop360
 
 jobs:
   build-and-push:

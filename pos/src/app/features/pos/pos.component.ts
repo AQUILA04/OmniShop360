@@ -13,8 +13,14 @@ import { SuccessModalComponent } from './components/success-modal/success-modal.
 import { ReceiptPreviewModalComponent } from './components/receipt-preview-modal/receipt-preview-modal.component';
 import { Product } from '../../core/models/product.model';
 import {ProductGridComponent} from "./components/product-grid/product-grid.component";
-import {CartPanelComponent} from "./components/cart-panel/cart-panel.component";
-import {PosSidebarComponent} from "./components/pos-sidebar/pos-sidebar.component";
+import { CartPanelComponent } from "./components/cart-panel/cart-panel.component";
+import { PosSidebarComponent } from "./components/pos-sidebar/pos-sidebar.component";
+import { RegisterModalComponent } from './components/register-modal/register-modal.component';
+import { CustomerSelectorComponent, Customer } from './components/customer-selector/customer-selector.component';
+import { CustomerCreateModalComponent } from './components/customer-create-modal/customer-create-modal.component';
+import { CashDrawerService, CashDrawerSession } from '../../core/services/cash-drawer.service';
+import { Customer as RealCustomer } from '../../core/models/customer.model';
+import { AlertModalComponent } from '../../shared/components/alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-pos',
@@ -28,6 +34,10 @@ import {PosSidebarComponent} from "./components/pos-sidebar/pos-sidebar.componen
     PaymentModalComponent,
     SuccessModalComponent,
     ReceiptPreviewModalComponent,
+    RegisterModalComponent,
+    CustomerSelectorComponent,
+    CustomerCreateModalComponent,
+    AlertModalComponent,
     RouterLink
   ],
   template: `
@@ -90,6 +100,12 @@ import {PosSidebarComponent} from "./components/pos-sidebar/pos-sidebar.componen
                   </svg>
                   Back Office
                 </a>
+                <div class="dropdown-item" (click)="triggerCloseRegister()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M16 11V7A4 4 0 008 7V11M5 9H19L20 21H4L5 9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Clôturer la Caisse
+                </div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item danger-item" (click)="logout()">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -111,6 +127,7 @@ import {PosSidebarComponent} from "./components/pos-sidebar/pos-sidebar.componen
             <app-product-grid
               [products]="products"
               [categories]="categories"
+              [allowNegativeStock]="allowNegativeStock"
               (addToCart)="addToCart($event)"
               (search)="onSearch($event)">
             </app-product-grid>
@@ -118,14 +135,21 @@ import {PosSidebarComponent} from "./components/pos-sidebar/pos-sidebar.componen
 
           <!-- Right: Cart -->
           <div class="cart-panel-wrapper">
+            <div class="cart-customer-section" style="padding: 16px 16px 0;">
+               <app-customer-selector (customerSelected)="onCustomerSelected($event)"></app-customer-selector>
+            </div>
             <app-cart-panel
               [cartItems]="cartItems"
               [total]="totalAmount"
+              [discountAmount]="discountAmount"
               [customerName]="customerName"
               (updateQuantity)="updateQuantity($event)"
               (removeItem)="removeFromCart($event)"
               (clearCart)="clearCart()"
-              (checkout)="openPaymentModal()">
+              (applyPromoCode)="onApplyPromoCode($event)"
+              (checkout)="openPaymentModal()"
+              (newCustomer)="openCustomerCreateModal()"
+              (editCustomer)="isCustomerSelectorOpen = true">
             </app-cart-panel>
           </div>
         </div>
@@ -153,11 +177,15 @@ import {PosSidebarComponent} from "./components/pos-sidebar/pos-sidebar.componen
         <app-cart-panel
           [cartItems]="cartItems"
           [total]="totalAmount"
+          [discountAmount]="discountAmount"
           [customerName]="customerName"
           (updateQuantity)="updateQuantity($event)"
           (removeItem)="removeFromCart($event)"
           (clearCart)="clearCart()"
-          (checkout)="openPaymentModal(); closeMobileCart();">
+          (applyPromoCode)="onApplyPromoCode($event)"
+          (checkout)="openPaymentModal(); closeMobileCart();"
+          (newCustomer)="openCustomerCreateModal()"
+          (editCustomer)="isCustomerSelectorOpen = true">
         </app-cart-panel>
       </div>
 
@@ -175,7 +203,7 @@ import {PosSidebarComponent} from "./components/pos-sidebar/pos-sidebar.componen
       <app-success-modal
         [isOpen]="isSuccessModalOpen"
         [ticketNumber]="lastSaleTicket"
-        [totalAmount]="totalAmount"
+        [totalAmount]="lastTotalAmount"
         [paymentMethod]="lastPaymentMethod"
         [transactionDate]="lastTransactionDate"
         [change]="lastChange"
@@ -187,13 +215,41 @@ import {PosSidebarComponent} from "./components/pos-sidebar/pos-sidebar.componen
       <app-receipt-preview-modal
         [isOpen]="isReceiptPreviewOpen"
         [ticketNumber]="lastSaleTicket"
-        [totalAmount]="totalAmount"
+        [totalAmount]="lastTotalAmount"
         [paymentMethod]="lastPaymentMethod"
+        [payments]="lastPayments"
         [transactionDate]="lastTransactionDate"
-        [cartItems]="cartItems"
+        [cartItems]="lastCartItems"
+        [printFormat]="receiptFormat"
+        (printFormatChange)="receiptFormat = $event"
         (close)="closeReceiptPreview()"
         (newSale)="startNewSale()">
       </app-receipt-preview-modal>
+
+      <app-customer-create-modal
+        [isOpen]="isCustomerCreateModalOpen"
+        (closeEvent)="isCustomerCreateModalOpen = false"
+        (customerCreated)="onCustomerCreated($event)"
+        (errorCreate)="showAlert($event, 'error', 'Erreur de création')">
+      </app-customer-create-modal>
+
+      <app-register-modal
+        [isOpen]="isRegisterModalOpen"
+        [mode]="registerModalMode"
+        [isForced]="isRegisterForced"
+        [openingBalance]="activeSession?.openingFloat || 0"
+        [expectedCashSales]="totalCashSales"
+        (close)="closeRegisterModal()"
+        (submitEvent)="onRegisterSubmit($event)">
+      </app-register-modal>
+
+      <app-alert-modal
+        [isOpen]="isAlertOpen"
+        [title]="alertTitle"
+        [message]="alertMessage"
+        [type]="alertType"
+        (close)="isAlertOpen = false">
+      </app-alert-modal>
     </div>
   `,
   styles: [`
@@ -540,8 +596,11 @@ export class PosComponent implements OnInit, OnDestroy {
   totalAmount = 0;
   storeName = 'Boutique Paris';
   customerName = 'Client Divers';
+  selectedCustomer: Customer | null = null;
+  allowNegativeStock = true; // For E.2
+  discountAmount = 0; // For E.3
 
-  get subtotal(): number { return this.totalAmount * 0.8333; }
+  get subtotal(): number { return (this.totalAmount + this.discountAmount) * 0.8333; }
   get tax(): number { return this.totalAmount - this.subtotal; }
 
   categories: string[] = ['Tous', 'Alimentation', 'Boissons', 'Électronique', 'Hygiène', 'Divers'];
@@ -550,14 +609,31 @@ export class PosComponent implements OnInit, OnDestroy {
   isSuccessModalOpen = false;
   isReceiptPreviewOpen = false;
   isMobileCartOpen = false;
+  isCustomerCreateModalOpen = false;
+  isCustomerSelectorOpen = false;
+  isProfileMenuOpen = false;
+  isAlertOpen = false;
+  alertTitle = '';
+  alertMessage = '';
+  alertType: 'error' | 'info' | 'success' = 'info';
+
+  isRegisterModalOpen = false;
+  registerModalMode: 'open' | 'close' = 'open';
+  isRegisterForced = false;
+  activeSession: CashDrawerSession | null = null;
+  totalCashSales = 0; // Mock tracker for expected cash sales
+
   lastSaleTicket = '';
   lastPaymentMethod = 'Espèces';
+  lastPayments: any[] = [];
   lastTransactionDate = new Date();
   lastChange = 0;
+  lastTotalAmount = 0;
+  lastCartItems: CartItem[] = [];
+  receiptFormat: 'thermal' | 'A4' = 'thermal';
 
   currentDate = new Date();
   private dateInterval: any;
-  isProfileMenuOpen = false;
   cashierName = 'Caissier';
   cashierRole = 'Caissier';
   cashierInitials = 'C';
@@ -565,21 +641,33 @@ export class PosComponent implements OnInit, OnDestroy {
   constructor(
     private cartService: CartService,
     private saleService: SaleService,
-    private oauthService: OAuthService
+    private oauthService: OAuthService,
+    private cashDrawerService: CashDrawerService
   ) {}
 
   ngOnInit() {
     this.cartService.items$.subscribe(items => {
       this.cartItems = items;
       this.totalAmount = this.cartService.totalAmount;
+      this.discountAmount = this.cartService.discountAmount;
     });
 
     this.loadProducts();
     this.loadUserProfile();
+    this.checkRegisterSession();
 
     this.dateInterval = setInterval(() => {
       this.currentDate = new Date();
     }, 60000);
+  }
+
+  checkRegisterSession() {
+    this.cashDrawerService.checkSession().subscribe(session => {
+      this.activeSession = session?.content[0] ?? null;
+      if (!this.activeSession || this.activeSession.status === 'CLOSED') {
+        this.openRegisterModal('open', true);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -621,47 +709,162 @@ export class PosComponent implements OnInit, OnDestroy {
   openPaymentModal() { this.isPaymentModalOpen = true; }
   closePaymentModal() { this.isPaymentModalOpen = false; }
 
-  processCheckout(payment: any) {
+  onApplyPromoCode(code: string) {
+    // Dans la réalité, on vérifierait d'abord l'API. ICI ON MOCK:
+    if (code === 'PROMO10') {
+      this.cartService.applyPromo(code, 'PERCENTAGE', 10);
+    } else if (code === '5OFF') {
+      this.cartService.applyPromo(code, 'FIXED_AMOUNT', 5);
+    } else {
+      this.showAlert("Code d'offres invalide ou expiré", "error");
+    }
+  }
+
+  openCustomerCreateModal() {
+    this.isCustomerCreateModalOpen = true;
+  }
+
+  onCustomerCreated(customer: RealCustomer) {
+    this.showAlert(`Client ${customer.firstName} ${customer.lastName} créé avec succès!`, 'success', 'Succès');
+    const selectorCustomer: Customer = {
+      id: customer.id,
+      name: `${customer.firstName} ${customer.lastName}`,
+      email: customer.email,
+      phone: customer.phone
+    };
+    this.onCustomerSelected(selectorCustomer); // Select this customer immediately
+  }
+
+  onCustomerSelected(customer: Customer) {
+    this.selectedCustomer = customer;
+    this.customerName = customer.name;
+  }
+
+  getPaymentMethodName(method: string): string {
+    const mapping: Record<string, string> = {
+      'CASH': 'Espèces',
+      'CARD': 'Carte',
+      'MOBILE': 'Mobile',
+      'CHECK': 'Chèque',
+      'MIXED': 'Mixte'
+    };
+    return mapping[method] || method;
+  }
+
+  processCheckout(paymentResult: any) {
     if (this.cartItems.length === 0) return;
 
     const request: CheckoutRequest = {
+      customerId: this.selectedCustomer?.id,
       items: this.cartItems.map(item => ({
         productId: item.productId,
         quantity: item.quantity
       })),
-      paymentMethod: payment.method as 'CASH' | 'CARD' | 'MOBILE' | 'MIXED',
+      payments: paymentResult.payments || [{ method: paymentResult.method || 'CASH', amount: this.totalAmount }],
+      discountAmount: this.discountAmount,
+      promoCode: this.cartService.getPromoDetails()?.code,
       notes: 'POS Sale'
     };
 
     this.saleService.checkout(request).subscribe({
       next: (sale) => {
         this.lastSaleTicket = sale.saleNumber;
-        this.lastPaymentMethod = payment.method;
+        const recordedPayments = request.payments && request.payments.length > 0
+            ? request.payments 
+            : [{ method: 'CASH', amount: this.totalAmount }];
+        
+        this.lastPayments = recordedPayments;
+        // Keep lastPaymentMethod backward compatible string list if needed
+        this.lastPaymentMethod = recordedPayments.map(p => this.getPaymentMethodName(p.method)).join(', ');
+        
         this.lastTransactionDate = new Date();
-        this.lastChange = payment.amount - this.totalAmount;
+        const totalPaid = recordedPayments.reduce((s,p) => s+p.amount, 0);
+        this.lastChange = Math.max(0, totalPaid - this.totalAmount);
+        this.lastTotalAmount = this.totalAmount;
+        this.lastCartItems = [...this.cartItems];
+
+        // Ensure cart is emptied immediately to remove floating bar
+        this.clearCart();
+        this.closeMobileCart();
         this.closePaymentModal();
         this.isSuccessModalOpen = true;
       },
       error: (err) => {
         console.error('Sale error', err);
-        alert('Erreur lors du paiement. Veuillez réessayer.');
+        let errorMsg = "Erreur lors du paiement. Veuillez réessayer.";
+        if (err.error && err.error.message) {
+            errorMsg = err.error.message;
+        }
+        this.showAlert(errorMsg, "error", "Échec du paiement");
       }
     });
   }
 
   startNewSale() {
-    this.isSuccessModalOpen = false;
-    this.isReceiptPreviewOpen = false;
-    this.clearCart();
-    this.loadProducts();
+        this.isSuccessModalOpen = false;
+        this.isReceiptPreviewOpen = false;
+        // The cart is already cleared during checkout success
+        this.loadProducts();
   }
 
   printReceipt() {
+    this.receiptFormat = 'thermal';
     this.isSuccessModalOpen = false;
     this.isReceiptPreviewOpen = true;
   }
 
-  printInvoice() { console.log('Printing invoice...'); }
+  printInvoice() { 
+    this.receiptFormat = 'A4';
+    this.isSuccessModalOpen = false;
+    this.isReceiptPreviewOpen = true;
+  }
   openReceiptPreview() { this.isReceiptPreviewOpen = true; }
   closeReceiptPreview() { this.isReceiptPreviewOpen = false; }
+
+  // --- Cash Drawer Management ---
+  openRegisterModal(mode: 'open' | 'close', forced = false) {
+    this.registerModalMode = mode;
+    this.isRegisterForced = forced;
+    this.isRegisterModalOpen = true;
+    this.isProfileMenuOpen = false;
+  }
+
+  closeRegisterModal() {
+    this.isRegisterModalOpen = false;
+  }
+
+  triggerCloseRegister() {
+    this.openRegisterModal('close', false);
+  }
+
+  onRegisterSubmit(event: { amount: number, notes: string }) {
+    if (this.registerModalMode === 'open') {
+      this.cashDrawerService.openDrawer(event.amount, event.notes).subscribe({
+        next: (session) => {
+          this.activeSession = session;
+          this.isRegisterModalOpen = false;
+        },
+        error: (err) => console.error('Error opening register', err)
+      });
+    } else {
+      this.cashDrawerService.closeDrawer(event.amount, event.notes).subscribe({
+        next: (session) => {
+          this.activeSession = null;
+          this.isRegisterModalOpen = false;
+          // Force re-opening
+          this.showAlert('Caisse clôturée. Un récapitulatif a été imprimé.', 'info');
+          this.checkRegisterSession();
+        },
+        error: (err) => console.error('Error closing register', err)
+      });
+    }
+  }
+
+  showAlert(message: string, type: 'error' | 'info' | 'success' = 'info', title: string = '') {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.alertTitle = title;
+    this.isAlertOpen = true;
+  }
 }
+

@@ -11,6 +11,8 @@ on:
 jobs:
   rollback:
     runs-on: ubuntu-latest
+    env:
+      GHCR_OWNER: AQUILA04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,7 +25,7 @@ jobs:
       - name: Prepare prod compose with rollback tag
         run: |
           mkdir -p /tmp/compose
-          sed "s|__GHCR_OWNER__|${{ github.repository_owner }}|g; s|__TAG__|${{ github.event.inputs.tag }}|g" deploy/docker-compose.prod.yml > /tmp/compose/docker-compose.rollback.yml
+          sed "s|__GHCR_OWNER__|${{ env.GHCR_OWNER }}|g; s|__TAG__|${{ github.event.inputs.tag }}|g" deploy/docker-compose.prod.yml > /tmp/compose/docker-compose.rollback.yml
 
       - name: Copy rollback compose to server
         uses: appleboy/scp-action@v0.1.4
@@ -35,7 +37,7 @@ jobs:
           source: "/tmp/compose/docker-compose.rollback.yml"
           target: "/srv/omnishop360/compose/docker-compose.yml"
 
-      - name: Remote rollback: pull images & restart
+      - name: Remote rollback - pull images & restart
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -59,4 +61,5 @@ jobs:
             echo "Waiting for health... ($i)"; sleep 10
           done
           echo "Health check failed after rollback"; exit 1
+
 

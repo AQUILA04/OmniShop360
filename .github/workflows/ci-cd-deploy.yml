@@ -7,10 +7,49 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  OWNER: ${{ github.repository_owner }}
-  IMAGE_PREFIX: ${{ env.REGISTRY }}/${{ env.OWNER }}/omnishop
+  GHCR_OWNER: AQUILA04
+  IMAGE_PREFIX: ${{ env.REGISTRY }}/${{ env.GHCR_OWNER }}/omnishop
 
 jobs:
+  infra:
+    runs-on: ubuntu-latest
+    outputs:
+      KEYCLOAK_CLIENT_SECRET: ${{ steps.tfapply.outputs.KEYCLOAK_CLIENT_SECRET }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
+
+      - name: Verify Terraform installation
+        run: |
+          echo "Verifying terraform is available"
+          terraform version
+          which terraform
+
+      - name: Ensure HETZNER_TOKEN secret exists
+        run: |
+          if [ -z "${{ secrets.HETZNER_TOKEN }}" ]; then
+            echo "ERROR: HETZNER_TOKEN secret is not set. Aborting."; exit 1
+          fi
+
+      - name: Terraform Init & Apply (keycloak-config/)
+        id: tfapply
+        env:
+          HETZNER_TOKEN: ${{ secrets.HETZNER_TOKEN }}
+        run: |
+          set -e
+          # use keycloak-config directory which contains Keycloak Terraform resources
+          cd keycloak-config || true
+          terraform init -input=false
+          terraform apply -auto-approve -input=false
+          # Capture backend client secret output from terraform (repo uses backend_client_secret)
+          secret=$(terraform output -raw backend_client_secret 2>/dev/null || true)
+          echo "KEYCLOAK_CLIENT_SECRET=$secret" >> $GITHUB_OUTPUT
+
   build-and-push:
     runs-on: ubuntu-latest
     outputs:
@@ -76,8 +115,26 @@ jobs:
             ${{ env.IMAGE_PREFIX }}-keycloak:latest
             ${{ env.IMAGE_PREFIX }}-keycloak:${{ github.sha }}
 
+      - name: Write images metadata (artifact)
+        run: |
+          mkdir -p /tmp/images
+          cat > /tmp/images/images.json <<EOF
+{
+  "backend": "${{ env.REGISTRY }}/${{ env.GHCR_OWNER }}/omnishop-backend:${{ github.sha }}",
+  "frontend": "${{ env.REGISTRY }}/${{ env.GHCR_OWNER }}/omnishop-frontend:${{ github.sha }}",
+  "pos": "${{ env.REGISTRY }}/${{ env.GHCR_OWNER }}/omnishop-pos:${{ github.sha }}",
+  "keycloak": "${{ env.REGISTRY }}/${{ env.GHCR_OWNER }}/omnishop-keycloak:${{ github.sha }}"
+}
+EOF
+
+      - name: Upload images metadata artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: images-metadata
+          path: /tmp/images/images.json
+
   deploy:
-    needs: build-and-push
+    needs: [build-and-push, infra]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -88,15 +145,38 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
 
-      - name: Copy docker-compose to server (optional)
+      - name: Prepare prod docker-compose (replace owner & tag)
+        run: |
+          mkdir -p /tmp/compose
+          sed "s|__GHCR_OWNER__|${{ github.repository_owner }}|g; s|__TAG__|${{ github.sha }}|g" deploy/docker-compose.prod.yml > /tmp/compose/docker-compose.to_deploy.yml
+
+      - name: Copy prod docker-compose to server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_SSH_USER }}
           key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           port: 22
-          source: "deploy/dev/docker-compose.yml"
+          source: "/tmp/compose/docker-compose.to_deploy.yml"
           target: "/srv/omnishop360/compose/docker-compose.yml"
+
+      - name: Prepare temp .env (contains secrets)
+        run: |
+          mkdir -p .github/temp_env
+          cat > .github/temp_env/.env <<EOF
+POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+KEYCLOAK_CLIENT_SECRET=${{ needs.infra.outputs.KEYCLOAK_CLIENT_SECRET }}
+EOF
+
+      - name: Copy .env to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_SSH_USER }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          port: 22
+          source: ".github/temp_env/.env"
+          target: "/srv/omnishop360/compose/.env"
 
       - name: Remote deploy: pull images & up
         uses: appleboy/ssh-action@v0.1.8
@@ -109,11 +189,8 @@ jobs:
             set -e
             mkdir -p /srv/omnishop360/compose
             cd /srv/omnishop360/compose
-            # optional: ensure .env exists
-            if [ ! -f .env ]; then
-              echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD:-omnishop_password }}" > .env
-              echo "KEYCLOAK_CLIENT_SECRET=${{ secrets.KEYCLOAK_CLIENT_SECRET }}" >> .env
-            fi
+            # .env is copied by the workflow; leave it as-is
+            true
             docker compose pull || true
             docker compose up -d
             docker image prune -f || true
@@ -129,4 +206,6 @@ jobs:
             echo "Waiting for health... ($i)"; sleep 10
           done
           echo "Health check failed"; exit 1
+
+
 

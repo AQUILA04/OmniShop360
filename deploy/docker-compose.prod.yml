@@ -47,7 +47,7 @@ services:
       retries: 5
 
   keycloak:
-    image: ghcr.io/__GHCR_OWNER__/omnishop-keycloak:__TAG__
+    image: "ghcr.io/__GHCR_OWNER__/omnishop-keycloak:__TAG__"
     container_name: omnishop-keycloak
     restart: unless-stopped
     environment:
@@ -78,7 +78,7 @@ services:
       start_period: 600s
 
   backend:
-    image: ghcr.io/__GHCR_OWNER__/omnishop-backend:__TAG__
+    image: "ghcr.io/__GHCR_OWNER__/omnishop-backend:__TAG__"
     container_name: omnishop-backend
     restart: unless-stopped
     environment:
@@ -120,7 +120,7 @@ services:
       start_period: 90s
 
   frontend:
-    image: ghcr.io/__GHCR_OWNER__/omnishop-frontend:__TAG__
+    image: "ghcr.io/__GHCR_OWNER__/omnishop-frontend:__TAG__"
     container_name: omnishop-frontend
     restart: unless-stopped
     ports:
@@ -137,7 +137,7 @@ services:
       retries: 3
 
   pos:
-    image: ghcr.io/__GHCR_OWNER__/omnishop-pos:__TAG__
+    image: "ghcr.io/__GHCR_OWNER__/omnishop-pos:__TAG__"
     container_name: omnishop-pos
     restart: unless-stopped
     ports:
@@ -163,4 +163,5 @@ volumes:
     name: omnishop-postgres-data
   redis_data:
     name: omnishop-redis-data
+
 

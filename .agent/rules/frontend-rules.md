@@ -48,7 +48,10 @@ generic-form.component.scss
 3.2 Alignement et Classes Utilitaires
 Tailwind : Privilégiez les classes utilitaires (flex, items-center, gap-2) pour la mise en page.
 Overrides : Si des styles globaux (ex: Material) interfèrent, utilisez des règles CSS spécifiques (voire !important de manière ciblée et justifiée) dans le composant générique pour forcer le comportement attendu.
-3.3 Routing
+3.4 Feedbacks Utilisateurs et Alertes (Modales et Toasts)
+Interdiction : On ne doit AU GRAND JAMAIS utiliser un `alert()` natif du navigateur.
+Solution : On doit toujours utiliser des modèles personnalisés (composants Modales ou Toasts) qui suivent de manière stricte le design UI du projet (Ex: `AlertModalComponent`).
+3.5 Routing
 Structure : /tenant/{feature} pour la liste, /tenant/{feature}/create pour la création, /tenant/{feature}/:id pour l'édition.
 4. Workflow de Développement
 Vérifier l'existant : Avant de coder, vérifiez si un composant générique ou une classe de base existe.

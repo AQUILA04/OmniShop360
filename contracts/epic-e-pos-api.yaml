@@ -1,0 +1,167 @@
+openapi: 3.0.3
+info:
+  title: POS Epic E Additions API
+  version: 1.0.0
+  description: OpenAPI contracts for Cash Drawer, Promos, and Multi-payment Sales.
+paths:
+  /v1/cash-drawers/session:
+    get:
+      summary: Get active cash drawer session for current user/register
+      responses:
+        '200':
+          description: Active session info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashDrawerSession'
+        '404':
+          description: No active session (drawer is closed)
+
+  /v1/cash-drawers/open:
+    post:
+      summary: Open cash drawer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                openingBalance:
+                  type: number
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Successfully opened
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashDrawerSession'
+
+  /v1/cash-drawers/close:
+    post:
+      summary: Close cash drawer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                closingBalance:
+                  type: number
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Successfully closed, returns variance/reliquat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashDrawerSession'
+
+  /v1/promotions/validate:
+    post:
+      summary: Validate a promo code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+      responses:
+        '200':
+          description: Promocode is valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Promotion'
+
+  /v1/sales/checkout-multi:
+    post:
+      summary: Checkout with multi-payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultiPaymentCheckoutRequest'
+      responses:
+        '201':
+          description: Sale completed
+
+components:
+  schemas:
+    CashDrawerSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [OPEN, CLOSED]
+        openingTime:
+          type: string
+          format: date-time
+        closingTime:
+          type: string
+          format: date-time
+        openingBalance:
+          type: number
+        expectedBalance:
+          type: number
+        closingBalance:
+          type: number
+        variance:
+          type: number
+
+    Promotion:
+      type: object
+      properties:
+        code:
+          type: string
+        type:
+          type: string
+          enum: [PERCENTAGE, FIXED_AMOUNT]
+        value:
+          type: number
+
+    PaymentLine:
+      type: object
+      properties:
+        amount:
+          type: number
+        method:
+          type: string
+          enum: [CASH, CARD, MOBILE, CHECK, CREDIT]
+
+    MultiPaymentCheckoutRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+              quantity:
+                type: number
+              price:
+                type: number
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentLine'
+        promoCode:
+          type: string
+        customerId:
+          type: string
+          format: uuid
+        notes:
+          type: string

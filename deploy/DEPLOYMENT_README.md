@@ -60,10 +60,13 @@ Le script :
 
 Déployer initialement le docker-compose
 -------------------------------------
-1. Copier `deploy/dev/docker-compose.yml` sur le serveur :
+1. Copier `deploy/docker-compose.prod.yml` (version VPS) sur le serveur :
 
 ```bash
-scp deploy/dev/docker-compose.yml deploy@178.104.248.247:/srv/omnishop360/compose/docker-compose.yml
+# Le workflow GitHub Actions prépare automatiquement deploy/docker-compose.prod.yml
+# en remplaçant le propriétaire GHCR et le tag (sha) puis le copie sur le serveur.
+# Si vous préférez copier manuellement :
+scp deploy/docker-compose.prod.yml deploy@178.104.248.247:/srv/omnishop360/compose/docker-compose.yml
 ```
 
 2. (Optionnel) Créer `/srv/omnishop360/compose/.env` avec les secrets locaux si vous ne voulez pas qu'ils soient injectés via GitHub Secrets :
@@ -97,6 +100,39 @@ Rollback simple
 ---------------
 - Gardez des tags immuables (sha). Pour rollback : modifier le `docker-compose.yml` sur le serveur pour utiliser un tag antérieur (ex: `:abc123`) puis `docker compose pull && docker compose up -d`.
 
+Rollback automatisé via GitHub Actions
+-------------------------------------
+- Un workflow manuel `Rollback - Deploy specific image tag` a été ajouté : `.github/workflows/rollback.yml`.
+- Pour l'utiliser : dans l'interface GitHub Actions, lancez le workflow manuellement (Run workflow) et fournissez le `tag` (ex: un commit SHA ou `latest`). Le workflow préparera le `docker-compose` avec le tag demandé, le copiera sur le serveur et exécutera `docker compose pull && docker compose up -d`. Il effectue aussi un healthcheck après le déploiement.
+
+Remarques :
+- Le workflow de rollback requiert les mêmes secrets GitHub (`DEPLOY_SSH_PRIVATE_KEY`, `SERVER_IP`, `SERVER_SSH_USER`).
+- Utilisez le tag du commit que vous souhaitez restaurer (vous pouvez retrouver les tags/shas dans l'historique GitHub Actions / images GHCR).
+
+Rollback local (script sur le serveur)
+-------------------------------------
+Un script local `deploy/rollback_local.sh` a été ajouté au dépôt. Il peut être copié sur le serveur et permet de rendre un `docker-compose.yml` à partir d'un template et de lancer la mise à jour localement.
+
+Installation / utilisation sur le serveur :
+1. Copiez le template `deploy/docker-compose.prod.yml` (ou créez un fichier `/srv/omnishop360/compose/docker-compose.template.yml`) qui contient les placeholders `__GHCR_OWNER__` et `__TAG__`.
+2. Copiez le script `deploy/rollback_local.sh` sur le serveur (par ex `/usr/local/bin/omnishop_rollback.sh`) et rendez-le exécutable :
+
+```bash
+sudo cp deploy/rollback_local.sh /usr/local/bin/omnishop_rollback.sh
+sudo chmod +x /usr/local/bin/omnishop_rollback.sh
+```
+
+3. Pour déployer une version spécifique sur le serveur (sans passer par GitHub Actions), exécutez :
+
+```bash
+sudo /usr/local/bin/omnishop_rollback.sh <TAG>
+# ex: sudo /usr/local/bin/omnishop_rollback.sh a1b2c3d4
+```
+
+4. Le script sauvegarde l'ancien `docker-compose.yml` dans `/srv/omnishop360/releases/`, rend le template avec le tag demandé, fait `docker compose pull` et `docker compose up -d`, puis conserve un historique simple des releases.
+
+Remarque : le script utilise `jq` pour maintenir un fichier JSON d'historique si `jq` est installé, sinon il écrit un simple `releases.log`.
+
 Backups
 -------
 - Le script de backup journalier fait : pg_dump (gzip) et tar.gz des volumes `omnishop-postgres-data` et `omnishop-redis-data`.
@@ -117,4 +153,5 @@ Je peux :
 - adapter `docker-compose.yml` pour utiliser les images GHCR avec tags `${{ github.sha }}`
 - ajouter un script d'upgrade/rollback automatisé
 - créer un guide pour migrer de self-signed à certbot une fois le domaine prêt
+
 

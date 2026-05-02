@@ -37,10 +37,20 @@ docker compose pull || true
 docker compose up -d
 docker image prune -f || true
 
-# append release metadata
+# append release metadata (prefer JSON via jq, fallback to a log)
 METAFILE="$RELEASES_DIR/releases.json"
-jq -n --arg t "$TAG" --arg dt "$TS" '{tag:$t, timestamp:$dt}' >> "$METAFILE" 2>/dev/null || echo "[{\"tag\":\"$TAG\",\"timestamp\":\"$TS\"}]" > "$METAFILE"
+if command -v jq >/dev/null 2>&1; then
+  if [ -f "$METAFILE" ]; then
+    TMPFILE=$(mktemp)
+    jq --arg t "$TAG" --arg dt "$TS" '. + [{tag:$t, timestamp:$dt}]' "$METAFILE" > "$TMPFILE" && mv "$TMPFILE" "$METAFILE"
+  else
+    jq -n --arg t "$TAG" --arg dt "$TS" '[{tag:$t, timestamp:$dt}]' > "$METAFILE"
+  fi
+else
+  echo "{\"tag\":\"$TAG\",\"timestamp\":\"$TS\"}" >> "$RELEASES_DIR/releases.log"
+fi
 
 echo "Deployment complete."
 exit 0
+
 

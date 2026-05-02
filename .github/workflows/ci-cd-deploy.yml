@@ -107,8 +107,8 @@ jobs:
 
       - name: Prepare docker-compose.yml with resolved images
         run: |
-          mkdir -p /tmp/compose
-          cat > /tmp/compose/docker-compose.yml << 'EOF'
+          mkdir -p deploy/compose
+          cat > deploy/compose/docker-compose.yml << 'EOF'
           version: '3.8'
 
           services:
@@ -223,15 +223,15 @@ jobs:
           EOF
 
           # Replace image placeholders with actual resolved images
-          sed -i "s|\${BACKEND_IMAGE}|${{ needs.resolve-images.outputs.backend_image }}|g" /tmp/compose/docker-compose.yml
-          sed -i "s|\${FRONTEND_IMAGE}|${{ needs.resolve-images.outputs.frontend_image }}|g" /tmp/compose/docker-compose.yml
-          sed -i "s|\${POS_IMAGE}|${{ needs.resolve-images.outputs.pos_image }}|g" /tmp/compose/docker-compose.yml
-          sed -i "s|\${KEYCLOAK_IMAGE}|${{ needs.resolve-images.outputs.keycloak_image }}|g" /tmp/compose/docker-compose.yml
+          sed -i "s|\${BACKEND_IMAGE}|${{ needs.resolve-images.outputs.backend_image }}|g" deploy/compose/docker-compose.yml
+          sed -i "s|\${FRONTEND_IMAGE}|${{ needs.resolve-images.outputs.frontend_image }}|g" deploy/compose/docker-compose.yml
+          sed -i "s|\${POS_IMAGE}|${{ needs.resolve-images.outputs.pos_image }}|g" deploy/compose/docker-compose.yml
+          sed -i "s|\${KEYCLOAK_IMAGE}|${{ needs.resolve-images.outputs.keycloak_image }}|g" deploy/compose/docker-compose.yml
 
       - name: Prepare .env file
         run: |
-          mkdir -p /tmp/compose
-          cat > /tmp/compose/.env << EOF
+          mkdir -p deploy/compose
+          cat > deploy/compose/.env << EOF
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
           KEYCLOAK_HOSTNAME=${{ secrets.KEYCLOAK_HOSTNAME }}
@@ -256,7 +256,7 @@ jobs:
           username: ${{ secrets.SERVER_SSH_USER }}
           key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           port: 22
-          source: "/tmp/compose/docker-compose.yml,/tmp/compose/.env"
+          source: "deploy/compose/*"
           target: "/srv/omnishop360/compose"
           strip_components: 2
 

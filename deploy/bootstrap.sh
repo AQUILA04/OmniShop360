@@ -62,8 +62,8 @@ if [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" ]]; then
     apt-get update -y
   fi
 
-  apt-get install -y --no-install-recommends docker-ce docker-ce-cli containerd.io docker-compose-plugin
-  apt-get install -y --no-install-recommends fail2ban ufw git
+  apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  apt-get install -y iptables fail2ban ufw git
 fi
 
 # Start and enable docker

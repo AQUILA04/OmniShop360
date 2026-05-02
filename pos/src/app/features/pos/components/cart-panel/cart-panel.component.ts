@@ -13,7 +13,7 @@ import { CartItem } from '../../../../core/services/cart.service';
       <!-- ① Header -->
       <div class="panel-header">
         <h2 class="panel-title">PANIER ACTUEL</h2>
-        <button class="icon-btn" title="Nouveau client">
+        <button class="icon-btn" title="Nouveau client" (click)="newCustomer.emit()">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
@@ -35,7 +35,7 @@ import { CartItem } from '../../../../core/services/cart.service';
           <span class="customer-name">{{ customerName }}</span>
           <span class="customer-badge">Client Divers</span>
         </div>
-        <button class="edit-btn" title="Modifier client">
+        <button class="edit-btn" title="Modifier client" (click)="editCustomer.emit()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -106,9 +106,9 @@ import { CartItem } from '../../../../core/services/cart.service';
             placeholder="Code promo"
             class="promo-field"
             [(ngModel)]="promoCode"
-            (keyup.enter)="applyPromo()"
+            (keyup.enter)="emitPromo()"
           >
-          <button class="promo-apply-btn" (click)="applyPromo()">Appliquer</button>
+          <button class="promo-apply-btn" (click)="emitPromo()">Appliquer</button>
         </div>
       </div>
 
@@ -124,9 +124,9 @@ import { CartItem } from '../../../../core/services/cart.service';
             <span class="s-label">Taxe (10%)</span>
             <span class="s-value">{{ tax | currency:'EUR':'symbol':'1.2-2' }}</span>
           </div>
-          <div class="summary-line discount-line" *ngIf="discount > 0">
+          <div class="summary-line discount-line" *ngIf="discountAmount > 0">
             <span class="s-label success-text">Remise appliquée</span>
-            <span class="s-value success-text">-{{ discount | currency:'EUR':'symbol':'1.2-2' }}</span>
+            <span class="s-value success-text">-{{ discountAmount | currency:'EUR':'symbol':'1.2-2' }}</span>
           </div>
         </div>
 
@@ -634,14 +634,14 @@ import { CartItem } from '../../../../core/services/cart.service';
 export class CartPanelComponent {
   @Input() cartItems: CartItem[] = [];
   @Input() total: number = 0;
+  @Input() discountAmount: number = 0;
   @Input() customerName: string = 'Client Divers';
 
   promoCode = '';
   promoOpen = false;
-  discount = 0;
 
   get subtotal(): number {
-    return this.total / 1.1;
+    return (this.total + this.discountAmount) / 1.1;
   }
 
   get tax(): number {
@@ -652,10 +652,16 @@ export class CartPanelComponent {
   @Output() removeItem = new EventEmitter<string>();
   @Output() clearCart = new EventEmitter<void>();
   @Output() checkout = new EventEmitter<void>();
+  @Output() applyPromoCode = new EventEmitter<string>();
+  @Output() newCustomer = new EventEmitter<void>();
+  @Output() editCustomer = new EventEmitter<void>();
 
-  applyPromo() {
-    console.log('Applying promo:', this.promoCode);
-    this.promoOpen = false;
+  emitPromo() {
+    if (this.promoCode) {
+      this.applyPromoCode.emit(this.promoCode);
+      this.promoCode = '';
+      this.promoOpen = false;
+    }
   }
 
   getItemGradient(name: string): string {

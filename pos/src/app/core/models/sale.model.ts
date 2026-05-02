@@ -42,7 +42,16 @@ export interface CheckoutRequest {
     variantId?: string;
     quantity: number;
   }[];
-  paymentMethod: 'CASH' | 'CARD' | 'MOBILE' | 'MIXED';
+  payments: {
+    method: 'CASH' | 'CARD' | 'MOBILE' | 'CHECK' | 'CREDIT' | 'MIXED';
+    amount: number;
+    reference?: string;
+    phoneNumber?: string;
+    checkNumber?: string;
+    ownerName?: string;
+    customerNumber?: string;
+  }[];
+  promoCode?: string;
   discountAmount?: number;
   notes?: string;
 }

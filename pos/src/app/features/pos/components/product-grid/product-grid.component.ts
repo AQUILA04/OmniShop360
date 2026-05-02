@@ -55,8 +55,8 @@ import { FormsModule } from '@angular/forms';
         <div
           *ngFor="let product of filteredProducts"
           class="product-card"
-          [class.out-of-stock]="product.stockLevel === 0"
-          (click)="addToCart.emit(product)"
+          [class.out-of-stock]="product.stockLevel === 0 && !allowNegativeStock"
+          (click)="handleProductClick(product)"
         >
           <!-- Product image / placeholder -->
           <div class="product-image-area">
@@ -93,15 +93,15 @@ import { FormsModule } from '@angular/forms';
               <span class="product-price">{{ product.price | currency:'EUR':'symbol':'1.2-2' }}</span>
               <button
                 class="add-btn"
-                [class.disabled-btn]="product.stockLevel === 0"
-                (click)="addToCart.emit(product); $event.stopPropagation()"
-                [disabled]="product.stockLevel === 0"
+                [class.disabled-btn]="product.stockLevel === 0 && !allowNegativeStock"
+                (click)="handleProductClick(product); $event.stopPropagation()"
+                [disabled]="product.stockLevel === 0 && !allowNegativeStock"
                 aria-label="Ajouter au panier"
               >
-                <svg *ngIf="product.stockLevel > 0" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <svg *ngIf="product.stockLevel > 0 || allowNegativeStock" width="18" height="18" viewBox="0 0 24 24" fill="none">
                   <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
                 </svg>
-                <svg *ngIf="product.stockLevel === 0" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <svg *ngIf="product.stockLevel === 0 && !allowNegativeStock" width="18" height="18" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
                   <path d="M5 5L19 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
@@ -493,6 +493,7 @@ import { FormsModule } from '@angular/forms';
 export class ProductGridComponent {
   @Input() products: any[] = [];
   @Input() categories: string[] = ['Tous', 'Alimentation', 'Boissons', 'Électronique', 'Hygiène', 'Divers'];
+  @Input() allowNegativeStock = false;
   @Output() addToCart = new EventEmitter<any>();
   @Output() search = new EventEmitter<string>();
 
@@ -515,6 +516,12 @@ export class ProductGridComponent {
 
   selectCategory(category: string) {
     this.selectedCategory = category;
+  }
+
+  handleProductClick(product: any) {
+    if (product.stockLevel > 0 || this.allowNegativeStock) {
+      this.addToCart.emit(product);
+    }
   }
 
   getProductGradient(name: string): string {

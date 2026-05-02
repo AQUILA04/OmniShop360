@@ -1,18 +1,19 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItem } from '../../../../core/services/cart.service';
+import { AlertModalComponent } from '../../../../shared/components/alert-modal/alert-modal.component';
 
 @Component({
     selector: 'app-receipt-preview-modal',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, AlertModalComponent],
     template: `
     <div class="modal-overlay" *ngIf="isOpen">
       <div class="modal-wrapper">
         
         <!-- Left Side: Receipt Preview -->
         <div class="receipt-preview-section">
-            <div class="receipt-paper">
+            <div class="receipt-paper" [class.receipt-a4]="printFormat === 'A4'">
                 <div class="receipt-header">
                     <div class="store-logo">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -69,12 +70,12 @@ import { CartItem } from '../../../../core/services/cart.service';
                 </div>
 
                 <div class="payment-info">
-                    <div class="pay-row">
-                        <span>{{ paymentMethod | uppercase }}</span>
-                        <span>{{ totalAmount | currency:'EUR' }}</span>
+                    <div class="pay-row" *ngFor="let p of payments">
+                        <span>{{ formatMethodName(p.method) | uppercase }}</span>
+                        <span>{{ p.amount | currency:'EUR':'symbol':'1.2-2' }}</span>
                     </div>
-                    <div class="auth-row">
-                        Auth: 883921
+                    <div class="auth-row" *ngIf="hasTransactionRef()">
+                        Réf. paiement validée
                     </div>
                 </div>
 
@@ -98,6 +99,27 @@ import { CartItem } from '../../../../core/services/cart.service';
 
             <div class="quick-actions">
                 <div class="action-label">QUICK ACTIONS</div>
+                
+                <!-- Format Toggle -->
+                <div class="format-toggle" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                  <button 
+                    [class.active]="printFormat === 'thermal'" 
+                    (click)="changeFormat('thermal')"
+                    style="flex: 1; padding: 8px; border-radius: 8px; border: 1px solid #ccc; cursor: pointer; background: white;"
+                    [style.background]="printFormat === 'thermal' ? '#EFF6FF' : 'white'"
+                    [style.borderColor]="printFormat === 'thermal' ? '#3B82F6' : '#ccc'">
+                    Format Thermique
+                  </button>
+                  <button 
+                    [class.active]="printFormat === 'A4'" 
+                    (click)="changeFormat('A4')"
+                    style="flex: 1; padding: 8px; border-radius: 8px; border: 1px solid #ccc; cursor: pointer; background: white;"
+                    [style.background]="printFormat === 'A4' ? '#EFF6FF' : 'white'"
+                    [style.borderColor]="printFormat === 'A4' ? '#3B82F6' : '#ccc'">
+                    Format A4
+                  </button>
+                </div>
+
                 <button class="btn-print-large" (click)="onPrintConfirm()">
                     <div class="print-icon-box">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -169,6 +191,14 @@ import { CartItem } from '../../../../core/services/cart.service';
             </div>
         </div>
       </div>
+      
+      <app-alert-modal
+        [isOpen]="isAlertOpen"
+        title="Information"
+        message="Génération du PDF en cours..."
+        type="info"
+        (close)="isAlertOpen = false">
+      </app-alert-modal>
     </div>
   `,
     styles: [`
@@ -199,12 +229,34 @@ import { CartItem } from '../../../../core/services/cart.service';
 
     .receipt-paper {
         background: white;
-        width: 320px;
+        width: 320px; /* Thermal width */
         padding: 32px 24px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         font-family: 'Courier New', Courier, monospace;
         color: #1F2937;
         font-size: 13px;
+        transition: width 0.3s;
+    }
+
+    .receipt-paper.receipt-a4 {
+        width: 595px; /* A4 aspect ratio representation */
+        height: 842px;
+        padding: 40px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+    }
+    
+    @media print {
+        body * { visibility: hidden; }
+        .receipt-paper, .receipt-paper * { visibility: visible; }
+        .receipt-paper { 
+            position: absolute; 
+            left: 0; 
+            top: 0; 
+            box-shadow: none; 
+            width: 100% !important; 
+            height: auto !important; 
+        }
     }
 
     .receipt-header {
@@ -569,20 +621,45 @@ export class ReceiptPreviewModalComponent {
     @Input() isOpen = false;
     @Input() ticketNumber = '';
     @Input() totalAmount = 0;
-    @Input() paymentMethod = 'Cash';
+    @Input() paymentMethod = 'Cash'; // Legacy fallback
+    @Input() payments: any[] = [];
     @Input() transactionDate = new Date();
     @Input() cartItems: CartItem[] = [];
+    @Input() printFormat: 'thermal' | 'A4' = 'thermal';
 
     @Output() close = new EventEmitter<void>();
     @Output() newSale = new EventEmitter<void>();
+    @Output() printFormatChange = new EventEmitter<'thermal' | 'A4'>();
+
+    isAlertOpen = false;
+
+    formatMethodName(method: string): string {
+        const mapping: Record<string, string> = {
+            'CASH': 'Espèces',
+            'CARD': 'Carte Bancaire',
+            'MOBILE': 'Mobile Money',
+            'CHECK': 'Chèque',
+            'MIXED': 'Paiement Mixte'
+        };
+        return mapping[method] || method;
+    }
+
+    hasTransactionRef(): boolean {
+        return this.payments.some(p => p.reference || p.checkNumber || p.phoneNumber);
+    }
+    
+    changeFormat(format: 'thermal' | 'A4') {
+        this.printFormat = format;
+        this.printFormatChange.emit(format);
+    }
 
     onPrintConfirm() {
-        alert('Receipt sent to printer.');
-        this.newSale.emit();
+        window.print();
+        setTimeout(() => this.newSale.emit(), 1000);
     }
 
     onDownloadPdf() {
-        alert('PDF Downloading...');
+        this.isAlertOpen = true;
     }
 
     onClose() {

@@ -4,50 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="Création des nouvelles epics">
-      <change afterPath="$PROJECT_DIR$/.agent/skills/ui-ux-and-front-architecture/SKILL.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.agent/skills/ui-ux-and-front-architecture/references/architecture.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.agent/skills/ui-ux-and-front-architecture/references/design-system.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.opencode/skills/ui-ux-and-front-architecture/SKILL.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.opencode/skills/ui-ux-and-front-architecture/references/architecture.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.opencode/skills/ui-ux-and-front-architecture/references/design-system.md" afterDir="false" />
+    <list default="true" id="52a02212-66b0-4d60-a114-01f9f3398698" name="Changes" comment="Refonte du frontend et du backoffice.">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/ci-cd-deploy.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/rollback.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/DEPLOYMENT_README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/bootstrap.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/docker-compose.prod.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/rollback_local.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.agent/rules/frontend-rules.md" beforeDir="false" afterPath="$PROJECT_DIR$/.agent/rules/frontend-rules.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/core/auth/proxy.interceptor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/core/auth/proxy.interceptor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/core/layout/header/header.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/core/layout/header/header.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/core/layout/main-layout/main-layout.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/core/layout/main-layout/main-layout.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/core/layout/sidebar/sidebar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/core/layout/sidebar/sidebar.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/dashboard/components/kpi-card/kpi-card.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/dashboard/components/kpi-card/kpi-card.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/dashboard/dashboard.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/dashboard/dashboard.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/dashboard/dashboard.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/dashboard/dashboard.component.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/shop-admin/inventory-list/inventory-list.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/shop-admin/inventory-list/inventory-list.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/shop-admin/inventory-list/inventory-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/shop-admin/inventory-list/inventory-list.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/shop-admin/stock-movement-form/stock-movement-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/shop-admin/stock-movement-form/stock-movement-form.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/shop-admin/stock-movement-form/stock-movement-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/shop-admin/stock-movement-form/stock-movement-form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/product-form/product-form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/shop-form/shop-form.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-list/user-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/features/tenant-space/components/user-list/user-list.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-form/generic-form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/components/generic-list/generic-list.component.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/shared.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/shared.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keycloak/themes/omnishop360/login/resources/css/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/keycloak/themes/omnishop360/login/resources/css/login.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/pos/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pos/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/core/auth/auth.interceptor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/core/auth/auth.interceptor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/core/models/sale.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/core/models/sale.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/core/services/cart.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/core/services/cart.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/core/services/customer.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/core/services/customer.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/cart-panel/cart-panel.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/cart-panel/cart-panel.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/payment-modal/payment-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/payment-modal/payment-modal.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/product-grid/product-grid.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/product-grid/product-grid.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/receipt-preview-modal/receipt-preview-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/receipt-preview-modal/receipt-preview-modal.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/components/success-modal/success-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/components/success-modal/success-modal.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.scss" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/app/features/pos/pos.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pos/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/pos/src/styles.scss" afterDir="false" />
     </list>
     <list id="28103352-43e2-4852-97fd-59c1c37de819" name="configs" comment="configs" />
     <option name="SHOW_DIALOG" value="false" />
@@ -68,7 +43,7 @@
     </selectedModels>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="1218" />
+    <option name="cachedIndexableFilesCount" value="1331" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -93,6 +68,10 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/refonte-ui-and-epic-E" />
+                    <option name="lastUsedInstant" value="1776501848" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="feature/add-theme-and-keycloak-frontend" />
                     <option name="lastUsedInstant" value="1765797880" />
@@ -174,12 +153,13 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
     "Spring Boot.OmniShop360BackendApplication.executor": "Debug",
     "augment.onboarding.workspace.first.indexed.C:/code/OmniShop360": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "feature/refonte-ui-and-epic-E",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/kahonsu/Documents/GitHub/OmniShop360/.opencode",
@@ -188,7 +168,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "editor.preferences.tabs",
     "to.speed.mode.migration.done": "true",
     "ts.external.directory.path": "C:\\Users\\kahonsu\\Documents\\GitHub\\OmniShop360\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
@@ -336,6 +316,13 @@
       <workItem from="1776403269712" duration="2771000" />
       <workItem from="1776407029574" duration="13620000" />
       <workItem from="1776449330972" duration="563000" />
+      <workItem from="1776501720903" duration="3356000" />
+      <workItem from="1776670432905" duration="8361000" />
+      <workItem from="1777112142973" duration="1142000" />
+      <workItem from="1777133398901" duration="4477000" />
+      <workItem from="1777274380825" duration="5200000" />
+      <workItem from="1777288197876" duration="1636000" />
+      <workItem from="1777362613869" duration="1190000" />
     </task>
     <task id="LOCAL-00001">
       <option name="closed" value="true" />
@@ -409,7 +396,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774803373443</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Refonte du frontend et du backoffice.">
+      <option name="closed" value="true" />
+      <created>1776501900104</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1776501900104</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -428,7 +423,8 @@
     <MESSAGE value="Audit Log Controller Category Controller Product Controller Shop Controller Tenant Controller User Controller (v2)" />
     <MESSAGE value="[Sprint 4]: prdV2" />
     <MESSAGE value="Création des nouvelles epics" />
-    <option name="LAST_COMMIT_MESSAGE" value="Création des nouvelles epics" />
+    <MESSAGE value="Refonte du frontend et du backoffice." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refonte du frontend et du backoffice." />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

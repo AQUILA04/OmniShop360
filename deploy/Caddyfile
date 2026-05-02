@@ -1,0 +1,33 @@
+# Caddyfile pour le VPS Hetzner (178.104.248.247)
+
+# Configuration pour l'accès web par défaut (HTTP port 80)
+http://178.104.248.247 {
+    # Routage pour l'interface Maildev (/mail/)
+    handle_path /mail* {
+        reverse_proxy omnishop-maildev:1080
+    }
+
+    # Routage par défaut vers le frontend (accessible directement via l'IP)
+    handle {
+        reverse_proxy omnishop-frontend:8080
+    }
+}
+
+# Conserver l'accès aux autres services via leurs ports habituels
+# Cela permet de ne rien casser pour les applications mobiles ou les requêtes API existantes.
+
+:4200 {
+    reverse_proxy omnishop-frontend:8080
+}
+
+:4201 {
+    reverse_proxy omnishop-pos:8080
+}
+
+:8081 {
+    reverse_proxy omnishop-backend:8081
+}
+
+:8080 {
+    reverse_proxy omnishop-keycloak:8080
+}

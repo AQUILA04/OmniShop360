@@ -18,6 +18,8 @@ export interface CartItem {
 export class CartService {
   private itemsSubject = new BehaviorSubject<CartItem[]>([]);
   items$ = this.itemsSubject.asObservable();
+  
+  private promoCodeDetails: { code: string, type: 'PERCENTAGE' | 'FIXED_AMOUNT', value: number } | null = null;
 
   addToCart(product: any, quantity: number = 1) {
     const currentItems = this.itemsSubject.value;
@@ -59,10 +61,37 @@ export class CartService {
 
   clearCart() {
     this.itemsSubject.next([]);
+    this.promoCodeDetails = null;
+  }
+
+  applyPromo(code: string, type: 'PERCENTAGE' | 'FIXED_AMOUNT', value: number) {
+    this.promoCodeDetails = { code, type, value };
+    // trigger recalculation if someone is listening to totalAmount, we can just push next to items
+    this.itemsSubject.next([...this.itemsSubject.value]);
+  }
+
+  getPromoDetails() {
+    return this.promoCodeDetails;
+  }
+
+  get rawSubtotal(): number {
+    return this.itemsSubject.value.reduce((total, item) => total + (item.price * item.quantity), 0);
+  }
+
+  get discountAmount(): number {
+    if (!this.promoCodeDetails) return 0;
+    
+    if (this.promoCodeDetails.type === 'FIXED_AMOUNT') {
+      return this.promoCodeDetails.value;
+    } else {
+      // PERCENTAGE
+      return this.rawSubtotal * (this.promoCodeDetails.value / 100);
+    }
   }
 
   get totalAmount(): number {
-    return this.itemsSubject.value.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const total = this.rawSubtotal - this.discountAmount;
+    return total > 0 ? total : 0;
   }
 
   get totalItems(): number {

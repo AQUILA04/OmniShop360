@@ -28,12 +28,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      # Login GHCR - exactement comme dans cd.yml (commande docker login directe)
       - name: Login to GHCR
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.OMNISHOP_GHCR_TOKEN }}
+        run: |
+          echo "${{ secrets.OMNISHOP_GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
       - name: Build & push backend
         uses: docker/build-push-action@v4
@@ -142,6 +140,9 @@ jobs:
           script: |
             set -e
             cd /srv/omnishop360/compose
+
+            # Login to GHCR on remote server before pulling
+            echo "${{ secrets.OMNISHOP_GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
             # 1. Pull images & start stack
             docker compose pull || true

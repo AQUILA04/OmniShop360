@@ -1,0 +1,62 @@
+name: Manual Rollback - Deploy specific image tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Image tag to deploy (eg commit SHA or "latest")'
+        required: true
+        default: 'latest'
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start SSH agent and add private key
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+
+      - name: Prepare prod compose with rollback tag
+        run: |
+          mkdir -p /tmp/compose
+          sed "s|__GHCR_OWNER__|${{ github.repository_owner }}|g; s|__TAG__|${{ github.event.inputs.tag }}|g" deploy/docker-compose.prod.yml > /tmp/compose/docker-compose.rollback.yml
+
+      - name: Copy rollback compose to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_SSH_USER }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          port: 22
+          source: "/tmp/compose/docker-compose.rollback.yml"
+          target: "/srv/omnishop360/compose/docker-compose.yml"
+
+      - name: Remote rollback: pull images & restart
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_SSH_USER }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            set -e
+            cd /srv/omnishop360/compose
+            docker compose pull || true
+            docker compose up -d
+
+      - name: Post-rollback healthcheck
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+        run: |
+          for i in $(seq 1 12); do
+            if curl -fsS http://$SERVER_IP:8081/api/actuator/health >/dev/null 2>&1; then
+              echo "Health OK"; exit 0
+            fi
+            echo "Waiting for health... ($i)"; sleep 10
+          done
+          echo "Health check failed after rollback"; exit 1
+

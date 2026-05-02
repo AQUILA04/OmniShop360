@@ -187,7 +187,7 @@ jobs:
           source: ".github/temp_env/.env"
           target: "/srv/omnishop360/compose/.env"
 
-      - name: Remote deploy: pull images & up
+      - name: "Remote deploy: pull images & up"
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.SERVER_IP }}

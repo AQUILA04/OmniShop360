@@ -134,7 +134,7 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
-systemctl enable --now omnishop-docker-compose.service || true
+systemctl enable omnishop-docker-compose.service || true
 
 # --- 10) Backup script + timer (daily) ---
 BACKUP_SCRIPT="/usr/local/bin/omnishop_backup.sh"

@@ -7,8 +7,6 @@ services:
       POSTGRES_DB: omnishop360
       POSTGRES_USER: omnishop
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-omnishop_password}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -23,9 +21,8 @@ services:
     image: maildev/maildev:latest
     container_name: omnishop-maildev
     restart: unless-stopped
-    ports:
-      - "1080:1080"
-      - "1025:1025"
+    environment:
+      - MAILDEV_BASE_PATHNAME=/mail
     networks:
       - omnishop-network
 
@@ -34,8 +31,6 @@ services:
     container_name: omnishop-redis
     restart: unless-stopped
     command: redis-server --appendonly yes
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
@@ -63,8 +58,6 @@ services:
       KC_METRICS_ENABLED: true
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-      - "8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
@@ -99,10 +92,8 @@ services:
       CORS_ALLOWED_ORIGINS: http://localhost:4200,http://localhost:4201,http://localhost:8081
       SUPERADMIN_EMAIL: admin@omnishop360.com
       SUPERADMIN_USERNAME: superadmin
-      SMTP_HOST: host.docker.internal
+      SMTP_HOST: maildev
       SMTP_PORT: 1025
-    ports:
-      - "8081:8081"
     depends_on:
       postgres:
         condition: service_healthy
@@ -123,8 +114,6 @@ services:
     image: "ghcr.io/__GHCR_OWNER__/omnishop-frontend:__TAG__"
     container_name: omnishop-frontend
     restart: unless-stopped
-    ports:
-      - "4200:8080"
     depends_on:
       - backend
       - keycloak
@@ -140,8 +129,6 @@ services:
     image: "ghcr.io/__GHCR_OWNER__/omnishop-pos:__TAG__"
     container_name: omnishop-pos
     restart: unless-stopped
-    ports:
-      - "4201:8080"
     depends_on:
       - backend
       - keycloak
@@ -153,6 +140,29 @@ services:
       timeout: 5s
       retries: 3
 
+  caddy:
+    image: caddy:2-alpine
+    container_name: omnishop-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "4200:4200"
+      - "4201:4201"
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - omnishop-network
+    depends_on:
+      - frontend
+      - backend
+      - pos
+      - keycloak
+
 networks:
   omnishop-network:
     driver: bridge
@@ -163,5 +173,9 @@ volumes:
     name: omnishop-postgres-data
   redis_data:
     name: omnishop-redis-data
+  caddy_data:
+    name: omnishop-caddy-data
+  caddy_config:
+    name: omnishop-caddy-config
 
 

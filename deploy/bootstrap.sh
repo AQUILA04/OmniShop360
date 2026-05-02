@@ -46,6 +46,10 @@ fi
 # --- 2) Install prerequisites and Docker (Ubuntu) ---
 if [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" ]]; then
   export DEBIAN_FRONTEND=noninteractive
+  
+  # Remove broken nodesource repositories to avoid apt-get update failures (nodistro error)
+  rm -f /etc/apt/sources.list.d/nodesource.list || true
+
   apt-get update -y
   apt-get install -y --no-install-recommends ca-certificates curl gnupg lsb-release apt-transport-https software-properties-common
 
@@ -59,8 +63,7 @@ if [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" ]]; then
   fi
 
   apt-get install -y --no-install-recommends docker-ce docker-ce-cli containerd.io docker-compose-plugin
-  apt-get install -y --no-install-recommends nginx openssl fail2ban ufw
-  apt-get install -y --no-install-recommends git
+  apt-get install -y --no-install-recommends fail2ban ufw git
 fi
 
 # Start and enable docker
@@ -95,21 +98,7 @@ if [ "$MEM_MB" -lt 2000 ] && ! swapon --show | grep -q "$SWAP_FILE"; then
   echo "$SWAP_FILE none swap sw 0 0" >> /etc/fstab
 fi
 
-# --- 7) Self-signed cert for IP (optional) ---
-# If DOMAIN not provided, create a self-signed cert for the server IP
-if [ -z "$DOMAIN" ]; then
-  IP_ADDR=$(hostname -I | awk '{print $1}')
-  if [ -n "$IP_ADDR" ]; then
-    SSL_DIR="/etc/ssl/omnishop"
-    mkdir -p "$SSL_DIR"
-    if [ ! -f "$SSL_DIR/omnishop.crt" ]; then
-      openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout "$SSL_DIR/omnishop.key" -out "$SSL_DIR/omnishop.crt" \
-        -subj "/CN=${IP_ADDR}" >/dev/null 2>&1
-      echo "Created self-signed cert at $SSL_DIR"
-    fi
-  fi
-fi
+# --- 7) SSL is now handled automatically by Caddy Server ---
 
 # --- 8) Install authorized key for deploy user if provided ---
 if [ -n "$SSH_PUB_KEY_FILE" ] && [ -f "$SSH_PUB_KEY_FILE" ]; then

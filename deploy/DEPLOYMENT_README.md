@@ -14,7 +14,7 @@ Choix faits
 - Registry : GHCR (ghcr.io)
 - Keycloak : construit dans CI
 - Backup : local disk (environnement de validation/test)
-- Mode TLS initial : certificat auto-signé (IP) — passer à certbot/Let's Encrypt quand domaine `omnishop360.com` sera prêt
+- Mode TLS : Automatisé via **Caddy Server** (Reverse Proxy inclus dans Docker Compose). Caddy gère les routes et le HTTPS automatiquement (ou fonctionne en HTTP par défaut si seul l'IP est fourni).
 
 GitHub Secrets nécessaires
 - `GHCR_TOKEN` : token personnel (GHCR) avec permissions write:packages
@@ -52,11 +52,10 @@ sudo bash /path/to/repo/deploy/bootstrap.sh --ssh-pub-key-file /home/you/omnisho
 ```
 
 Le script :
-- installe Docker, docker compose plugin, nginx, fail2ban, ufw
+- installe Docker, docker compose plugin, fail2ban, ufw
 - crée l'utilisateur `deploy` et place la clé publique
 - prépare `/srv/omnishop360/compose` et `/srv/omnishop360/backups`
 - crée un service systemd `omnishop-docker-compose.service` et un timer de backup
-- génère un certificat auto-signé pour l'IP (si aucun domaine fourni)
 
 Déployer initialement le docker-compose
 -------------------------------------
@@ -140,8 +139,8 @@ Backups
 - Pour restore : arrêter le stack, re-injecter les dumps via `docker exec -i omnishop-postgres psql -U omnishop -d omnishop360`, et extraire les tar dans les volumes.
 
 Sécurité & production notes
-- Ne pas exposer Postgres (5432) publiquement.
-- Remplacer le certificat auto-signé par Let's Encrypt dès que `omnishop360.com` est disponible.
+- Ne pas exposer Postgres (5432) et Redis (6379) publiquement. Ils sont maintenant uniquement accessibles sur le réseau interne Docker (`omnishop-network`).
+- Caddy gère le reverse proxy. Pour ajouter Let's Encrypt plus tard, il suffit de remplacer `http://178.104.248.247` par `votre-domaine.com` dans le fichier `Caddyfile` et Caddy fera le reste automatiquement.
 - En production, considérer Hetzner Managed DB ou cluster et un load balancer.
 
 Questions fréquentes
@@ -152,6 +151,6 @@ Support
 Je peux :
 - adapter `docker-compose.yml` pour utiliser les images GHCR avec tags `${{ github.sha }}`
 - ajouter un script d'upgrade/rollback automatisé
-- créer un guide pour migrer de self-signed à certbot une fois le domaine prêt
+- vous accompagner lorsque vous serez prêt à ajouter un domaine personnalisé dans Caddy
 
 

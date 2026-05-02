@@ -12,7 +12,7 @@ on:
 env:
   REGISTRY: ghcr.io
   GHCR_OWNER: aquila04
-  IMAGE_PREFIX: ghcr.io/aquila04/omnishop360/omnishop
+  IMAGE_PREFIX: ghcr.io/aquila04/omnishop
   REPO_NAME: omnishop360
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build & push backend
